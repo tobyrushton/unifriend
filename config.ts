@@ -1,15 +1,15 @@
 interface config{
-    API_KEY:string
+    DATABASE_URL:string
 }
 
-const API_KEY = process.env.API_KEY as string
+const DATABASE_URL = process.env.DATABASE_URL as string
 
 if(
-    API_KEY == undefined
+    DATABASE_URL == undefined
 )
     throw new Error('Missing environment variables')
 
 
 export const config:config = {
-    API_KEY
+    DATABASE_URL
 }
