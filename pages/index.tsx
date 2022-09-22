@@ -6,12 +6,11 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>uniFRIEND</title>
+        <title>UniFriend</title>
         <meta name="description" content="Meet other students" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
     </div>
-
   )
 }
 
