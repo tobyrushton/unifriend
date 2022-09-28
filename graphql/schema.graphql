@@ -2,6 +2,10 @@
 ### Do not make changes to this file directly
 
 
+type Mutation {
+  createUser(age: Int!, course: String!, firstName: String!, lastName: String!, university: String!): User!
+}
+
 type Query {
   users: [User]!
 }
