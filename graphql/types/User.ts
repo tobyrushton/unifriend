@@ -18,6 +18,23 @@ export const UserQuery = extendType({
   definition(t) {
     t.nonNull.list.field('users', {
       type: 'User',
+      args: { id: nonNull(stringArg())},
+      resolve(_parent, _args, ctx) {
+        return ctx.prisma.users.findUnique({
+          where: {
+            id: _args.id
+          }
+        })
+      },
+    })
+  },
+})
+
+export const UserQueryByID = extendType({
+  type: 'Query',
+  definition(t) {
+    t.nonNull.list.field('users', {
+      type: 'User',
       resolve(_parent, _args, ctx) {
         return ctx.prisma.users.findMany()
       },
