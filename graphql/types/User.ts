@@ -33,7 +33,7 @@ export const UserQuery = extendType({
 export const UserQueryByID = extendType({
   type: 'Query',
   definition(t) {
-    t.nonNull.list.field('users', {
+    t.nonNull.list.field('user', {
       type: 'User',
       resolve(_parent, _args, ctx) {
         return ctx.prisma.users.findMany()
@@ -81,7 +81,7 @@ export const CreateUserMutation = extendType({
 export const UpdateUserMutation = extendType({
   type: 'Mutation',
   definition(t) {
-    t.nonNull.field('createUser', {
+    t.nonNull.field('updateUser', {
       type: User,
       args: {
         id: nonNull(stringArg()),
@@ -92,7 +92,7 @@ export const UpdateUserMutation = extendType({
         course: nonNull(stringArg()),
       },
       async resolve(_parent, args: UserObjectWithID, ctx) {
-        return ctx.prisma.link.update({
+        return ctx.prisma.users.update({
           where: { id: args.id },
           data: {
             firstName: args.firstName,
@@ -106,3 +106,21 @@ export const UpdateUserMutation = extendType({
     })
   },
 })
+
+//delete user
+export const DeleteUserMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('deleteUser', {
+      type: 'User',
+      args: {
+        id: nonNull(stringArg()),
+      },
+      resolve(_parent, args, ctx) {
+        return ctx.prisma.users.delete({
+          where: { id: args.id },
+        });
+      },
+    });
+  },
+});
