@@ -40,9 +40,9 @@ const useCreateUser = (user:UserObject):graphQLHookReturn => {
     }
 
     return {
-        success: false,
-        loading: false,
-        error: new Error()
+        success,
+        loading,
+        error
     } 
 }
 
