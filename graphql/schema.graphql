@@ -5,14 +5,14 @@
 type Mutation {
   createUser(birthday: String!, course: String!, firstName: String!, lastName: String!, university: String!): User!
   deleteUser(id: String!): User!
-  updateUser(birthday: String!, course: String!, firstName: String!, id: String!, lastName: String!, university: String!): User!
+  updateUser(birthday: String, course: String, firstName: String, id: String!, lastName: String, university: String): User!
 }
 
 type Query {
   birthday: String
   course: String
   firstName: String
-  id: String!
+  id: String
   lastName: String
   university: String
   user: [User]!

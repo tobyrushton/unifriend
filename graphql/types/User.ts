@@ -17,7 +17,7 @@ export const User = objectType({
 export const UserQueryByID = extendType({
   type: 'Query',
   definition(t) {
-    t.nonNull.string('id')
+    t.string('id')
     t.string('firstName')
     t.string('lastName')
     t.string('university')
@@ -95,11 +95,11 @@ export const UpdateUserMutation = extendType({
       type: User,
       args: {
         id: nonNull(stringArg()),
-        firstName: nonNull(stringArg()),
-        lastName: nonNull(stringArg()),
-        birthday: nonNull(stringArg()),
-        university: nonNull(stringArg()),
-        course: nonNull(stringArg()),
+        firstName: stringArg(),
+        lastName: stringArg(),
+        birthday: stringArg(),
+        university: stringArg(),
+        course: stringArg(),
       },
       async resolve(_parent, args: UserObjectWithID, ctx) {
         return ctx.prisma.users.update({
