@@ -1,5 +1,5 @@
 export interface UserObject {
-    age: number
+    birthday: string
     firstName: string
     lastName: string
     university: string

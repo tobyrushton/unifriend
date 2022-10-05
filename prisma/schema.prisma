@@ -17,5 +17,5 @@ model users {
   lastName String
   university String
   course String
-  age Int
+  birthday String
 }
