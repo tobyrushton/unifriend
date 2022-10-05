@@ -1,5 +1,5 @@
 import { objectType, extendType, nonNull, stringArg } from 'nexus'
-import { UserObject, UserObjectWithID } from '../../types/User'
+import { UserObject, UserObjectWithID } from '../../types/index'
 
 export const User = objectType({
   name: 'User',
