@@ -9,8 +9,14 @@ type Mutation {
 }
 
 type Query {
+  birthday: String
+  course: String
+  firstName: String
+  id: String!
+  lastName: String
+  university: String
   user: [User]!
-  users(id: String!): [User]!
+  users(id: String!): User
 }
 
 type User {
