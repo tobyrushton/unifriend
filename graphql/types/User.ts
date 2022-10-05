@@ -13,24 +13,32 @@ export const User = objectType({
   },
 })
 
-export const UserQuery = extendType({
+//fetches user by ID
+export const UserQueryByID = extendType({
   type: 'Query',
   definition(t) {
-    t.nonNull.list.field('users', {
+    t.nonNull.string('id')
+    t.string('firstName')
+    t.string('lastName')
+    t.string('university')
+    t.string('course')
+    t.string('birthday')
+    t.nullable.field('users', {
       type: 'User',
-      args: { id: nonNull(stringArg())},
-      resolve(_parent, _args, ctx) {
-        return ctx.prisma.users.findUnique({
+      args: {id: nonNull(stringArg())},
+      resolve(_parent, args, ctx) {
+        return ctx.prisma.users.findMany({
           where: {
-            id: _args.id
+            id: args.id
           }
         })
-      },
+      }
     })
   },
 })
 
-export const UserQueryByID = extendType({
+//fetches all users
+export const UserQuery = extendType({
   type: 'Query',
   definition(t) {
     t.nonNull.list.field('user', {
@@ -58,7 +66,7 @@ export const CreateUserMutation = extendType({
       async resolve(_parent, args: UserObject, ctx) {
 
         if(!args.firstName || !args.lastName || !args.birthday || !args.university || !args.course)
-          return new Error('Missing arguements on object user')
+          throw new Error('Missing arguements on object user')
         
         const newUser = {
           firstName: args.firstName,
