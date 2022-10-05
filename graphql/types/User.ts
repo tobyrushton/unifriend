@@ -27,6 +27,8 @@ export const UserQueryByID = extendType({
       type: 'User',
       args: {id: nonNull(stringArg())},
       resolve(_parent, args, ctx) {
+        //due to return type error findUnique method was giving 
+        //changed to findMany, as the id is UUID there is not multiple rows with same ID.
         return ctx.prisma.users.findMany({
           where: {
             id: args.id
