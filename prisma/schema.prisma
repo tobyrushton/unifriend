@@ -11,11 +11,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model Users {
   id String @id @default(uuid())
   firstName String
   lastName String
+  birthday String
   university String
   course String
-  birthday String
+  bio String
+  username String @unique
+  friends Friends[]
+  friendRequests FriendRequests[]
+}
+
+model Friends {
+  id Int @id@unique@default(autoincrement())
+  friendedAt DateTime @default(now())
+  friendID String @unique
+}
+
+model FriendRequests {
+  id Int @id@unique@default(autoincrement())
+  createdAt DateTime @default(now())
+  friendID String @unique
+  status Boolean @default(false)
 }
