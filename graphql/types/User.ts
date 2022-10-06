@@ -1,4 +1,4 @@
-import { objectType, extendType, nonNull, stringArg } from 'nexus'
+import { objectType, extendType, nonNull, stringArg, booleanArg, arg } from 'nexus'
 import { UserObject, UserObjectWithID } from '../../types/index'
 
 export const User = objectType({
@@ -17,21 +17,29 @@ export const User = objectType({
 export const UserQueryByID = extendType({
   type: 'Query',
   definition(t) {
-    t.string('id')
-    t.string('firstName')
-    t.string('lastName')
-    t.string('university')
-    t.string('course')
-    t.string('birthday')
     t.nullable.field('users', {
       type: 'User',
-      args: {id: nonNull(stringArg())},
+      args: {
+        id: nonNull(stringArg()),
+        firstNameSelected: booleanArg(),
+        lastNameSelected: booleanArg(),
+        universitySelected: booleanArg(),
+        courseSelected: booleanArg(),
+        birthdaySelected: booleanArg()
+      },
       resolve(_parent, args, ctx) {
         //due to return type error findUnique method was giving 
         //changed to findMany, as the id is UUID there is not multiple rows with same ID.
         return ctx.prisma.users.findMany({
           where: {
             id: args.id
+          },
+          select:{
+            firstName: args.firstNameSelected ?? false,
+            lastName: args.lastNameSelected ?? false,
+            university: args.universitySelected ?? false,
+            birthday: args.birthdaySelected ?? false,
+            course: args.courseSelected ?? false
           }
         })
       }

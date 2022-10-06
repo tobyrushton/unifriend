@@ -11,3 +11,12 @@ export interface UpdateUserParamaters {
     firstName?:string
     lastName?: string
 }
+
+export interface SelectUserByIDParameters {
+    id:string
+    course?: boolean
+    university?: boolean
+    birthday?:boolean
+    firstName?:boolean
+    lastName?: boolean
+}
