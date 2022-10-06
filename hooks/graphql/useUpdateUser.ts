@@ -16,7 +16,7 @@ const UpdateUserMutation = gql`
 
 const useUpdateUser = (updates:UpdateUserParamaters):graphQLHookReturn => {    
     const [ loading, setLoading ] = useState<boolean>(true)
-    const [ error, setError ] = useState<Error>(new Error())
+    const [ error, setError ] = useState<Error>()
     const [ success, setSuccess ] = useState<boolean>(false) //defaults to false, for a false success to be viewed loading must also equal false.
 
     const [updateUser, { loading: mutationLoading, error: mutationError }] = useMutation<UserObjectWithID, UpdateUserParamaters>(UpdateUserMutation)

@@ -1,6 +1,6 @@
 export interface graphQLHookReturn{
     success: boolean,
-    error?: Error,
+    error: Error | undefined,
     loading: boolean
 }
 
