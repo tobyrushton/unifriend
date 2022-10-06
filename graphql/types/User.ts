@@ -1,5 +1,6 @@
-import { objectType, extendType, nonNull, stringArg, booleanArg, arg } from 'nexus'
+import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
 import { UserObject, UserObjectWithID } from '../../types/index'
+import { Friend, FriendRequeset } from './Friends'
 
 export const User = objectType({
   name: 'User',
@@ -10,6 +11,13 @@ export const User = objectType({
     t.string('university')
     t.string('course')
     t.string('birthday')
+    t.string('username')
+    t.list.field('friends', {
+      type: Friend
+    }),
+    t.list.field('friendRequests', {
+      type: FriendRequeset
+    })
   },
 })
 
@@ -28,9 +36,7 @@ export const UserQueryByID = extendType({
         birthdaySelected: booleanArg()
       },
       resolve(_parent, args, ctx) {
-        //due to return type error findUnique method was giving 
-        //changed to findMany, as the id is UUID there is not multiple rows with same ID.
-        return ctx.prisma.users.findMany({
+        return ctx.prisma.users.findUnique({
           where: {
             id: args.id
           },

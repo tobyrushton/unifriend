@@ -11,3 +11,15 @@ export const Friend = objectType({
         })
     },
 })
+
+export const FriendRequeset = objectType({
+    name: 'friendRequest',
+    definition(t){
+        t.int('id'),
+        t.string('friendID'),
+        t.list.field('createdAt', {
+            type: DateTime
+        }),
+        t.boolean('status')
+    }
+})
