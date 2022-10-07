@@ -24,6 +24,7 @@ type Mutation {
 
 type Query {
   getFriendRequests(usersId: String!): friendRequest!
+  getFriends(usersId: String!): Friend!
   user: [User]!
   users(bioSelected: Boolean, birthdaySelected: Boolean, courseSelected: Boolean, firstNameSelected: Boolean, id: String!, lastNameSelected: Boolean, universitySelected: Boolean, usernameSelected: Boolean): User
 }
