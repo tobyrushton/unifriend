@@ -34,7 +34,9 @@ export const UserQueryByID = extendType({
         lastNameSelected: booleanArg(),
         universitySelected: booleanArg(),
         courseSelected: booleanArg(),
-        birthdaySelected: booleanArg()
+        birthdaySelected: booleanArg(),
+        bioSelected: booleanArg(),
+        usernameSelected: booleanArg()
       },
       resolve(_parent, args, ctx) {
         return ctx.prisma.users.findUnique({
@@ -46,7 +48,9 @@ export const UserQueryByID = extendType({
             lastName: args.lastNameSelected ?? false,
             university: args.universitySelected ?? false,
             birthday: args.birthdaySelected ?? false,
-            course: args.courseSelected ?? false
+            course: args.courseSelected ?? false,
+            bio: args.bioSelected ?? false,
+            username: args.usernameSelected ?? false,
           }
         })
       }
@@ -118,12 +122,13 @@ export const UpdateUserMutation = extendType({
         university: stringArg(),
         course: stringArg(),
         username: stringArg(),
+        bio: stringArg()
       },
     resolve: (_parent, args, ctx) => {  
         let temp:any = {...args}
         delete temp.id
         let userUpdates: UserUpdateObject = temp
-        
+
         return ctx.prisma.users.update({
           where: { id: args.id },
           data: userUpdates
@@ -145,8 +150,8 @@ export const DeleteUserMutation = extendType({
       resolve(_parent, args, ctx) {
         return ctx.prisma.users.delete({
           where: { id: args.id },
-        });
+        })
       },
-    });
+    })
   },
-});
+})

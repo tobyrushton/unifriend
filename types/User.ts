@@ -18,4 +18,5 @@ export interface UserUpdateObject {
     university?: string
     course?: string
     username?: string
+    bio?: string
 }

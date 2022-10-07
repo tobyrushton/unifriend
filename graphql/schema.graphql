@@ -14,12 +14,12 @@ type Friend {
 type Mutation {
   createUser(birthday: String!, course: String!, firstName: String!, lastName: String!, university: String!, username: String!): User!
   deleteUser(id: String!): User!
-  updateUser(birthday: String, course: String, firstName: String, id: String!, lastName: String, university: String, username: String): User!
+  updateUser(bio: String, birthday: String, course: String, firstName: String, id: String!, lastName: String, university: String, username: String): User!
 }
 
 type Query {
   user: [User]!
-  users(birthdaySelected: Boolean, courseSelected: Boolean, firstNameSelected: Boolean, id: String!, lastNameSelected: Boolean, universitySelected: Boolean): User
+  users(bioSelected: Boolean, birthdaySelected: Boolean, courseSelected: Boolean, firstNameSelected: Boolean, id: String!, lastNameSelected: Boolean, universitySelected: Boolean, usernameSelected: Boolean): User
 }
 
 type User {
