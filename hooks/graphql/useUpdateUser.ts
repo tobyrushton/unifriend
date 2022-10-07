@@ -40,3 +40,5 @@ const useUpdateUser = (updates:UpdateUserParamaters):graphQLHookReturn => {
         success
     }
 }
+
+export default useUpdateUser

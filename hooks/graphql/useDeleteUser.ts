@@ -37,3 +37,4 @@ const useDeleteUser = (userID:string):graphQLHookReturn => {
     }
 }
 
+export default useDeleteUser
