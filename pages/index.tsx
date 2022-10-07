@@ -15,7 +15,7 @@ const Home: React.FC = () => {
     }
     
     
-    const { loading, error, success } = useCreateUser(createUserInformation)
+    // const { loading, error, success } = useCreateUser(createUserInformation)
     
     return(
     <div className={styles.container}>
@@ -26,11 +26,11 @@ const Home: React.FC = () => {
         </Head>
 
         <div>
-            <pre>
+            {/* <pre>
                 status: {loading}
                 success: {success}
                 error: {error?.message}
-            </pre>
+            </pre> */}
         </div>
     </div>
 )}

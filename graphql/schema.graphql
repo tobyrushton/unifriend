@@ -9,9 +9,12 @@ type Friend {
   friendID: String
   friendedAt: [DateTime]
   id: Int
+  usersId: String
 }
 
 type Mutation {
+  createFriend(friendID: String!, usersId: String!): Friend!
+  createFriendRequest(friendID: String!, usersId: String!): friendRequest!
   createUser(birthday: String!, course: String!, firstName: String!, lastName: String!, university: String!, username: String!): User!
   deleteUser(id: String!): User!
   updateUser(bio: String, birthday: String, course: String, firstName: String, id: String!, lastName: String, university: String, username: String): User!
@@ -40,4 +43,5 @@ type friendRequest {
   friendID: String
   id: Int
   status: Boolean
+  usersId: String
 }

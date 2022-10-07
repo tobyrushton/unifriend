@@ -1,6 +1,6 @@
 import { objectType, extendType, nonNull, stringArg, booleanArg, arg } from 'nexus'
 import { UserUpdateObject } from '../../types'
-import { Friend, FriendRequeset } from './Friends'
+import { Friend, FriendRequest } from './Friends'
 
 export const User = objectType({
   name: 'User',
@@ -16,7 +16,7 @@ export const User = objectType({
       type: Friend
     }),
     t.list.field('friendRequests', {
-      type: FriendRequeset
+      type: FriendRequest
     })
     t.string('bio')
   },
@@ -126,7 +126,7 @@ export const UpdateUserMutation = extendType({
       },
     resolve: (_parent, args, ctx) => {  
         let temp:any = {...args}
-        delete temp.id
+        delete temp.id //removes id property so that it is not passed in the updates.
         let userUpdates: UserUpdateObject = temp
 
         return ctx.prisma.users.update({
