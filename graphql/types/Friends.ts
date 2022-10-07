@@ -96,3 +96,37 @@ export const DeleteFriendRequest = extendType({
         })
     }
 })
+
+export const getFriendRequests = extendType({
+    type:'Query',
+    definition(t){
+        t.nonNull.field('getFriendRequests', {
+            type:'friendRequest',
+            args: {
+                usersId: nonNull(stringArg())
+            },
+            resolve: (_parent, args, ctx) => {
+                return ctx.prisma.friendRequests.findMany({
+                    where: args
+                })
+            }
+        })
+    }
+})
+
+export const getFriends = extendType({
+    type: 'Query',
+    definition(t) {
+        t.nonNull.field('getFriends', {
+            type:'Friend',
+            args: {
+                usersId: nonNull(stringArg())
+            },
+            resolve: (_parent, args, ctx) => {
+                return ctx.prisma.friends.findMany({
+                    where: args
+                })
+            }
+        })
+    }
+})
