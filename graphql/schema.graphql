@@ -2,10 +2,19 @@
 ### Do not make changes to this file directly
 
 
+"""DateTime custom scalar type."""
+scalar DateTime
+
+type Friend {
+  friendID: String
+  friendedAt: [DateTime]
+  id: Int
+}
+
 type Mutation {
   createUser(birthday: String!, course: String!, firstName: String!, lastName: String!, university: String!): User!
   deleteUser(id: String!): User!
-  updateUser(birthday: String, course: String, firstName: String, id: String!, lastName: String, university: String): User!
+  updateUser(birthday: String, course: String, firstName: String, id: String!, lastName: String, university: String, username: String): User!
 }
 
 type Query {
@@ -17,7 +26,17 @@ type User {
   birthday: String
   course: String
   firstName: String
+  friendRequests: [friendRequest]
+  friends: [Friend]
   id: String
   lastName: String
   university: String
+  username: String
+}
+
+type friendRequest {
+  createdAt: [DateTime]
+  friendID: String
+  id: Int
+  status: Boolean
 }

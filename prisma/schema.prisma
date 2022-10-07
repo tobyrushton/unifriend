@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider             = "prisma-client-js"
   referentialIntegrity = "prisma"
 }
 
@@ -12,27 +12,31 @@ datasource db {
 }
 
 model Users {
-  id String @id @default(uuid())
-  firstName String
-  lastName String
-  birthday String
-  university String
-  course String
-  bio String
-  username String @unique
-  friends Friends[]
+  id             String           @id @default(uuid())
+  firstName      String
+  lastName       String
+  birthday       String
+  university     String
+  course         String
+  bio            String
+  username       String           @unique
+  friends        Friends[]
   friendRequests FriendRequests[]
 }
 
 model Friends {
-  id Int @id@unique@default(autoincrement())
+  id         Int      @id @unique @default(autoincrement())
   friendedAt DateTime @default(now())
-  friendID String @unique
+  friendID   String   @unique
+  Users      Users?   @relation(fields: [usersId], references: [id])
+  usersId    String?
 }
 
 model FriendRequests {
-  id Int @id@unique@default(autoincrement())
+  id        Int      @id @unique @default(autoincrement())
   createdAt DateTime @default(now())
-  friendID String @unique
-  status Boolean @default(false)
+  friendID  String   @unique
+  status    Boolean  @default(false)
+  Users     Users?   @relation(fields: [usersId], references: [id])
+  usersId   String?
 }
