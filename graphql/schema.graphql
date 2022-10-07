@@ -12,19 +12,33 @@ type Friend {
   usersId: String
 }
 
+type Message {
+  id: Int
+  message: String
+  recipientID: String
+  seen: Boolean
+  senderID: String
+  sentAt: [DateTime]
+}
+
 type Mutation {
   createFriend(friendID: String!, usersId: String!): Friend!
   createFriendRequest(friendID: String!, usersId: String!): friendRequest!
+  createMessage(message: String!, recipientID: String!, senderID: String!): Message!
   createUser(birthday: String!, course: String!, firstName: String!, lastName: String!, university: String!, username: String!): User!
   deleteFriend(friendID: String!): Friend!
   deleteFriendRequest(friendID: String!): friendRequest!
+  deleteMessage(id: Int!): Message!
   deleteUser(id: String!): User!
+  markMessageAsRead(id: Int!): Message!
   updateUser(bio: String, birthday: String, course: String, firstName: String, id: String!, lastName: String, university: String, username: String): User!
 }
 
 type Query {
   getFriendRequests(usersId: String!): friendRequest!
   getFriends(usersId: String!): Friend!
+  getMessageBySenderID(id: String!): Message!
+  getMessagesByRecipientID(id: String!): Message!
   user: [User]!
   users(bioSelected: Boolean, birthdaySelected: Boolean, courseSelected: Boolean, firstNameSelected: Boolean, id: String!, lastNameSelected: Boolean, universitySelected: Boolean, usernameSelected: Boolean): User
 }
