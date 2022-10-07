@@ -1,5 +1,4 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
-import { resolve } from 'path'
 import { DateTime } from '../scalars/DateTime'
 
 export const Friend = objectType({
@@ -22,8 +21,7 @@ export const FriendRequest = objectType({
         t.string('friendID'),
         t.list.field('createdAt', {
             type: DateTime
-        }),
-        t.boolean('status')
+        })
     }
 })
 
@@ -61,4 +59,40 @@ export const createFriend = extendType({
             }
         })
     },
+})
+
+export const DeleteFriend = extendType({
+    type: 'Mutation',
+    definition(t) {
+        t.nonNull.field('deleteFriend', {
+            type: 'Friend',
+            args: {
+                friendID: nonNull(stringArg())
+            },
+            resolve: (_parent, args, ctx) => {
+                return ctx.prisma.friends.delete({
+                    where: args
+                })
+            }
+        })
+    },
+})
+
+export const DeleteFriendRequest = extendType({
+    type: 'Mutation',
+    definition(t){
+        t.nonNull.field('deleteFriendRequest', {
+            type: 'friendRequest',
+            args: {
+                friendID: nonNull(stringArg())
+            },
+            resolve: (_parent, args, ctx) => {
+                return ctx.prisma.friendRequests.delete({
+                    where: {
+                        friendID: args.friendID
+                    }
+                })
+            }
+        })
+    }
 })
