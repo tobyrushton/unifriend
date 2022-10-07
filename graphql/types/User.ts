@@ -30,13 +30,13 @@ export const UserQueryByID = extendType({
       type: 'User',
       args: {
         id: nonNull(stringArg()),
-        firstNameSelected: booleanArg(),
-        lastNameSelected: booleanArg(),
-        universitySelected: booleanArg(),
-        courseSelected: booleanArg(),
-        birthdaySelected: booleanArg(),
-        bioSelected: booleanArg(),
-        usernameSelected: booleanArg()
+        firstName: booleanArg(),
+        lastName: booleanArg(),
+        university: booleanArg(),
+        course: booleanArg(),
+        birthday: booleanArg(),
+        bio: booleanArg(),
+        username: booleanArg()
       },
       resolve(_parent, args, ctx) {
         return ctx.prisma.users.findUnique({
@@ -44,13 +44,13 @@ export const UserQueryByID = extendType({
             id: args.id
           },
           select:{
-            firstName: args.firstNameSelected ?? false,
-            lastName: args.lastNameSelected ?? false,
-            university: args.universitySelected ?? false,
-            birthday: args.birthdaySelected ?? false,
-            course: args.courseSelected ?? false,
-            bio: args.bioSelected ?? false,
-            username: args.usernameSelected ?? false,
+            firstName: args.firstName ?? false,
+            lastName: args.lastName ?? false,
+            university: args.university ?? false,
+            birthday: args.birthday ?? false,
+            course: args.course ?? false,
+            bio: args.bio ?? false,
+            username: args.username ?? false,
           }
         })
       }

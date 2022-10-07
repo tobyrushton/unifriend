@@ -40,9 +40,9 @@ export const useCreateUser = (user:UserObject):graphQLHookReturn => {
             }
         })
     
-        useEffect(()=> {
-                createUser({ variables: user })
-        }, [])
+    useEffect(()=> {
+            createUser({ variables: user })
+    }, [])
 
     return {
         success,

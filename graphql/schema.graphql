@@ -40,7 +40,7 @@ type Query {
   getMessageBySenderID(id: String!): Message!
   getMessagesByRecipientID(id: String!): Message!
   user: [User]!
-  users(bioSelected: Boolean, birthdaySelected: Boolean, courseSelected: Boolean, firstNameSelected: Boolean, id: String!, lastNameSelected: Boolean, universitySelected: Boolean, usernameSelected: Boolean): User
+  users(bio: Boolean, birthday: Boolean, course: Boolean, firstName: Boolean, id: String!, lastName: Boolean, university: Boolean, username: Boolean): User
 }
 
 type User {

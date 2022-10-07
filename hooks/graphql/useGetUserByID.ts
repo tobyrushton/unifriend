@@ -1,39 +1,44 @@
-import { graphQLHookReturn, UserObjectWithID, SelectUserByIDParameters } from '../../types'
+import { graphQLHookReturnQuery, UserObjectWithID, SelectUserByIDParameters } from '../../types'
 import { gql, useQuery } from '@apollo/client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 const UserByIDQuery = gql`
-    query Users($usersId: String!, $firstNameSelected: Boolean, $lastNameSelected: Boolean, $universitySelected: Boolean, $courseSelected: Boolean, $birthdaySelected: Boolean) {
-        users(id: $usersId, firstNameSelected: $firstNameSelected, lastNameSelected: $lastNameSelected, universitySelected: $universitySelected, courseSelected: $courseSelected, birthdaySelected: $birthdaySelected) {
+    query Query($id: String!, $firstName: Boolean, $lastName: Boolean, $university: Boolean, $course: Boolean, $birthday: Boolean, $bio: Boolean, $username: Boolean) {
+        users(id: $id, firstName: $firstName, lastName: $lastName, university: $university, course: $course, birthday: $birthday, bio: $bio, username: $username) {
             id
             firstName
             lastName
             university
             course
             birthday
+            username
+            bio
         }
     }
 `
 
-export const useGetUserByID = (options: SelectUserByIDParameters): graphQLHookReturn => {
+export const useGetUserByID = (options: SelectUserByIDParameters): graphQLHookReturnQuery => {
     const [ error, setError ] = useState<Error>()
     const [ success, setSuccess ] = useState<boolean>(false) //defaults to false, for a false success to be viewed loading must also equal false.
 
-    const {loading, data, error: queryError} = useQuery<UserObjectWithID, SelectUserByIDParameters>(UserByIDQuery, {variables: options})
+    console.log(options)
 
-    useEffect(()=> {
-        if(data)
-            setSuccess(true)
-    }, [data])
-
-    useEffect(()=> {
-        if(queryError)
-            setError(queryError)
-    }, [queryError])
-
+    const {data, loading} = useQuery<UserObjectWithID, SelectUserByIDParameters>(UserByIDQuery, 
+        { 
+            onError: (error) =>{
+                setError(error)
+                setSuccess(false)
+            },
+            onCompleted: () => {
+                setSuccess(true)
+            },
+            variables: options
+        })
+    
     return {
         loading,
         error,
-        success
+        success,
+        data: data as UserObjectWithID
     }
 }

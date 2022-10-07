@@ -1,5 +1,5 @@
 import { graphQLHookReturn, UserObjectWithID } from '../../types'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { gql, useMutation } from '@apollo/client'
 
 const DeleteUserMutation = gql`
@@ -15,20 +15,23 @@ export const useDeleteUser = (userID:string):graphQLHookReturn => {
     const [ error, setError ] = useState<Error>()
     const [ success, setSuccess ] = useState<boolean>(false) //defaults to false, for a false success to be viewed loading must also equal false.
 
-    const [deleteUser, { loading: mutationLoading, error: mutationError }] = useMutation<UserObjectWithID, {userID: string}>(DeleteUserMutation)
-    setLoading(mutationLoading)
 
-    try{
-        deleteUser({ variables: {userID: userID} })
-        setSuccess(true)
-        setLoading(false)
-    }catch(e){
-        setError(e as Error)
-        setLoading(false)
-        setSuccess(false)
-    }
-
-
+    const [deleteUser] = useMutation<UserObjectWithID, {userID: string}>(DeleteUserMutation, 
+        { 
+            onError: (error) =>{
+                setError(error)
+                setSuccess(false)
+                setLoading(false)
+            },
+            onCompleted: () => {
+                setSuccess(true)
+                setLoading(false)
+            }
+        })
+    
+    useEffect(()=> {
+            deleteUser({ variables: {userID: userID} })
+    }, [])
 
     return {
         loading,
