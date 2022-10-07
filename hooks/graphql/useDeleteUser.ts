@@ -10,7 +10,7 @@ const DeleteUserMutation = gql`
     }
 `
 
-const useDeleteUser = (userID:string):graphQLHookReturn => {
+export const useDeleteUser = (userID:string):graphQLHookReturn => {
     const [ loading, setLoading ] = useState<boolean>(true)
     const [ error, setError ] = useState<Error>()
     const [ success, setSuccess ] = useState<boolean>(false) //defaults to false, for a false success to be viewed loading must also equal false.
@@ -36,5 +36,3 @@ const useDeleteUser = (userID:string):graphQLHookReturn => {
         success
     }
 }
-
-export default useDeleteUser

@@ -15,7 +15,7 @@ const UserByIDQuery = gql`
     }
 `
 
-const useGetUserByID = (options: SelectUserByIDParameters): graphQLHookReturn => {
+export const useGetUserByID = (options: SelectUserByIDParameters): graphQLHookReturn => {
     const [ error, setError ] = useState<Error>()
     const [ success, setSuccess ] = useState<boolean>(false) //defaults to false, for a false success to be viewed loading must also equal false.
 
@@ -37,5 +37,3 @@ const useGetUserByID = (options: SelectUserByIDParameters): graphQLHookReturn =>
         success
     }
 }
-
-export default useGetUserByID

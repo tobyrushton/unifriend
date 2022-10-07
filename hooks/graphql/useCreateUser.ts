@@ -14,7 +14,7 @@ const CreateUserMutation = gql`
     }
 `
 
-const useCreateUser = (user:UserObject):graphQLHookReturn => {
+export const useCreateUser = (user:UserObject):graphQLHookReturn => {
     const [ loading, setLoading ] = useState<boolean>(true)
     const [ error, setError ] = useState<Error>()
     const [ success, setSuccess ] = useState<boolean>(false) //defaults to false, for a false success to be viewed loading must also equal false.
@@ -45,5 +45,3 @@ const useCreateUser = (user:UserObject):graphQLHookReturn => {
         error
     } 
 }
-
-export default useCreateUser
