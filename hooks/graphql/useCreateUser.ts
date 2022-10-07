@@ -1,15 +1,17 @@
 import { UserObject, UserObjectWithID, graphQLHookReturn } from '../../types/index'
 import { gql, useMutation } from '@apollo/client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const CreateUserMutation = gql`
-    mutation($firstName: String!, $lastName: String!, $birthday: String!, $university: String!, $course: String!) {
-        createUser(firstName: $firstName, lastName: $lastName, birthday: $birthday, university: $university, course: $course) {
+    mutation Mutation($firstName: String!, $lastName: String!, $birthday: String!, $university: String!, $course: String!, $username: String!) {
+        createUser(firstName: $firstName, lastName: $lastName, birthday: $birthday, university: $university, course: $course, username: $username) {
             firstName
             lastName
-            course
             university
+            course
             birthday
+            username
+            bio
         }
     }
 `
@@ -24,24 +26,27 @@ export const useCreateUser = (user:UserObject):graphQLHookReturn => {
             error: new Error('birthday invalid format'),
             loading: false
         } as graphQLHookReturn
+
+    const [createUser] = useMutation<UserObjectWithID, UserObject>(CreateUserMutation, 
+        { 
+            onError: (error) =>{
+                setError(error)
+                setSuccess(false)
+                setLoading(false)
+            },
+            onCompleted: () => {
+                setSuccess(true)
+                setLoading(false)
+            }
+        })
     
-    const [createUser, { loading: mutationLoading, error: mutationError }] = useMutation<UserObjectWithID, UserObject>(CreateUserMutation)
-    setLoading(mutationLoading)
-    
-    try{
-        createUser({ variables: user })
-        setSuccess(true)
-        setLoading(false)
-    }
-    catch(err){
-        setError(err as Error)
-        setLoading(false)
-        setSuccess(false)
-    }
+        useEffect(()=> {
+                createUser({ variables: user })
+        }, [])
 
     return {
         success,
         loading,
         error
-    } 
+    } as const
 }
