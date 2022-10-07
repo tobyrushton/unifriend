@@ -1,5 +1,5 @@
-import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
-import { UserObject, UserObjectWithID } from '../../types/index'
+import { objectType, extendType, nonNull, stringArg, booleanArg, arg } from 'nexus'
+import { UserObject, UserObjectWithID, UserUpdateObject } from '../../types/index'
 import { Friend, FriendRequeset } from './Friends'
 
 export const User = objectType({
@@ -100,6 +100,15 @@ export const CreateUserMutation = extendType({
   },
 })
 
+// export const User = objectType({
+//   name: 'User',
+//   definition(t) {
+//   	t.string('imageUrl', {
+//      resolve: (src) => { return `https://cdn.path/${src.firstName}` }
+//     })
+//   }
+// })
+
 
 //updates properties on user
 export const UpdateUserMutation = extendType({
@@ -114,17 +123,12 @@ export const UpdateUserMutation = extendType({
         birthday: stringArg(),
         university: stringArg(),
         course: stringArg(),
+        username: stringArg(),
       },
-      async resolve(_parent, args: UserObjectWithID, ctx) {
+    resolve: (_parent, args, ctx) => {     
         return ctx.prisma.users.update({
           where: { id: args.id },
-          data: {
-            firstName: args.firstName,
-            lastName: args.lastName,
-            course: args.course,
-            university: args.university,
-            birthday: args.birthday
-          }
+          data: args
         })
       },
     })
