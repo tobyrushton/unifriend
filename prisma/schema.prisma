@@ -36,7 +36,6 @@ model FriendRequests {
   id        Int      @id @unique @default(autoincrement())
   createdAt DateTime @default(now())
   friendID  String   @unique
-  status    Boolean  @default(false)
   Users     Users?   @relation(fields: [usersId], references: [id])
   usersId   String?
 }

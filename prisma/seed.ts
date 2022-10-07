@@ -11,7 +11,9 @@ async function main() {
         lastName:'Rushton',
         university:'Oxford University',
         course: 'Computer Science',
-        age: 17
+        username: 'tobyrushton',
+        birthday: '12062005',
+        bio:''
     },
   })
   await prisma.users.create({
@@ -20,7 +22,9 @@ async function main() {
         lastName:'Rushton',
         university:'Sheffield University',
         course: 'Financial Mathematics',
-        age: 19
+        username: 'oliviarushton',
+        birthday: '27072002',
+        bio:''
     },
   })
 }
