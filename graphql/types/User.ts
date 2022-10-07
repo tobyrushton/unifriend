@@ -1,5 +1,4 @@
 import { objectType, extendType, nonNull, stringArg, booleanArg, arg } from 'nexus'
-import { UserObject, UserObjectWithID, UserUpdateObject } from '../../types/index'
 import { Friend, FriendRequeset } from './Friends'
 
 export const User = objectType({
@@ -18,6 +17,7 @@ export const User = objectType({
     t.list.field('friendRequests', {
       type: FriendRequeset
     })
+    t.string('bio')
   },
 })
 
@@ -78,10 +78,11 @@ export const CreateUserMutation = extendType({
         birthday: nonNull(stringArg()),
         university: nonNull(stringArg()),
         course: nonNull(stringArg()),
+        username : nonNull(stringArg())
       },
-      async resolve(_parent, args: UserObject, ctx) {
+      async resolve(_parent, args, ctx) {
 
-        if(!args.firstName || !args.lastName || !args.birthday || !args.university || !args.course)
+        if(!args.firstName || !args.lastName || !args.birthday || !args.university || !args.course || !args.username)
           throw new Error('Missing arguements on object user')
         
         const newUser = {
@@ -90,6 +91,8 @@ export const CreateUserMutation = extendType({
           university: args.university,
           course: args.course,
           birthday: args.birthday,
+          username: args.username,
+          bio: ''
         }
 
         return await ctx.prisma.users.create({
