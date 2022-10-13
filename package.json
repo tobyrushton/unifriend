@@ -14,6 +14,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@prisma/client": "^4.3.1",
+    "@supabase/supabase-js": "^2.0.0-rc.12",
     "apollo-server-micro": "^3.10.2",
     "graphql": "^16.6.0",
     "micro": "^9.4.1",

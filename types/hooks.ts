@@ -1,4 +1,5 @@
 import { UserObjectWithID } from "./User"
+import { AuthError, Session, User } from "@supabase/supabase-js"
 
 export interface graphQLHookReturn{
     success: boolean,
@@ -30,4 +31,19 @@ export interface SelectUserByIDParameters {
     lastName?: boolean
     bio?: boolean
     username?: boolean
+}
+
+export interface AuthenticationHookReturn {
+    loading: boolean,
+    error: AuthError | null
+}
+
+export interface AuthenticationHookReturnWithData extends AuthenticationHookReturn {
+    data: {
+        user: User | null
+        session: Session | null
+    } | {
+        user: null
+        session: null
+    }, 
 }
