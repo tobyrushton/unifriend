@@ -5,29 +5,32 @@ import { UserObject } from '../types'
 import { useCreateUser } from '../hooks/index'
 
 const Home: React.FC = () => {
-    const createUserInformation: UserObject = useMemo(() => ({
-        firstName: 'Olivia',
-        lastName: 'Rushton',
-        university: 'Sheffield University',
-        course: 'Financial Mathematics',
-        birthday: '27102002',
-        username: 'oliviarushton4',
-        bio:''
-    }),[])
+    const createUserInformation: UserObject = useMemo(
+        () => ({
+            firstName: 'Olivia',
+            lastName: 'Rushton',
+            university: 'Sheffield University',
+            course: 'Financial Mathematics',
+            birthday: '27102002',
+            username: 'oliviarushton4',
+            bio: '',
+        }),
+        []
+    )
 
     const { loading, error, success } = useCreateUser(createUserInformation)
-    
-    useEffect(()=> {
+
+    useEffect(() => {
         console.log('loading: ', loading)
-    },[loading])
-    useEffect(()=> {
-        console.log('error: ',error)
-    },[error])
-    useEffect(()=> {
-        console.log('success: ',success)
-    },[success])
-    
-    return(
+    }, [loading])
+    useEffect(() => {
+        console.log('error: ', error)
+    }, [error])
+    useEffect(() => {
+        console.log('success: ', success)
+    }, [success])
+
+    return (
         <div className={styles.container}>
             <Head>
                 <title>UniFriend</title>
@@ -35,9 +38,9 @@ const Home: React.FC = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <div>
-            </div>
+            <div />
         </div>
-)}
+    )
+}
 
 export default Home
