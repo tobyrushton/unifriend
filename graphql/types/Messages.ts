@@ -9,7 +9,7 @@ export const Message = objectType({
         t.string('recipientID')
         t.boolean('seen')
         t.list.field('sentAt', {
-            type: DateTime
+            type: DateTime,
         })
         t.string('message')
     },
@@ -23,14 +23,14 @@ export const CreateMessage = extendType({
             args: {
                 message: nonNull(stringArg()),
                 senderID: nonNull(stringArg()),
-                recipientID: nonNull(stringArg())
+                recipientID: nonNull(stringArg()),
             },
-            /*@ts-ignore*/
+            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.create({
-                    data: args
+                    data: args,
                 })
-            }
+            },
         })
     },
 })
@@ -41,37 +41,37 @@ export const MarkMessageAsRead = extendType({
         t.nonNull.field('markMessageAsRead', {
             type: Message,
             args: {
-                id: nonNull(intArg())
+                id: nonNull(intArg()),
             },
-            /*@ts-ignore*/
+            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.update({
                     where: { id: args.id },
                     data: {
-                        seen: true
-                    }
+                        seen: true,
+                    },
                 })
-            }
+            },
         })
     },
 })
 
 export const DeleteMessage = extendType({
     type: 'Mutation',
-    definition(t){
+    definition(t) {
         t.nonNull.field('deleteMessage', {
             type: Message,
             args: {
-                id: nonNull(intArg())
+                id: nonNull(intArg()),
             },
-            /*@ts-ignore*/
+            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.delete({
-                    where: { id: args.id }
+                    where: { id: args.id },
                 })
-            }
+            },
         })
-    }
+    },
 })
 
 export const GetMessageBySenderID = extendType({
@@ -80,16 +80,16 @@ export const GetMessageBySenderID = extendType({
         t.nonNull.field('getMessageBySenderID', {
             type: Message,
             args: {
-                id: nonNull(stringArg())
+                id: nonNull(stringArg()),
             },
-            /*@ts-ignore*/
+            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.findMany({
                     where: {
-                        senderID: args.id
-                    }
+                        senderID: args.id,
+                    },
                 })
-            }
+            },
         })
     },
 })
@@ -100,16 +100,16 @@ export const GetMessagesByRecipientID = extendType({
         t.nonNull.field('getMessagesByRecipientID', {
             type: Message,
             args: {
-                id: nonNull(stringArg())
+                id: nonNull(stringArg()),
             },
-            /*@ts-ignore*/
+            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.findMany({
                     where: {
-                        recipientID: args.id
-                    }
+                        recipientID: args.id,
+                    },
                 })
-            }
+            },
         })
     },
 })

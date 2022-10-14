@@ -1,10 +1,28 @@
-import { UserObject, UserObjectWithID, graphQLHookReturn } from '../../types/index'
 import { gql, useMutation } from '@apollo/client'
 import { useState, useEffect } from 'react'
+import {
+    UserObject,
+    UserObjectWithID,
+    graphQLHookReturn,
+} from '../../types/index'
 
 const CreateUserMutation = gql`
-    mutation Mutation($firstName: String!, $lastName: String!, $birthday: String!, $university: String!, $course: String!, $username: String!) {
-        createUser(firstName: $firstName, lastName: $lastName, birthday: $birthday, university: $university, course: $course, username: $username) {
+    mutation Mutation(
+        $firstName: String!
+        $lastName: String!
+        $birthday: String!
+        $university: String!
+        $course: String!
+        $username: String!
+    ) {
+        createUser(
+            firstName: $firstName
+            lastName: $lastName
+            birthday: $birthday
+            university: $university
+            course: $course
+            username: $username
+        ) {
             firstName
             lastName
             university
@@ -16,37 +34,33 @@ const CreateUserMutation = gql`
     }
 `
 
-export const useCreateUser = (user:UserObject):graphQLHookReturn => {
-    const [ loading, setLoading ] = useState<boolean>(true)
-    const [ error, setError ] = useState<Error>()
-    const [ success, setSuccess ] = useState<boolean>(false) //defaults to false, for a false success to be viewed loading must also equal false.
-    if(user.birthday.length !== 8)
-        return {
-            success: false,
-            error: new Error('birthday invalid format'),
-            loading: false
-        } as graphQLHookReturn
+export const useCreateUser = (user: UserObject): graphQLHookReturn => {
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<Error>()
+    const [success, setSuccess] = useState<boolean>(false)
 
-    const [createUser] = useMutation<UserObjectWithID, UserObject>(CreateUserMutation, 
-        { 
-            onError: (error) =>{
-                setError(error)
+    const [createUser] = useMutation<UserObjectWithID, UserObject>(
+        CreateUserMutation,
+        {
+            onError: err => {
+                setError(err)
                 setSuccess(false)
                 setLoading(false)
             },
             onCompleted: () => {
                 setSuccess(true)
                 setLoading(false)
-            }
-        })
-    
-    useEffect(()=> {
-            createUser({ variables: user })
+            },
+        }
+    )
+
+    useEffect(() => {
+        createUser({ variables: user })
     }, [])
 
     return {
         success,
         loading,
-        error
+        error,
     } as const
 }
