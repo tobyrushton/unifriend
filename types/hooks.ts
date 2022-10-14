@@ -40,11 +40,14 @@ export interface AuthenticationHookReturn {
 
 export interface AuthenticationHookReturnWithData
     extends AuthenticationHookReturn {
-    data:
-        | {
-              user: User | null
-              session: Session | null
-          }
+    data: data
+}
+
+export interface data {
+    user: User | null
+    session:
+        | Session
+        | null
         | {
               user: null
               session: null

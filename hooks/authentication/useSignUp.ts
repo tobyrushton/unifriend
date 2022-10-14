@@ -1,14 +1,29 @@
-import { useState } from 'react'
+import { AuthError } from '@supabase/supabase-js'
+import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-import { AuthenticationHookReturnWithData } from '../../types'
+import { AuthenticationHookReturnWithData, data } from '../../types'
 
-export const useSignUp = async (
+export const useSignUp = (
     password: string,
     email: string
-): Promise<AuthenticationHookReturnWithData> => {
+): AuthenticationHookReturnWithData => {
     const [loading, setLoading] = useState<boolean>(true)
-    const { data, error } = await supabase.auth.signUp({ password, email })
-    setLoading(false)
+    const [data, setData] = useState<data>({ user: null, session: null })
+    const [error, setError] = useState<AuthError | null>(null)
+
+    useEffect(() => {
+        const response = async () => {
+            const { data, error } = await supabase.auth.signUp({
+                password,
+                email,
+            })
+            setError(error)
+            setData(data)
+            setLoading(false)
+        }
+
+        response()
+    }, [])
 
     return {
         loading,
