@@ -206,3 +206,24 @@ export const ConnectUserToAuth = extendType({
         })
     },
 })
+
+export const GetAuthFromUsername = extendType({
+    type: 'Query',
+    definition(t) {
+        t.nonNull.field('getAuthFromUsername', {
+            type: 'User',
+            args: {
+                username: nonNull(stringArg())
+            },
+            resolve: (_, args, ctx) => {
+                return ctx.prisma.auth.findUnique({
+                    where: {
+                        User: {
+                            username: args.username
+                        }
+                    }
+                })
+            }
+        })
+    },
+})
