@@ -163,19 +163,19 @@ export const DeleteUserMutation = extendType({
 })
 
 export const GetUserFromAuth = extendType({
-    type:'Query',
+    type: 'Query',
     definition(t) {
         t.nonNull.field('getUserFromAuth', {
             type: 'User',
             args: {
-                email: nonNull(stringArg())
+                email: nonNull(stringArg()),
             },
-            resolve: (_, args, ctx ) => {
+            resolve: (_, args, ctx) => {
                 return ctx.prisma.auth.findUnique({
-                    where: {email: args.email},
-                    include: { User: true }
+                    where: { email: args.email },
+                    include: { User: true },
                 })
-            }
+            },
         })
     },
 })
@@ -187,22 +187,22 @@ export const ConnectUserToAuth = extendType({
             type: 'User',
             args: {
                 authID: nonNull(stringArg()),
-                userID: nonNull(stringArg())
+                userID: nonNull(stringArg()),
             },
             resolve: (_, args, ctx) => {
                 return ctx.prisma.auth.update({
                     where: {
-                        id: args.authID
+                        id: args.authID,
                     },
                     data: {
                         User: {
                             connect: {
-                                id: args.userID
-                            }
-                        }
-                    }
+                                id: args.userID,
+                            },
+                        },
+                    },
                 })
-            }
+            },
         })
     },
 })

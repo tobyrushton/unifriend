@@ -34,7 +34,6 @@ export const CreateFriendRequest = extendType({
                 friendID: nonNull(stringArg()),
                 usersId: nonNull(stringArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.create({
                     data: args,
@@ -53,7 +52,6 @@ export const createFriend = extendType({
                 usersId: nonNull(stringArg()),
                 friendID: nonNull(stringArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.create({
                     data: args,
@@ -71,7 +69,6 @@ export const DeleteFriend = extendType({
             args: {
                 friendID: nonNull(stringArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.delete({
                     where: args,
@@ -89,7 +86,6 @@ export const DeleteFriendRequest = extendType({
             args: {
                 friendID: nonNull(stringArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.delete({
                     where: {
@@ -109,7 +105,6 @@ export const getFriendRequests = extendType({
             args: {
                 usersId: nonNull(stringArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.findMany({
                     where: args,
@@ -127,7 +122,6 @@ export const getFriends = extendType({
             args: {
                 usersId: nonNull(stringArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.findMany({
                     where: args,

@@ -25,7 +25,6 @@ export const CreateMessage = extendType({
                 senderID: nonNull(stringArg()),
                 recipientID: nonNull(stringArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.create({
                     data: args,
@@ -43,7 +42,6 @@ export const MarkMessageAsRead = extendType({
             args: {
                 id: nonNull(intArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.update({
                     where: { id: args.id },
@@ -64,7 +62,6 @@ export const DeleteMessage = extendType({
             args: {
                 id: nonNull(intArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.delete({
                     where: { id: args.id },
@@ -82,7 +79,6 @@ export const GetMessageBySenderID = extendType({
             args: {
                 id: nonNull(stringArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.findMany({
                     where: {
@@ -102,7 +98,6 @@ export const GetMessagesByRecipientID = extendType({
             args: {
                 id: nonNull(stringArg()),
             },
-            /* @ts-ignore */
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.findMany({
                     where: {
