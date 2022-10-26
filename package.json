@@ -12,7 +12,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.0",
+    "@apollo/client": "^3.7.1",
     "@prisma/client": "^4.5.0",
     "@supabase/supabase-js": "^2.0.4",
     "apollo-server-micro": "^3.10.3",
