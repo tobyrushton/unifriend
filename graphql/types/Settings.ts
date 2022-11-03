@@ -9,4 +9,3 @@ export const Settings = objectType({
         t.string('usersId')
     },
 })
-

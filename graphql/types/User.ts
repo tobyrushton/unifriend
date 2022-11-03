@@ -22,13 +22,13 @@ export const User = objectType({
         })
         t.string('bio')
         t.list.field('sentMessages', {
-            type: Message
+            type: Message,
         })
         t.list.field('recievedMessages', {
-            type: Message
+            type: Message,
         })
         t.field('settings', {
-            type: Settings
+            type: Settings,
         })
     },
 })
@@ -224,17 +224,17 @@ export const GetAuthFromUsername = extendType({
         t.nonNull.field('getAuthFromUsername', {
             type: 'User',
             args: {
-                username: nonNull(stringArg())
+                username: nonNull(stringArg()),
             },
             resolve: (_, args, ctx) => {
                 return ctx.prisma.auth.findUnique({
                     where: {
                         User: {
-                            username: args.username
-                        }
-                    }
+                            username: args.username,
+                        },
+                    },
                 })
-            }
+            },
         })
     },
 })

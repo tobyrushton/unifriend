@@ -53,3 +53,8 @@ export interface data {
               session: null
           }
 }
+
+export interface authStatusReturnType {
+    session: Session | null
+    loading: boolean
+}
