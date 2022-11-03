@@ -22,6 +22,7 @@ type Message {
 }
 
 type Mutation {
+  connectUserToAuth(authID: String!, userID: String!): User!
   createFriend(friendID: String!, usersId: String!): Friend!
   createFriendRequest(friendID: String!, usersId: String!): friendRequest!
   createMessage(message: String!, recipientID: String!, senderID: String!): Message!
@@ -35,12 +36,24 @@ type Mutation {
 }
 
 type Query {
+  getAuthFromUsername(username: String!): User!
   getFriendRequests(usersId: String!): friendRequest!
   getFriends(usersId: String!): Friend!
-  getMessageBySenderID(id: String!): Message!
-  getMessagesByRecipientID(id: String!): Message!
+  getUserFromAuth(email: String!): User!
   user: [User]!
   users(bio: Boolean, birthday: Boolean, course: Boolean, firstName: Boolean, id: String!, lastName: Boolean, university: Boolean, username: Boolean): User
+}
+
+type Settings {
+  darkMode: Boolean
+  id: Int
+  universityPreference: String
+  usersId: String
+}
+
+type Subscription {
+  getMessageBySenderID(id: String!): Message!
+  getMessagesByRecipientID(id: String!): Message!
 }
 
 type User {
@@ -52,6 +65,9 @@ type User {
   friends: [Friend]
   id: String
   lastName: String
+  recievedMessages: [Message]
+  sentMessages: [Message]
+  settings: Settings
   university: String
   username: String
 }

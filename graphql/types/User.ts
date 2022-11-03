@@ -1,6 +1,8 @@
 import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
 import { UserUpdateObject } from '../../types'
 import { Friend, FriendRequest } from './Friends'
+import { Settings } from './Settings'
+import { Message } from './Messages'
 
 export const User = objectType({
     name: 'User',
@@ -19,6 +21,15 @@ export const User = objectType({
             type: FriendRequest,
         })
         t.string('bio')
+        t.list.field('sentMessages', {
+            type: Message
+        })
+        t.list.field('recievedMessages', {
+            type: Message
+        })
+        t.field('settings', {
+            type: Settings
+        })
     },
 })
 

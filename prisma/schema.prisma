@@ -23,6 +23,7 @@ model Users {
   friends                                       Friends[]
   sentMessages                                  Messages[]       @relation("sentMessages")
   recievedMessages                              Messages[]       @relation("recievedMessages")
+  settings                                      Settings?        @relation("settings")
 }
 
 model Friends {
@@ -52,5 +53,13 @@ model Messages {
   recipientID String
   sender      Users?   @relation(name: "sentMessages", fields: [senderID], references: [id])
   recipient   Users?   @relation("recievedMessages", fields: [recipientID], references: [id])
-  message String
+  message     String
+}
+
+model Settings {
+  id                   Int     @id @unique @default(autoincrement())
+  darkMode             Boolean @default(false)
+  universityPreference String  @default(dbgenerated("OWN"))
+  usersId              String  @unique
+  User                 Users   @relation("settings", fields: [usersId], references: [id])
 }

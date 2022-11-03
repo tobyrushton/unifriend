@@ -4,7 +4,7 @@ import {
     UserObject,
     UserObjectWithID,
     graphQLHookReturn,
-} from '../../types/index'
+} from '../../../types/index'
 
 const CreateUserMutation = gql`
     mutation Mutation(

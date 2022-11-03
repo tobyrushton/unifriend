@@ -72,38 +72,45 @@ export const DeleteMessage = extendType({
 })
 
 export const GetMessageBySenderID = extendType({
-    type: 'Query',
+    type: 'Subscription',
     definition(t) {
         t.nonNull.field('getMessageBySenderID', {
             type: Message,
             args: {
                 id: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
-                return ctx.prisma.messages.findMany({
-                    where: {
-                        senderID: args.id,
-                    },
+            subscribe: (_parent, args, ctx) => {
+                return ctx.prisma.$subscribe.messages({
+                    mutation_in: ['CREATED','UPDATED'],
+                    node: {
+                        senderID_contains: args.id
+                    }
                 })
+            },
+            resolve: (payload) => {
+                return payload
             },
         })
     },
 })
 
 export const GetMessagesByRecipientID = extendType({
-    type: 'Query',
+    type: 'Subscription',
     definition(t) {
         t.nonNull.field('getMessagesByRecipientID', {
             type: Message,
             args: {
                 id: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
+            subscribe: (_parent, args, ctx) => {
                 return ctx.prisma.messages.findMany({
                     where: {
-                        recipientID: args.id,
-                    },
+                        recipientID: args.id
+                    }
                 })
+            },
+            resolve: (payload) => {
+                return payload
             },
         })
     },
