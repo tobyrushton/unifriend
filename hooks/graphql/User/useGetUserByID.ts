@@ -4,7 +4,7 @@ import {
     graphQLHookReturnQuery,
     UserObjectWithID,
     SelectUserByIDParameters,
-} from '../../types'
+} from '../../../types'
 
 const UserByIDQuery = gql`
     query Query(

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { gql, useMutation } from '@apollo/client'
-import { graphQLHookReturn, UserObjectWithID } from '../../types'
+import { graphQLHookReturn, UserObjectWithID } from '../../../types'
 
 const DeleteUserMutation = gql`
     mutation Mutation($userID: String!) {

@@ -4,7 +4,7 @@ import {
     graphQLHookReturn,
     UpdateUserParamaters,
     UserObjectWithID,
-} from '../../types'
+} from '../../../types'
 
 const UpdateUserMutation = gql`
     mutation UpdateUser(
