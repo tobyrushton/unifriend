@@ -1,5 +1,0 @@
-- Research database querries (prisma) and build api using graphql inside the nextjs inbuilt api.
-- Plan all data that needs to be stored inside the database
-- Construct API using graphql and prisma
-- Link API to a database (PostgreSQL)
-- Document API build as first iteration for computer science project
