@@ -13,7 +13,7 @@ export interface UserObjectWithID extends UserObject {
 }
 
 export interface UserUpdateObject {
-    birthday?: string 
+    birthday?: string
     firstName?: string
     lastName?: string
     university?: string
@@ -23,5 +23,5 @@ export interface UserUpdateObject {
 }
 
 export interface tempUserObject extends UserUpdateObject {
-    id?:string
+    id?: string
 }

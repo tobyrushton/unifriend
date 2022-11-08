@@ -6,13 +6,14 @@ import { createContext } from '../../graphql/context'
 
 const cors = Cors()
 
+// creates a new apolloServer
 const apolloServer = new ApolloServer({
     schema,
     resolvers,
     context: createContext,
 })
 
-const startServer = apolloServer.start()
+const startServer = apolloServer.start() // starts the server
 
 export default cors(async function handler(req, res) {
     if (req.method === 'OPTIONS') {
@@ -22,7 +23,7 @@ export default cors(async function handler(req, res) {
     await startServer
 
     return apolloServer.createHandler({
-        path: '/api/graphql',
+        path: '/api/graphql', // creates new server with endpoint /api/graphql
     })(req, res)
 })
 
