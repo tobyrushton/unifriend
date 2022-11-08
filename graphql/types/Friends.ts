@@ -60,7 +60,7 @@ export const createFriend = extendType({
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.create({
-                    data: args,
+                    data: args, // creates a new friend
                 })
             },
         })
@@ -80,7 +80,7 @@ export const DeleteFriend = extendType({
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.delete({
-                    where: args,
+                    where: args, // deletes a friend
                 })
             },
         })
@@ -88,7 +88,7 @@ export const DeleteFriend = extendType({
 })
 
 export const DeleteFriendRequest = extendType({
-    type: 'Mutation',
+    type: 'Mutation', // modifies data in the database.
     definition(t) {
         t.nonNull.field('deleteFriendRequest', {
             type: 'friendRequest',
@@ -98,7 +98,7 @@ export const DeleteFriendRequest = extendType({
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.delete({
                     where: {
-                        friendID: args.friendID,
+                        friendID: args.friendID, // deletes a friend
                     },
                 })
             },
@@ -107,16 +107,17 @@ export const DeleteFriendRequest = extendType({
 })
 
 export const getFriendRequests = extendType({
-    type: 'Query',
+    type: 'Query', // gets database from the database
     definition(t) {
         t.nonNull.field('getFriendRequests', {
             type: 'friendRequest',
             args: {
+                // takes the users Id as an arguement
                 usersId: nonNull(stringArg()),
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.findMany({
-                    where: args,
+                    where: args, // returns all rows with the corresponding user ID
                 })
             },
         })
@@ -124,16 +125,17 @@ export const getFriendRequests = extendType({
 })
 
 export const getFriends = extendType({
-    type: 'Query',
+    type: 'Query', // gets database from the database
     definition(t) {
         t.nonNull.field('getFriends', {
             type: 'Friend',
             args: {
+                // takes the users Id as an arguement
                 usersId: nonNull(stringArg()),
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.findMany({
-                    where: args,
+                    where: args, // returns all rows with the corresponding user ID
                 })
             },
         })
