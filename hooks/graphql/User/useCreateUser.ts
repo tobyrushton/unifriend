@@ -24,13 +24,18 @@ const CreateUserMutation = gql`
             course: $course
             username: $username
         ) {
+            bio
+            birthday
+            course
             firstName
             lastName
+            settings {
+                darkMode
+                universityPreference
+                usersId
+            }
             university
-            course
-            birthday
             username
-            bio
         }
     }
 `
