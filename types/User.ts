@@ -13,11 +13,15 @@ export interface UserObjectWithID extends UserObject {
 }
 
 export interface UserUpdateObject {
-    birthday?: string
+    birthday?: string 
     firstName?: string
     lastName?: string
     university?: string
     course?: string
     username?: string
     bio?: string
+}
+
+export interface tempUserObject extends UserUpdateObject {
+    id?:string
 }
