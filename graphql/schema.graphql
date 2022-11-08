@@ -27,7 +27,7 @@ type Mutation {
   createFriendRequest(friendID: String!, usersId: String!): friendRequest!
   createMessage(message: String!, recipientID: String!, senderID: String!): Message!
   createUser(birthday: String!, course: String!, firstName: String!, lastName: String!, university: String!, username: String!): User!
-  deleteFriend(friendID: String!): Friend!
+  deleteFriend(friendID: String!, usersId: String!): Friend!
   deleteFriendRequest(friendID: String!): friendRequest!
   deleteMessage(id: Int!): Message!
   deleteUser(id: String!): User!
