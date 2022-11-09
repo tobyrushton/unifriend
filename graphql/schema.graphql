@@ -26,7 +26,7 @@ type Mutation {
   createFriend(friendID: String!, usersId: String!): Friend!
   createFriendRequest(friendID: String!, usersId: String!): friendRequest!
   createMessage(message: String!, recipientID: String!, senderID: String!): Message!
-  createUser(birthday: String!, course: String!, firstName: String!, lastName: String!, university: String!, username: String!): User!
+  createUser(birthday: String!, course: String!, email: String!, firstName: String!, lastName: String!, university: String!, username: String!): User!
   deleteFriend(friendID: String!, usersId: String!): Friend!
   deleteFriendRequest(friendID: String!, usersId: String!): friendRequest!
   deleteMessage(id: Int!): Message!
@@ -41,7 +41,7 @@ type Query {
   getFriends(usersId: String!): Friend!
   getUserFromAuth(email: String!): User!
   user: [User]!
-  users(bio: Boolean, birthday: Boolean, course: Boolean, firstName: Boolean, id: String!, lastName: Boolean, university: Boolean, username: Boolean): User
+  users(bio: Boolean, birthday: Boolean, course: Boolean, email: Boolean, firstName: Boolean, id: String!, lastName: Boolean, university: Boolean, username: Boolean): User
 }
 
 type Settings {
@@ -60,6 +60,7 @@ type User {
   bio: String
   birthday: String
   course: String
+  email: String
   firstName: String
   friendRequests: [friendRequest]
   friends: [Friend]

@@ -31,6 +31,7 @@ export const User = objectType({
         t.field('settings', {
             type: Settings, // type settings from './Settings.ts'
         })
+        t.string('email')
     },
 })
 
@@ -50,6 +51,7 @@ export const UserQueryByID = extendType({
                 birthday: booleanArg(),
                 bio: booleanArg(),
                 username: booleanArg(),
+                email: booleanArg(),
             },
             resolve(_parent, args, ctx) {
                 return ctx.prisma.users.findUnique({
@@ -66,6 +68,7 @@ export const UserQueryByID = extendType({
                         course: args.course ?? false,
                         bio: args.bio ?? false,
                         username: args.username ?? false,
+                        email: args.email ?? false,
                     },
                 })
             },
@@ -101,6 +104,7 @@ export const CreateUserMutation = extendType({
                 university: nonNull(stringArg()),
                 course: nonNull(stringArg()),
                 username: nonNull(stringArg()),
+                email: nonNull(stringArg()),
             },
             async resolve(_parent, args, ctx) {
                 if (
@@ -109,7 +113,8 @@ export const CreateUserMutation = extendType({
                     !args.birthday ||
                     !args.university ||
                     !args.course ||
-                    !args.username
+                    !args.username ||
+                    !args.email
                 )
                     throw new Error('Missing arguements on object user')
                 // if arguements are missing, an error will be thrown and process exited.
@@ -121,6 +126,7 @@ export const CreateUserMutation = extendType({
                     course: args.course,
                     birthday: args.birthday,
                     username: args.username,
+                    email: args.email,
                     bio: '',
                 }
 
@@ -194,38 +200,9 @@ export const GetUserFromAuth = extendType({
                 email: nonNull(stringArg()),
             },
             resolve: (_, args, ctx) => {
-                return ctx.prisma.auth.findUnique({ //returns the user row that is linked to the email.
-                    where: { email: args.email },
-                    include: { User: true },
-                })
-            },
-        })
-    },
-})
-
-// creates a relationship between the auth table and the user table.
-export const ConnectUserToAuth = extendType({
-    type: 'Mutation',
-    definition(t) {
-        t.nonNull.field('connectUserToAuth', {
-            type: 'User', // uses type user defined earlier.
-            args: {
-                // takes the ID from auth table and ID from user table as arguements
-                authID: nonNull(stringArg()),
-                userID: nonNull(stringArg()),
-            },
-            resolve: (_, args, ctx) => {
-                return ctx.prisma.auth.update({
-                    // connects the 2 tables.
+                return ctx.prisma.users.findUnique({
                     where: {
-                        id: args.authID,
-                    },
-                    data: {
-                        User: {
-                            connect: {
-                                id: args.userID,
-                            },
-                        },
+                        email: args.email,
                     },
                 })
             },
@@ -244,12 +221,14 @@ export const GetAuthFromUsername = extendType({
                 username: nonNull(stringArg()),
             },
             resolve: (_, args, ctx) => {
-                return ctx.prisma.auth.findUnique({
+                return ctx.prisma.users.findUnique({
                     where: {
-                        // returns the unique row with the corresponding username.
-                        User: {
-                            username: args.username,
-                        },
+                        // finds unique row in table users where the username matches
+                        username: args.username,
+                    },
+                    select: {
+                        // returns only the email
+                        email: true,
                     },
                 })
             },

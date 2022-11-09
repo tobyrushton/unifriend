@@ -6,6 +6,7 @@ export interface UserObject {
     course: string
     username: string
     bio: string
+    email: string
 }
 
 export interface UserObjectWithID extends UserObject {
