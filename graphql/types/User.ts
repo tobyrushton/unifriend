@@ -194,12 +194,10 @@ export const GetUserFromAuth = extendType({
                 email: nonNull(stringArg()),
             },
             resolve: (_, args, ctx) => {
-                return ctx.prisma.auth
-
-                // findUnique({ //returns the user row that is linked to the email.
-                //     where: { email: args.email },
-                //     include: { User: true },
-                // })
+                return ctx.prisma.auth.findUnique({ //returns the user row that is linked to the email.
+                    where: { email: args.email },
+                    include: { User: true },
+                })
             },
         })
     },

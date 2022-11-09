@@ -94,11 +94,12 @@ export const DeleteFriendRequest = extendType({
             type: 'friendRequest',
             args: {
                 friendID: nonNull(stringArg()),
+                usersId: nonNull(stringArg())
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.delete({
                     where: {
-                        friendID: args.friendID, // deletes a friend
+                        args, // deletes a friend
                     },
                 })
             },
