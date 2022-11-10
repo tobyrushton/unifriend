@@ -12,20 +12,22 @@ export const useSignUp = (
     const [data, setData] = useState<data>({ user: null, session: null })
     const [error, setError] = useState<AuthError | null>(null)
 
-    // useEffect hook used to ensure that it runs once
-    useEffect(() => {
-        const response = async () => {
-            // signUp method used to create new account
-            const { data, error } = await supabase.auth.signUp({
+    const response = async (): Promise<void> => {
+        // signUp method used to create new account
+        const { data: authData, error: authErorr } = await supabase.auth.signUp(
+            {
                 password,
                 email,
-            })
-            // state changed upon completion
-            setError(error)
-            setData(data)
-            setLoading(false)
-        }
+            }
+        )
+        // state changed upon completion
+        setError(authErorr)
+        setData(authData)
+        setLoading(false)
+    }
 
+    // useEffect hook used to ensure that it runs once
+    useEffect(() => {
         response()
     }, [])
 

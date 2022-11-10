@@ -24,7 +24,7 @@ model Users {
   sentMessages                                  Messages[]       @relation("sentMessages")
   recievedMessages                              Messages[]       @relation("recievedMessages")
   settings                                      Settings?        @relation("settings")
-  email String @unique
+  email                                         String           @unique
 }
 
 model Friends {
