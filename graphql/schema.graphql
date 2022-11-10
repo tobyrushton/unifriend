@@ -22,7 +22,6 @@ type Message {
 }
 
 type Mutation {
-  connectUserToAuth(authID: String!, userID: String!): User!
   createFriend(friendID: String!, usersId: String!): Friend!
   createFriendRequest(friendID: String!, usersId: String!): friendRequest!
   createMessage(message: String!, recipientID: String!, senderID: String!): Message!
