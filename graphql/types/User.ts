@@ -107,18 +107,6 @@ export const CreateUserMutation = extendType({
                 email: nonNull(stringArg()),
             },
             async resolve(_parent, args, ctx) {
-                if (
-                    !args.firstName ||
-                    !args.lastName ||
-                    !args.birthday ||
-                    !args.university ||
-                    !args.course ||
-                    !args.username ||
-                    !args.email
-                )
-                    throw new Error('Missing arguements on object user')
-                // if arguements are missing, an error will be thrown and process exited.
-
                 const newUser = {
                     firstName: args.firstName,
                     lastName: args.lastName,
