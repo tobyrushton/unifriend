@@ -5,6 +5,6 @@ export interface userContextInterface {
     user: UserObjectWithID
 }
 
-export type children = {
+export type ChildrenProps = {
     children: React.ReactNode
 }
