@@ -26,8 +26,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm ci, build dev and test
+      - name: npm ci, build and test
         run: |
           npm ci
-          CI= npm run dev --if-present
+          CI= npm run build --if-present
           npm test
