@@ -26,3 +26,7 @@ export interface UserUpdateObject {
 export interface tempUserObject extends UserUpdateObject {
     id?: string
 }
+
+export type email = {
+    email:string
+}

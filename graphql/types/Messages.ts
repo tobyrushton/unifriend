@@ -1,4 +1,5 @@
 import { extendType, intArg, nonNull, objectType, stringArg } from 'nexus'
+import { MessageId, MessageWithId } from '../../types'
 import { DateTime } from '../scalars/DateTime'
 
 // table messages in the database
@@ -31,7 +32,7 @@ export const CreateMessage = extendType({
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.create({
                     data: args, // creates new row in the database.
-                })
+                }) as unknown as MessageWithId
             },
         })
     },
@@ -53,7 +54,7 @@ export const MarkMessageAsRead = extendType({
                     data: {
                         seen: true, // updates seen attribute to true.
                     },
-                })
+                }) as unknown as MessageWithId
             },
         })
     },
@@ -72,60 +73,62 @@ export const DeleteMessage = extendType({
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.delete({
                     where: { id: args.id }, // deletes row in the database
-                })
+                }) as unknown as MessageId
             },
         })
     },
 })
 
-// gets messages by the id of the sender
-export const GetMessageBySenderID = extendType({
-    type: 'Subscription', // creates a realtime subscription to data in the database.
-    definition(t) {
-        t.nonNull.field('getMessageBySenderID', {
-            type: Message, // users the type Message defined previously.
-            args: {
-                // takes sender id as a parameter
-                id: nonNull(stringArg()),
-            },
-            subscribe: (_parent, args, ctx) => {
-                return ctx.prisma.$subscribe.messages({
-                    // creates a subscription to watch for new or updated messages
-                    mutation_in: ['CREATED', 'UPDATED'],
-                    node: {
-                        senderID_contains: args.id,
-                    },
-                })
-            }, // returns the messages
-            resolve: payload => {
-                return payload
-            },
-        })
-    },
-})
+//functions to be fixed during iteration 3
 
-// gets messages by the id of the recipient
-export const GetMessagesByRecipientID = extendType({
-    type: 'Subscription', // creates a realtime subscription to data in the database.
-    definition(t) {
-        t.nonNull.field('getMessagesByRecipientID', {
-            type: Message, // users the type Message defined previously.
-            args: {
-                // takes recipient id as an arguement
-                id: nonNull(stringArg()),
-            },
-            subscribe: (_parent, args, ctx) => {
-                return ctx.prisma.$subscribe.messages({
-                    // creates a subscription to watch for new or updated messages
-                    mutation_in: ['CREATED', 'UPDATED'],
-                    node: {
-                        recipientID_contains: args.id,
-                    },
-                })
-            }, // returns the messages
-            resolve: payload => {
-                return payload
-            },
-        })
-    },
-})
+// // gets messages by the id of the sender
+// export const GetMessageBySenderID = extendType({
+//     type: 'Subscription', // creates a realtime subscription to data in the database.
+//     definition(t) {
+//         t.nonNull.field('getMessageBySenderID', {
+//             type: Message, // users the type Message defined previously.
+//             args: {
+//                 // takes sender id as a parameter
+//                 id: nonNull(stringArg()),
+//             },
+//             subscribe: (_parent, args, ctx) => {
+//                 return ctx.prisma.$subscribe.messages({
+//                     // creates a subscription to watch for new or updated messages
+//                     mutation_in: ['CREATED', 'UPDATED'],
+//                     node: {
+//                         senderID_contains: args.id,
+//                     },
+//                 })
+//             }, // returns the messages
+//             resolve: payload => {
+//                 return payload
+//             },
+//         })
+//     },
+// })
+
+// // gets messages by the id of the recipient
+// export const GetMessagesByRecipientID = extendType({
+//     type: 'Subscription', // creates a realtime subscription to data in the database.
+//     definition(t) {
+//         t.nonNull.field('getMessagesByRecipientID', {
+//             type: Message, // users the type Message defined previously.
+//             args: {
+//                 // takes recipient id as an arguement
+//                 id: nonNull(stringArg()),
+//             },
+//             subscribe: (_parent, args, ctx) => {
+//                 return ctx.prisma.$subscribe.messages({
+//                     // creates a subscription to watch for new or updated messages
+//                     mutation_in: ['CREATED', 'UPDATED'],
+//                     node: {
+//                         recipientID_contains: args.id,
+//                     },
+//                 })
+//             }, // returns the messages
+//             resolve: payload => {
+//                 return payload
+//             },
+//         })
+//     },
+// })

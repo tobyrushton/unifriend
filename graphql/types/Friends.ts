@@ -1,4 +1,5 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
+import { FriendID, FriendsWithID } from '../../types'
 import { DateTime } from '../scalars/DateTime'
 
 // friend table in database
@@ -41,7 +42,7 @@ export const CreateFriendRequest = extendType({
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.create({
                     data: args, // creates a new friend request.
-                })
+                }) as unknown as FriendsWithID
             },
         })
     },
@@ -61,7 +62,7 @@ export const createFriend = extendType({
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.create({
                     data: args, // creates a new friend
-                })
+                }) as unknown as FriendID
             },
         })
     },
@@ -81,7 +82,7 @@ export const DeleteFriend = extendType({
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.delete({
                     where: args, // deletes a friend
-                })
+                }) as unknown as FriendID
             },
         })
     },
@@ -98,10 +99,8 @@ export const DeleteFriendRequest = extendType({
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.delete({
-                    where: {
-                        args, // deletes a friend
-                    },
-                })
+                    where: args // deletes a friend,
+                }) as unknown as FriendID
             },
         })
     },
@@ -119,7 +118,7 @@ export const getFriendRequests = extendType({
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.findMany({
                     where: args, // returns all rows with the corresponding user ID
-                })
+                }) as unknown as FriendID
             },
         })
     },
@@ -137,7 +136,7 @@ export const getFriends = extendType({
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.findMany({
                     where: args, // returns all rows with the corresponding user ID
-                })
+                }) as unknown as FriendsWithID
             },
         })
     },

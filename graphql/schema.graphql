@@ -5,6 +5,10 @@
 """DateTime custom scalar type."""
 scalar DateTime
 
+type Email {
+  email: String
+}
+
 type Friend {
   friendID: String
   friendedAt: [DateTime]
@@ -35,7 +39,7 @@ type Mutation {
 }
 
 type Query {
-  getAuthFromUsername(username: String!): User!
+  getAuthFromUsername(username: String!): Email!
   getFriendRequests(usersId: String!): friendRequest!
   getFriends(usersId: String!): Friend!
   getUserFromAuth(email: String!): User!

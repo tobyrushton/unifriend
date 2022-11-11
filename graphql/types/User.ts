@@ -1,5 +1,5 @@
 import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
-import { tempUserObject, UserUpdateObject } from '../../types'
+import { email, tempUserObject, UserObjectWithID, UserUpdateObject } from '../../types'
 import { Friend, FriendRequest } from './Friends'
 import { Settings } from './Settings'
 import { Message } from './Messages'
@@ -192,18 +192,24 @@ export const GetUserFromAuth = extendType({
                     where: {
                         email: args.email,
                     },
-                })
+                }) as unknown as UserObjectWithID
             },
         })
     },
 })
 
+export const Email = objectType({
+    name: 'Email',
+    definition(t) {
+        t.nullable.string('email')
+    },
+})
 // gets users Auth information from their username.
 export const GetAuthFromUsername = extendType({
     type: 'Query', // returns data from the database.
     definition(t) {
         t.nonNull.field('getAuthFromUsername', {
-            type: 'User', // uses type user defined earlier.
+            type: 'Email', // uses type user defined earlier.
             args: {
                 // takes users username as an arguement
                 username: nonNull(stringArg()),
@@ -218,7 +224,7 @@ export const GetAuthFromUsername = extendType({
                         // returns only the email
                         email: true,
                     },
-                })
+                }) as unknown as email
             },
         })
     },
