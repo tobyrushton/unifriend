@@ -58,3 +58,7 @@ export interface authStatusReturnType {
     session: Session | null
     loading: boolean
 }
+
+export interface graphQLHookReturnQueryFunction extends graphQLHookReturnQuery {
+    runQuery: (email:string) => Promise<void>
+}

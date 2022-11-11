@@ -54,11 +54,6 @@ type Settings {
   usersId: String
 }
 
-type Subscription {
-  getMessageBySenderID(id: String!): Message!
-  getMessagesByRecipientID(id: String!): Message!
-}
-
 type User {
   bio: String
   birthday: String
