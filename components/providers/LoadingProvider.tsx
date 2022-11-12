@@ -2,14 +2,19 @@ import { createContext, FC, useState, useMemo } from 'react'
 import { LoadingContextInterface, ChildrenProps } from '../../types'
 import { LoadingScreen } from '../screens'
 
-export const LoadingContext = createContext<LoadingContextInterface | null>(null)
+export const LoadingContext = createContext<LoadingContextInterface | null>(
+    null
+)
 
-export const LoadingProvider:FC<ChildrenProps> = ({children}) => {
+export const LoadingProvider: FC<ChildrenProps> = ({ children }) => {
     const [loading, setLoading] = useState<boolean>(false)
 
-    const ProviderValue: LoadingContextInterface = useMemo(()=> ({
-        setLoading
-    }), [setLoading])
+    const ProviderValue: LoadingContextInterface = useMemo(
+        () => ({
+            setLoading,
+        }),
+        [setLoading]
+    )
 
     return (
         <LoadingContext.Provider value={ProviderValue}>
