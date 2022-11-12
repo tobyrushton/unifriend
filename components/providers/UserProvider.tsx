@@ -4,7 +4,7 @@ import {
     ChildrenProps,
     UserObjectWithID,
 } from '../../types'
-import { useAuthStatus, useGetUserByEmail } from '../../hooks'
+import { useAuthStatus, useGetUserByEmail, useLoadingScreen } from '../../hooks'
 
 // start second iteration with this file
 // define a provider that will spread user information throughout the program
@@ -24,17 +24,14 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         bio: '',
         email: '',
     })
-    const [loading, setLoading] = useState<boolean>(false)
     const { session, loading: sessionLoading } = useAuthStatus()
     const { error, loading: queryLoading, runQuery, data } = useGetUserByEmail()
+    const { setLoading } = useLoadingScreen()
 
     useEffect(() => {
-        setLoading(sessionLoading)
-    }, [sessionLoading])
-
-    useEffect(() => {
-        setLoading(queryLoading)
-    }, [queryLoading])
+        if (queryLoading || sessionLoading) setLoading(true)
+        else setLoading(false)
+    }, [queryLoading, sessionLoading, setLoading])
 
     useEffect(() => {
         // implement get user from auth hook here once created.
@@ -52,7 +49,6 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
 
     return (
         <UserContext.Provider value={providerValue}>
-            {loading ? 'screen' : 'nothing'}
             {error ? 'screen' : 'nothing'}
             {children}
         </UserContext.Provider>
