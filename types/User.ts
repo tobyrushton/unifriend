@@ -28,5 +28,5 @@ export interface tempUserObject extends UserUpdateObject {
 }
 
 export type email = {
-    email:string
+    email: string
 }

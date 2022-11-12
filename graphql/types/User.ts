@@ -1,5 +1,10 @@
 import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
-import { email, tempUserObject, UserObjectWithID, UserUpdateObject } from '../../types'
+import {
+    email,
+    tempUserObject,
+    UserObjectWithID,
+    UserUpdateObject,
+} from '../../types'
 import { Friend, FriendRequest } from './Friends'
 import { Settings } from './Settings'
 import { Message } from './Messages'

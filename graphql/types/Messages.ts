@@ -79,7 +79,7 @@ export const DeleteMessage = extendType({
     },
 })
 
-//functions to be fixed during iteration 3
+// functions to be fixed during iteration 3
 
 // // gets messages by the id of the sender
 // export const GetMessageBySenderID = extendType({

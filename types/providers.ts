@@ -10,5 +10,5 @@ export type ChildrenProps = {
 }
 
 export interface LoadingContextInterface {
-    setLoading: (change:boolean) => void
+    setLoading: (change: boolean) => void
 }

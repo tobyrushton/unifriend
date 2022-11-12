@@ -15,7 +15,7 @@ async function main() {
             username: 'tobyrushton',
             birthday: '12062005',
             bio: '',
-            email: 'temp@email.com'
+            email: 'temp@email.com',
         },
     })
     await prisma.users.create({
@@ -27,7 +27,7 @@ async function main() {
             username: 'oliviarushton',
             birthday: '27072002',
             bio: '',
-            email: 'temp2@email.com'
+            email: 'temp2@email.com',
         },
     })
 }

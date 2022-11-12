@@ -60,5 +60,5 @@ export interface authStatusReturnType {
 }
 
 export interface graphQLHookReturnQueryFunction extends graphQLHookReturnQuery {
-    runQuery: (email:string) => Promise<void>
+    runQuery: (email: string) => Promise<void>
 }

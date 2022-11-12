@@ -1,7 +1,7 @@
 export interface Friends {
     friendID: string
     userId: string
-    friendedAt: any[] //temporary data type
+    friendedAt: any[] // temporary data type
 }
 
 export interface FriendsWithID extends Friends {
@@ -9,5 +9,5 @@ export interface FriendsWithID extends Friends {
 }
 
 export type FriendID = {
-    id:number
+    id: number
 }

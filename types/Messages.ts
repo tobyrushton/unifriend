@@ -3,10 +3,10 @@ export interface Message {
     senderID: string
     recipientID: string
     seen: boolean
-    sentAt: any[] //temp data type
+    sentAt: any[] // temp data type
 }
 
-export interface MessageWithId extends Message{
+export interface MessageWithId extends Message {
     id: number
 }
 
