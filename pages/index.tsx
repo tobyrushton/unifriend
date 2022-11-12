@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/modules/Home.module.css'
 
 const Home: React.FC = () => {
     return (
@@ -10,7 +10,6 @@ const Home: React.FC = () => {
                 <meta name="description" content="Meet other students" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-
             <div />
         </div>
     )

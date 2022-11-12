@@ -1,13 +1,12 @@
-@use 'colours';
-@use 'fazeOut';
-@use 'center';
+@use '../reusables/colours' as colours;
+@use '../reusables/mixins' as mixins;
 
 .backgroundScreen {
-    @include fazeOut.fazeOut($zAxis: 1000);
+    @include mixins.fazeOut($zAxis: 1000);
 }
 
 .loaderContainer{
-    @include center.center;
+    @include mixins.center;
 }
 
 .loader {
