@@ -1,0 +1,26 @@
+@use 'colours';
+@use 'fazeOut';
+@use 'center';
+
+.backgroundScreen {
+    @include fazeOut.fazeOut($zAxis: 1000);
+}
+
+.loaderContainer{
+    @include center.center;
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid colours.$primary_color;
+    border-radius: 50%;
+    width: 7.5rem;
+    height: 7.5rem;
+    animation: spin 2s linear infinite;
+}
+  
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
