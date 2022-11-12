@@ -8,3 +8,7 @@ export interface userContextInterface {
 export type ChildrenProps = {
     children: React.ReactNode
 }
+
+export interface LoadingContextInterface {
+    setLoading: (change:boolean) => void
+}

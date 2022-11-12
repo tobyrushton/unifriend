@@ -12,7 +12,7 @@ import { useAuthStatus, useGetUserByEmail } from '../../hooks'
 
 export const UserContext = createContext<userContextInterface | null>(null)
 
-const UserProvider: FC<ChildrenProps> = ({ children }) => {
+export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     const [user, setUser] = useState<UserObjectWithID>({
         id: '',
         firstName: '',
@@ -58,5 +58,3 @@ const UserProvider: FC<ChildrenProps> = ({ children }) => {
         </UserContext.Provider>
     )
 }
-
-export default UserProvider
