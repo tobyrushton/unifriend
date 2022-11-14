@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { graphQLHookReturn, UserObjectWithID } from '../../../types'
-
-// defines the graphql mutation needed in order to
-const DeleteUserMutation = gql`
-    mutation Mutation($userID: String!) {
-        deleteUser(id: $userID) {
-            id
-        }
-    }
-`
+import { DeleteUserMutation } from '../../../graphql/queries'
 
 export const useDeleteUser = (userID: string): graphQLHookReturn => {
     // defines state types which allow for dynamic return values

@@ -1,44 +1,11 @@
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { useState, useEffect } from 'react'
 import {
     UserObject,
     UserObjectWithID,
     graphQLHookReturn,
 } from '../../../types/index'
-
-// graphql mutation defined in order to interact with API
-const CreateUserMutation = gql`
-    mutation Mutation(
-        $firstName: String!
-        $lastName: String!
-        $birthday: String!
-        $university: String!
-        $course: String!
-        $username: String!
-    ) {
-        createUser(
-            firstName: $firstName
-            lastName: $lastName
-            birthday: $birthday
-            university: $university
-            course: $course
-            username: $username
-        ) {
-            bio
-            birthday
-            course
-            firstName
-            lastName
-            settings {
-                darkMode
-                universityPreference
-                usersId
-            }
-            university
-            username
-        }
-    }
-`
+import { CreateUserMutation } from '../../../graphql/queries'
 
 export const useCreateUser = (user: UserObject): graphQLHookReturn => {
     // defines state types which allow for dynamic return values

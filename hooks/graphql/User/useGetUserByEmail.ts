@@ -1,29 +1,13 @@
-import { gql, useApolloClient } from '@apollo/client'
+import { useApolloClient } from '@apollo/client'
 import { useState } from 'react'
 import {
     UserObjectWithID,
     email,
     graphQLHookReturnQueryFunction,
 } from '../../../types'
+import { UserByEmailQuery } from '../../../graphql/queries'
 
 // as this function will be designed differently, (for use inside a useEffect call back it will need to be designed differently)
-
-// graphql query defintion to get all user information
-export const UserByEmailQuery = gql`
-    query Query($email: String!) {
-        getUserFromAuth(email: $email) {
-            bio
-            birthday
-            course
-            email
-            firstName
-            id
-            lastName
-            university
-            username
-        }
-    }
-`
 
 export const useGetUserByEmail = (): graphQLHookReturnQueryFunction => {
     // defines state types which allow for dynamic return values

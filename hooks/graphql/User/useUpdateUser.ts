@@ -1,44 +1,11 @@
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { useState, useEffect } from 'react'
 import {
     graphQLHookReturn,
     UpdateUserParamaters,
     UserObjectWithID,
 } from '../../../types'
-
-// graphql mutation definiton to update user
-const UpdateUserMutation = gql`
-    mutation UpdateUser(
-        $userId: String!
-        $firstName: String
-        $lastName: String
-        $birthday: String
-        $university: String
-        $course: String
-        $username: String
-        $bio: String
-    ) {
-        updateUser(
-            id: $userId
-            firstName: $firstName
-            lastName: $lastName
-            birthday: $birthday
-            university: $university
-            course: $course
-            username: $username
-            bio: $bio
-        ) {
-            userId
-            firstName
-            lastName
-            university
-            course
-            birthday
-            username
-            bio
-        }
-    }
-`
+import { UpdateUserMutation } from '../../../graphql/queries'
 
 export const useUpdateUser = (
     updates: UpdateUserParamaters
