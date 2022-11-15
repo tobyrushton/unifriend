@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
+  experimental:{appDir: true}
 }
 
 module.exports = nextConfig
