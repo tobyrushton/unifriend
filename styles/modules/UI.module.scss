@@ -1,0 +1,5 @@
+@use '../reusables/mixins' as mixins;
+
+.fontLogo {
+    @include mixins.fontClass($fontWeight: 700, $fontSize: 2rem)
+}

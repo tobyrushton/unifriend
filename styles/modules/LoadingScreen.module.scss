@@ -1,4 +1,4 @@
-@use '../reusables/colours' as colours;
+@use '../reusables/variables' as variables;
 @use '../reusables/mixins' as mixins;
 
 .backgroundScreen {
@@ -24,10 +24,10 @@
     width: 5rem;
     height: 5rem;
     margin: 8px;
-    border: 8px solid colours.$primary_color;
+    border: 8px solid variables.$primary_color;
     border-radius: 50%;
     animation: loadingRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: colours.$primary_color transparent transparent transparent;
+    border-color: variables.$primary_color transparent transparent transparent;
 }
 
 .loadingRing div:nth-child(1) {

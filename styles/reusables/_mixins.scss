@@ -1,3 +1,5 @@
+@use 'variables';
+
 @mixin fazeOut($zAxis: 100) {
     position: absolute;
     width: 100%;
@@ -15,4 +17,10 @@
     top: 50%;
     left:50%;
     transform: translate(-50%,-50%);
+}
+
+@mixin fontClass($fontWeight: 100, $fontSize: 16px) {
+    font-family: variables.$font_family;
+    font-weight: $fontWeight;
+    font-size: $fontSize;
 }
