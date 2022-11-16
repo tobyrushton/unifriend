@@ -1,4 +1,5 @@
 @use '../reusables/mixins' as mixins;
+@use '../reusables/variables' as variables;
 
 .fontLogo {
     @include mixins.fontClass($fontWeight: 700, $fontSize: 2rem)
@@ -14,4 +15,23 @@
 
 .fontText {
     @include mixins.fontClass($fontWeight: 400)
+}
+
+.button {
+    border: 1px solid #E6E6E6;
+    border-radius: 50px;
+    width: fit-content;
+    padding: .5rem 1rem .5rem 1rem;
+    cursor: pointer;
+}
+
+.filled {
+    background-color: variables.$primary_color;
+    color: variables.$secondary_color;
+}
+
+.inactive {
+    cursor: not-allowed !important;
+    background-color: variables.$inactive_color;
+    color: variables.$secondary_color
 }

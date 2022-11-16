@@ -9,3 +9,9 @@ export interface TextProps extends ChildrenProps {
     bold?: boolean
     header?: boolean
 }
+
+export interface ButtonProps extends ChildrenProps {
+    onClick: () => void
+    filled?: boolean
+    inactive?:boolean
+}
