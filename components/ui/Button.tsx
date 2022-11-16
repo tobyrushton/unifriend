@@ -7,6 +7,7 @@ export const Button: FC<ButtonProps> = ({
     filled,
     inactive,
     children,
+    style,
 }) => (
     <div
         onClick={() => {
@@ -17,6 +18,7 @@ export const Button: FC<ButtonProps> = ({
             filled ? styles.filled : inactive ? styles.inactive : ''
         }`}
         tabIndex={0}
+        style={style}
     >
         {children}
     </div>
