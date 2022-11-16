@@ -19,7 +19,7 @@
     transform: translate(-50%,-50%);
 }
 
-@mixin fontClass($fontWeight: 100, $fontSize: 16px) {
+@mixin fontClass($fontWeight: 100, $fontSize: 1rem) {
     font-family: variables.$font_family;
     font-weight: $fontWeight;
     font-size: $fontSize;
