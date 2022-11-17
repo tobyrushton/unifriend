@@ -25,3 +25,14 @@ export interface ButtonProps extends ChildrenProps {
     inactive?:boolean
     style?: styleProperties
 }
+
+export type inputType = 'password' | 'text'
+
+export interface inputProps {
+    placeholder: string
+    type: inputType
+    setValue: (update:string) => void
+    value: string | undefined
+    style?: styleProperties
+    maxLength?: number
+}

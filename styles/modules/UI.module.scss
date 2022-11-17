@@ -35,3 +35,10 @@
     background-color: variables.$inactive_color;
     color: variables.$secondary_color
 }
+
+.inputBox {
+    border-radius: 10px;
+    border: 1px solid variables.$accent_color;
+    width: 20rem;
+    padding: .5rem 1rem .5rem 1rem;
+}
