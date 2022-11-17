@@ -1,10 +1,13 @@
 'use client'
 
-import { FC } from 'react'
-import { Logo, Text, Button } from '../components'
+import { FC, useState } from 'react'
+import { Logo, Text, Button, AuthScreen } from '../components'
 import styles from '../styles/modules/Home.module.scss'
+import { authState } from '../types'
 
 const Home: FC = () => {
+    const [auth, setAuth] = useState<authState>({ active: false })
+
     return (
         <>
             <div className={styles.logoContainer}>
@@ -17,7 +20,10 @@ const Home: FC = () => {
                 </Text>
                 <Button
                     onClick={() => {
-                        'link to sign up here'
+                        setAuth({
+                            active: true,
+                            type: 'sign up',
+                        })
                     }}
                     filled
                     style={{
@@ -33,13 +39,23 @@ const Home: FC = () => {
                 </Text>
                 <Button
                     onClick={() => {
-                        'link to log in here'
+                        setAuth({
+                            active: true,
+                            type: 'log in',
+                        })
                     }}
                     style={{ marginRight: 'auto', marginLeft: 'auto' }}
                 >
                     Sign In
                 </Button>
             </div>
+            {auth.active ? (
+                auth.type === 'log in' ? (
+                    <AuthScreen logIn />
+                ) : (
+                    <AuthScreen signUp />
+                )
+            ) : null}
         </>
     )
 }
