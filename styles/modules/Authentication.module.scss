@@ -37,6 +37,12 @@
     }
 }
 
+.offset{
+    position: relative;
+    left: 5%;
+    top: 5%;
+}
+
 
 @media screen and (max-width:1000px) {
     .authContainer {

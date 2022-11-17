@@ -32,7 +32,7 @@ export interface inputProps {
     placeholder: string
     type: inputType
     setValue: (update:string) => void
-    value: string | undefined
+    value?: string | undefined
     style?: styleProperties
     maxLength?: number
 }
