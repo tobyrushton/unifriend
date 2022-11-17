@@ -8,6 +8,11 @@ import { authState } from '../types'
 const Home: FC = () => {
     const [auth, setAuth] = useState<authState>({ active: false })
 
+    // referncing this function instead of using the setter directly, forces a rerender.
+    const changeAuth = (change: authState): void => {
+        setAuth(change)
+    }
+
     return (
         <>
             <div className={styles.logoContainer}>
@@ -20,7 +25,7 @@ const Home: FC = () => {
                 </Text>
                 <Button
                     onClick={() => {
-                        setAuth({
+                        changeAuth({
                             active: true,
                             type: 'sign up',
                         })
@@ -39,7 +44,7 @@ const Home: FC = () => {
                 </Text>
                 <Button
                     onClick={() => {
-                        setAuth({
+                        changeAuth({
                             active: true,
                             type: 'log in',
                         })
@@ -51,9 +56,9 @@ const Home: FC = () => {
             </div>
             {auth.active ? (
                 auth.type === 'log in' ? (
-                    <AuthScreen logIn />
+                    <AuthScreen changeAuth={changeAuth} logIn />
                 ) : (
-                    <AuthScreen signUp />
+                    <AuthScreen changeAuth={changeAuth} signUp />
                 )
             ) : null}
         </>

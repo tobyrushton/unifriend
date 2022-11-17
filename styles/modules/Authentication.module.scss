@@ -1,0 +1,47 @@
+@use '../reusables/mixins' as mixins;
+@use '../reusables/variables' as variables;
+
+.fazedOut {
+    @include mixins.fazeOut();
+}
+
+.authContainer {
+    @include mixins.center();
+    width: 35%;
+    height: 50%;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background: variables.$secondary_color;
+    border-radius: 10px;
+}
+
+.exit {
+    position: relative;
+    left: 5%;
+    top:5%;
+    cursor: pointer;
+
+    div{
+        border: 1px solid #000000;
+        background: black;
+        width: 1rem;
+        position: absolute;
+    }
+
+    div:nth-child(1) {
+        transform: rotate(45deg);
+        top: 1%
+    }
+
+    div:nth-child(2) {
+        transform: rotate(-45deg);
+    }
+}
+
+
+@media screen and (max-width:1000px) {
+    .authContainer {
+        width:100%;
+        height: 100%;
+        border-radius: 0;
+    }
+}

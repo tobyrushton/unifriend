@@ -6,7 +6,7 @@
 }
 
 .fontTextBold {
-    @include mixins.fontClass($fontWeight: 600)
+    @include mixins.fontClass($fontWeight: 600);
 }
 
 .large {
@@ -14,7 +14,7 @@
 }
 
 .fontText {
-    @include mixins.fontClass($fontWeight: 400)
+    @include mixins.fontClass($fontWeight: 400);
 }
 
 .button {

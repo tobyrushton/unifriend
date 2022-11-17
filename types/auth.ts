@@ -5,4 +5,6 @@ export interface authState {
     type?: authType
 }
 
-export type authProps = {logIn:true, signUp?:never} | {logIn?:never, signUp: true}
+export type authProps =
+    | { logIn: true; signUp?: never; changeAuth: (change: authState) => void }
+    | { logIn?: never; signUp: true; changeAuth: (change: authState) => void }
