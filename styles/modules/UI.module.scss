@@ -2,7 +2,7 @@
 @use '../reusables/variables' as variables;
 
 .fontLogo {
-    @include mixins.fontClass($fontWeight: 700, $fontSize: 2rem)
+    @include mixins.fontClass($fontWeight: 700, $fontSize: 3rem)
 }
 
 .fontTextBold {
@@ -10,7 +10,7 @@
 }
 
 .large {
-    font-size: 2rem !important;
+    font-size: 3rem !important;
 }
 
 .fontText {
@@ -20,7 +20,7 @@
 .button {
     border: 1px solid variables.$accent_color;
     border-radius: 50px;
-    width: fit-content;
+    width: 20rem;
     padding: .5rem 1rem .5rem 1rem;
     cursor: pointer;
 }
