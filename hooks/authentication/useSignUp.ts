@@ -1,18 +1,18 @@
 import { AuthError } from '@supabase/supabase-js'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
-import { AuthenticationHookReturnWithData, data } from '../../types'
+import { AuthenticationHookReturnWithData, authDataType } from '../../types'
 
-export const useSignUp = (
-    password: string,
-    email: string
-): AuthenticationHookReturnWithData => {
+export const useSignUp = (): AuthenticationHookReturnWithData<string> => {
     // defines state types which allow for dynamic return values
     const [loading, setLoading] = useState<boolean>(true)
-    const [data, setData] = useState<data>({ user: null, session: null })
+    const [data, setData] = useState<authDataType>({
+        user: null,
+        session: null,
+    })
     const [error, setError] = useState<AuthError | null>(null)
 
-    const response = async (): Promise<void> => {
+    const response = async (email: string, password: string): Promise<void> => {
         // signUp method used to create new account
         const { data: authData, error: authErorr } = await supabase.auth.signUp(
             {
@@ -26,14 +26,10 @@ export const useSignUp = (
         setLoading(false)
     }
 
-    // useEffect hook used to ensure that it runs once
-    useEffect(() => {
-        response()
-    }, [])
-
     return {
         loading,
         data,
         error,
+        response,
     }
 }

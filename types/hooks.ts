@@ -33,17 +33,18 @@ export interface SelectUserByIDParameters {
     username?: boolean
 }
 
-export interface AuthenticationHookReturn {
+export interface AuthenticationHookReturn<T> {
     loading: boolean
     error: AuthError | null
+    response: (email:T, password: T) => void
 }
 
-export interface AuthenticationHookReturnWithData
-    extends AuthenticationHookReturn {
-    data: data
+export interface AuthenticationHookReturnWithData<T>
+    extends AuthenticationHookReturn<T> {
+    data: authDataType
 }
 
-export interface data {
+export interface authDataType {
     user: User | null
     session:
         | Session
