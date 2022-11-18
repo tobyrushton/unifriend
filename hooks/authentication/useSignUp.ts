@@ -5,7 +5,7 @@ import { AuthenticationHookReturnWithData, authDataType } from '../../types'
 
 export const useSignUp = (): AuthenticationHookReturnWithData<string> => {
     // defines state types which allow for dynamic return values
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(false)
     const [data, setData] = useState<authDataType>({
         user: null,
         session: null,
@@ -13,6 +13,7 @@ export const useSignUp = (): AuthenticationHookReturnWithData<string> => {
     const [error, setError] = useState<AuthError | null>(null)
 
     const response = async (email: string, password: string): Promise<void> => {
+        setLoading(true)
         // signUp method used to create new account
         const { data: authData, error: authErorr } = await supabase.auth.signUp(
             {

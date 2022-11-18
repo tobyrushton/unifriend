@@ -5,10 +5,11 @@ import { AuthenticationHookReturn } from '../../types'
 
 export const useSignOut = (): AuthenticationHookReturn<undefined> => {
     // defines state types which allow for dynamic return values
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<AuthError | null>(null)
 
     const response = async (): Promise<void> => {
+        setLoading(true)
         // uses sign out method
         const { error: errorFromAuth } = await supabase.auth.signOut()
         // updates state upon completion
