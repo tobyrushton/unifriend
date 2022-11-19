@@ -1,4 +1,4 @@
-import { ChildrenProps } from './providers'
+import { ChildrenProps, NotificationInterface } from './providers'
 
 type color = 'primary' | 'secondary'
 
@@ -18,6 +18,7 @@ export interface TextProps extends ChildrenProps {
     bold?: boolean
     header?: boolean
     style?: styleProperties
+    large?: boolean
 }
 
 export interface ButtonProps extends ChildrenProps {
@@ -40,4 +41,9 @@ export interface inputProps {
 
 export interface exitProps {
     onClick: () => void
+}
+
+export interface notificationProps extends NotificationInterface {
+    onClick: () => void
+    id: string
 }
