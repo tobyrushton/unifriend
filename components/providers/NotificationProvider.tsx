@@ -8,7 +8,8 @@ export const NotificationContext =
     createContext<NotificationContextInterfrace | null>(null)
 
 export const NoticiationProvider: FC<ChildrenProps> = ({ children }) => {
-    const [notifications, createNotification, deleteNotification] = useNotificationQueue()
+    const [notifications, createNotification, deleteNotification] =
+        useNotificationQueue()
 
     const ProviderValue: NotificationContextInterfrace = useMemo(
         () => ({
@@ -20,14 +21,16 @@ export const NoticiationProvider: FC<ChildrenProps> = ({ children }) => {
     return (
         <NotificationContext.Provider value={ProviderValue}>
             <div className={styles.notificationContainer}>
-                {notifications.map((notification, idx) => notification? (
-                    <Notification
-                        type={notification.type}
-                        content={notification.content}
-                        key={'notification'.concat(idx.toString())}
-                        onClick={() => deleteNotification(idx)}
-                    />
-                ): null)}
+                {notifications.map((notification, idx) =>
+                    notification ? (
+                        <Notification
+                            type={notification.type}
+                            content={notification.content}
+                            key={'notification'.concat(idx.toString())}
+                            onClick={() => deleteNotification(idx)}
+                        />
+                    ) : null
+                )}
             </div>
             {children}
         </NotificationContext.Provider>
