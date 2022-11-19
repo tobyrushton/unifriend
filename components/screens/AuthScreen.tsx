@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react'
 import { authProps, logInState, signUpState } from '../../types/auth'
 import styles from '../../styles/modules/Authentication.module.scss'
-import { Input, Text, Button } from '../ui'
+import { Input, Text, Button, Exit } from '../ui'
 import { useLogIn } from '../../hooks'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 import { isSignUpState } from '../../lib/utils'
@@ -59,15 +59,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     return (
         <div className={styles.fazedOut}>
             <div className={styles.authContainer}>
-                <div
-                    className={styles.exit}
-                    onClick={() => changeAuth({ active: false })}
-                    tabIndex={0}
-                    role="button"
-                >
-                    <div />
-                    <div />
-                </div>
+                <Exit onClick={() => changeAuth({ active: false })} />
                 <div className={styles.offset}>
                     {logIn ? (
                         <>
