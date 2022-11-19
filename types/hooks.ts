@@ -65,7 +65,7 @@ export interface graphQLHookReturnQueryFunction extends graphQLHookReturnQuery {
     runQuery: (email: string) => Promise<void>
 }
 
-export type notificationQueueReturn  = [
-    queue:NotificationInterface[],
+export type notificationQueueReturn = [
+    queue: NotificationInterface[],
     createNotification: createNotificationType
 ]

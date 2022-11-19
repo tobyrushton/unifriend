@@ -12,3 +12,16 @@ export type ChildrenProps = {
 export interface LoadingContextInterface {
     setLoading: (change: boolean) => void
 }
+
+export type notificationType = 'error' | 'success' | 'standard'
+
+export interface NotificationInterface {
+    type: notificationType
+    content: string
+}
+
+export type createNotificationType = (args: NotificationInterface) => void
+
+export interface NotificationContextInterfrace {
+    createNotification: createNotificationType
+}
