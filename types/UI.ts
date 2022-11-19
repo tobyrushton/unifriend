@@ -28,7 +28,7 @@ export interface ButtonProps extends ChildrenProps {
     style?: styleProperties
 }
 
-export type inputType = 'password' | 'text'
+export type inputType = 'password' | 'text' | 'date'
 
 export interface inputProps {
     placeholder: string
@@ -45,4 +45,9 @@ export interface exitProps {
 
 export interface notificationProps extends NotificationInterface {
     onClick: () => void
+}
+
+export interface signUpSlidesInterface {
+    buttonActive: boolean
+    slide: number
 }

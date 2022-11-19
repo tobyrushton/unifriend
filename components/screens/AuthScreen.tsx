@@ -1,14 +1,28 @@
 import { FC, useState, useEffect } from 'react'
-import { authProps, logInState, signUpState } from '../../types/auth'
+import {
+    authProps,
+    logInState,
+    signUpState,
+    signUpSlidesInterface,
+} from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
 import { Input, Text, Button, Exit } from '../ui'
-import { useLogIn } from '../../hooks'
+import { useLogIn, useNotifications } from '../../hooks'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
-import { isSignUpState } from '../../lib/utils'
+import {
+    isSignUpState,
+    isValidEmail,
+    isValidPassword,
+    isValidUsername,
+} from '../../lib/utils'
 
 export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     const [state, setState] = useState<logInState | signUpState>()
     const [buttonActive, setButtonActive] = useState<boolean>(false)
+    const [signUpSlides, setSignUpSlides] = useState<signUpSlidesInterface>({
+        buttonActive: false,
+        slide: 1,
+    })
 
     const {
         response: signIn,
@@ -16,14 +30,19 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         loading: signInLoading,
     } = useLogIn()
     const { setLoading } = useLoadingScreen()
+    const { createNotification } = useNotifications()
 
     useEffect(() => {
         setLoading(signInLoading)
     }, [signInLoading, setLoading])
 
     useEffect(() => {
-        console.log(signInError?.message)
-    }, [signInError])
+        if (signInError)
+            createNotification({
+                type: 'error',
+                content: signInError.message as string,
+            })
+    }, [signInError, createNotification])
 
     useEffect(() => {
         if (logIn && state === undefined) setState({ email: '', password: '' })
@@ -37,9 +56,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 course: '',
                 password: '',
             })
-    }, [state, logIn, signUp])
-
-    useEffect(() => {
         if (state) {
             if (logIn) {
                 if (state.password.length >= 8 && state.email.length >= 3) {
@@ -47,13 +63,65 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 } else setButtonActive(false)
             }
         }
-    }, [logIn, state, state?.password, state?.email])
+        if (isSignUpState(state)) {
+            if (signUpSlides.slide === 1) {
+                if (
+                    isValidEmail(state.email) &&
+                    state.firstName.length >= 2 &&
+                    state.lastName.length >= 2
+                )
+                    setSignUpSlides(prevState => {
+                        const temp = { ...prevState }
+                        temp.buttonActive = true
+                        return temp
+                    })
+                else
+                    setSignUpSlides(prevState => {
+                        const temp = { ...prevState }
+                        temp.buttonActive = false
+                        return temp
+                    })
+            } else if (signUpSlides.slide === 2) {
+                if (
+                    isValidPassword(state.password) &&
+                    isValidUsername(state.username)
+                )
+                    setSignUpSlides(prevState => {
+                        const temp = { ...prevState }
+                        temp.buttonActive = true
+                        return temp
+                    })
+                else
+                    setSignUpSlides(prevState => {
+                        const temp = { ...prevState }
+                        temp.buttonActive = false
+                        return temp
+                    })
+            } else if (signUpSlides.slide === 3) {
+                if (state.birthday.length === 10 && state.course.length >= 3)
+                    setSignUpSlides(prevState => {
+                        const temp = { ...prevState }
+                        temp.buttonActive = true
+                        return temp
+                    })
+                else
+                    setSignUpSlides(prevState => {
+                        const temp = { ...prevState }
+                        temp.buttonActive = false
+                        return temp
+                    })
+            }
+        }
+    }, [state, logIn, signUp, setButtonActive, setSignUpSlides])
 
     const clickSignIn = async (): Promise<void> => {
         if (!isSignUpState(state) && state) {
             await signIn(state.email, state.password)
-            // logic to handle errors here etc.
         }
+    }
+
+    const clickSignUp = async (): Promise<void> => {
+        // logic for sign up here.
     }
 
     return (
@@ -107,7 +175,159 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                             </Button>
                         </>
                     ) : (
-                        <div />
+                        <>
+                            <Text header bold>
+                                Create your account
+                            </Text>
+                            {signUpSlides.slide === 1 ? (
+                                <>
+                                    <Input
+                                        placeholder="First Name"
+                                        type="text"
+                                        setValue={change => {
+                                            setState(prevState => {
+                                                const temp = {
+                                                    ...prevState,
+                                                } as signUpState
+                                                temp.firstName = change
+                                                return temp
+                                            })
+                                        }}
+                                        style={{
+                                            marginTop: '2.5%',
+                                        }}
+                                        maxLength={16}
+                                    />
+                                    <Input
+                                        placeholder="Last Name"
+                                        type="text"
+                                        setValue={change => {
+                                            setState(prevState => {
+                                                const temp = {
+                                                    ...prevState,
+                                                } as signUpState
+                                                temp.lastName = change
+                                                return temp
+                                            })
+                                        }}
+                                        style={{
+                                            marginTop: '2.5%',
+                                        }}
+                                        maxLength={16}
+                                    />
+                                    <Input
+                                        placeholder="University Email"
+                                        type="text"
+                                        setValue={change => {
+                                            setState(prevState => {
+                                                const temp = {
+                                                    ...prevState,
+                                                } as signUpState
+                                                temp.email = change
+                                                return temp
+                                            })
+                                        }}
+                                        style={{
+                                            marginTop: '2.5%',
+                                        }}
+                                        maxLength={32}
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    {signUpSlides.slide === 2 ? (
+                                        <>
+                                            <Input
+                                                placeholder="Username"
+                                                type="text"
+                                                setValue={change => {
+                                                    setState(prevState => {
+                                                        const temp = {
+                                                            ...prevState,
+                                                        } as signUpState
+                                                        temp.username = change
+                                                        return temp
+                                                    })
+                                                }}
+                                                style={{
+                                                    marginTop: '2.5%',
+                                                }}
+                                                maxLength={16}
+                                            />
+                                            <Input
+                                                placeholder="Password"
+                                                type="password"
+                                                setValue={change => {
+                                                    setState(prevState => {
+                                                        const temp = {
+                                                            ...prevState,
+                                                        } as signUpState
+                                                        temp.password = change
+                                                        return temp
+                                                    })
+                                                }}
+                                                style={{
+                                                    marginTop: '2.5%',
+                                                }}
+                                                maxLength={16}
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Input
+                                                placeholder="Course"
+                                                type="text"
+                                                style={{
+                                                    marginTop: '2.5%',
+                                                }}
+                                                setValue={change => {
+                                                    setState(prevState => {
+                                                        const temp = {
+                                                            ...prevState,
+                                                        } as signUpState
+                                                        temp.course = change
+                                                        return temp
+                                                    })
+                                                }}
+                                            />
+                                            <Input
+                                                placeholder="Birthday"
+                                                type="date"
+                                                style={{
+                                                    marginTop: '2.5%',
+                                                }}
+                                                setValue={change => {
+                                                    setState(prevState => {
+                                                        const temp = {
+                                                            ...prevState,
+                                                        } as signUpState
+                                                        temp.birthday = change
+                                                        return temp
+                                                    })
+                                                }}
+                                                maxLength={16}
+                                            />
+                                        </>
+                                    )}
+                                </>
+                            )}
+                            <Button
+                                onClick={() =>
+                                    signUpSlides.slide === 3
+                                        ? clickSignUp()
+                                        : setSignUpSlides(prevState => ({
+                                              buttonActive: false,
+                                              slide: prevState.slide + 1,
+                                          }))
+                                }
+                                style={{
+                                    marginTop: '2.5%',
+                                }}
+                                inactive={!signUpSlides.buttonActive}
+                            >
+                                {signUpSlides.slide === 3 ? 'Sign Up' : 'Next'}
+                            </Button>
+                        </>
                     )}
                 </div>
             </div>
