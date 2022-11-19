@@ -4,7 +4,8 @@ import {
     ChildrenProps,
     UserObjectWithID,
 } from '../../types'
-import { useAuthStatus, useGetUserByEmail, useLoadingScreen } from '../../hooks'
+import { useAuthStatus, useGetUserByEmail } from '../../hooks'
+import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 
 // start second iteration with this file
 // define a provider that will spread user information throughout the program

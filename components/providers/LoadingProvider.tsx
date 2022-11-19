@@ -1,6 +1,6 @@
 import { createContext, FC, useState, useMemo } from 'react'
 import { LoadingContextInterface, ChildrenProps } from '../../types'
-import { LoadingScreen } from '../screens'
+import { LoadingScreen } from '../screens/LoadingScreen'
 
 export const LoadingContext = createContext<LoadingContextInterface | null>(
     null

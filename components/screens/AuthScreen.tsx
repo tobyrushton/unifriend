@@ -2,10 +2,28 @@ import { FC, useState, useEffect } from 'react'
 import { authProps, logInState, signUpState } from '../../types/auth'
 import styles from '../../styles/modules/Authentication.module.scss'
 import { Input, Text, Button } from '../ui'
+import { useLogIn } from '../../hooks'
+import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
+import { isSignUpState } from '../../lib/utils'
 
 export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     const [state, setState] = useState<logInState | signUpState>()
     const [buttonActive, setButtonActive] = useState<boolean>(false)
+
+    const {
+        response: signIn,
+        error: signInError,
+        loading: signInLoading,
+    } = useLogIn()
+    const { setLoading } = useLoadingScreen()
+
+    useEffect(() => {
+        setLoading(signInLoading)
+    }, [signInLoading, setLoading])
+
+    useEffect(() => {
+        console.log(signInError?.message)
+    }, [signInError])
 
     useEffect(() => {
         if (logIn && state === undefined) setState({ email: '', password: '' })
@@ -30,6 +48,13 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
             }
         }
     }, [logIn, state, state?.password, state?.email])
+
+    const clickSignIn = async (): Promise<void> => {
+        if (!isSignUpState(state) && state) {
+            await signIn(state.email, state.password)
+            // logic to handle errors here etc.
+        }
+    }
 
     return (
         <div className={styles.fazedOut}>
@@ -81,9 +106,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                             />
                             <Button
                                 inactive={!buttonActive}
-                                onClick={() => {
-                                    'log in logic here'
-                                }}
+                                onClick={clickSignIn}
                                 style={{
                                     marginTop: '20%',
                                 }}
