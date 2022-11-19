@@ -37,3 +37,7 @@ export interface inputProps {
     style?: styleProperties
     maxLength?: number
 }
+
+export interface exitProps {
+    onClick: () => void
+}
