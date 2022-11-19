@@ -1,40 +1,49 @@
-import { useQuery } from '@apollo/client'
+import { useApolloClient } from '@apollo/client'
 import { useState } from 'react'
 import {
-    graphQLHookReturnQuery,
     UserObjectWithID,
     SelectUserByIDParameters,
+    graphQLHookReturnQueryFunction,
 } from '../../../types'
 import { UserByIDQuery } from '../../../graphql/queries'
 
-export const useGetUserByID = (
-    options: SelectUserByIDParameters
-): graphQLHookReturnQuery => {
-    // defines state types which allow for dynamic return values
-    const [error, setError] = useState<Error>()
-    const [success, setSuccess] = useState<boolean>(false)
+export const useGetUserByID =
+    (): graphQLHookReturnQueryFunction<SelectUserByIDParameters> => {
+        // defines state types which allow for dynamic return values
+        const [error, setError] = useState<Error>()
+        const [success, setSuccess] = useState<boolean>(false)
+        const [loading, setLoading] = useState<boolean>(false)
+        const [data, setData] = useState<UserObjectWithID>()
 
-    // creates a query to the database using the grapql query previously defined.
-    const { data, loading } = useQuery<
-        UserObjectWithID,
-        SelectUserByIDParameters
-    >(UserByIDQuery, {
-        onError: err => {
-            // updates state on error
-            setError(err)
-            setSuccess(false)
-        },
-        onCompleted: () => {
-            // updates state on completion
-            setSuccess(true)
-        },
-        variables: options,
-    })
+        const apollo = useApolloClient()
 
-    return {
-        loading,
-        error,
-        success,
-        data: data as UserObjectWithID,
+        const runQuery = async (
+            args: SelectUserByIDParameters
+        ): Promise<void> => {
+            setLoading(true)
+            // creates a query to the database using the grapql query previously defined.
+            await apollo
+                .query<UserObjectWithID, SelectUserByIDParameters>({
+                    query: UserByIDQuery,
+                    variables: args,
+                })
+                .catch(err => {
+                    setError(err)
+                })
+                .then(response => {
+                    if (response) {
+                        setData(response.data)
+                        setSuccess(true)
+                        setLoading(false)
+                    }
+                })
+        }
+
+        return {
+            loading,
+            error,
+            success,
+            data: data as UserObjectWithID,
+            runQuery,
+        }
     }
-}

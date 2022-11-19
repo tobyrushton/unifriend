@@ -9,7 +9,7 @@ import { UserByEmailQuery } from '../../../graphql/queries'
 
 // as this function will be designed differently, (for use inside a useEffect call back it will need to be designed differently)
 
-export const useGetUserByEmail = (): graphQLHookReturnQueryFunction => {
+export const useGetUserByEmail = (): graphQLHookReturnQueryFunction<string> => {
     // defines state types which allow for dynamic return values
     const [error, setError] = useState<Error>()
     const [success, setSuccess] = useState<boolean>(false)
@@ -34,6 +34,7 @@ export const useGetUserByEmail = (): graphQLHookReturnQueryFunction => {
                 if (response) {
                     setData(response.data)
                     setSuccess(true)
+                    setLoading(false)
                 }
             })
     }

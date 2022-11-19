@@ -8,6 +8,10 @@ export interface graphQLHookReturn {
     loading: boolean
 }
 
+export interface graphQLHookReturnMutation<T> extends graphQLHookReturn {
+    mutation: (args: T) => Promise<UserObjectWithID>
+}
+
 export interface graphQLHookReturnQuery extends graphQLHookReturn {
     data: UserObjectWithID
 }
@@ -61,8 +65,9 @@ export interface authStatusReturnType {
     loading: boolean
 }
 
-export interface graphQLHookReturnQueryFunction extends graphQLHookReturnQuery {
-    runQuery: (email: string) => Promise<void>
+export interface graphQLHookReturnQueryFunction<T>
+    extends graphQLHookReturnQuery {
+    runQuery: (args: T) => Promise<void>
 }
 
 export type notificationQueueReturn = [

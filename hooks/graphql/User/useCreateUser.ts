@@ -1,13 +1,13 @@
 import { useMutation } from '@apollo/client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
     UserObject,
     UserObjectWithID,
-    graphQLHookReturn,
+    graphQLHookReturnMutation,
 } from '../../../types/index'
 import { CreateUserMutation } from '../../../graphql/queries'
 
-export const useCreateUser = (user: UserObject): graphQLHookReturn => {
+export const useCreateUser = (): graphQLHookReturnMutation<UserObject> => {
     // defines state types which allow for dynamic return values
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<Error>()
@@ -31,14 +31,10 @@ export const useCreateUser = (user: UserObject): graphQLHookReturn => {
         }
     )
 
-    // useEffect runs create user function once.
-    useEffect(() => {
-        createUser({ variables: user })
-    }, [])
-
     return {
         success,
         loading,
         error,
+        mutation: createUser as () => Promise<UserObjectWithID>,
     } as const
 }

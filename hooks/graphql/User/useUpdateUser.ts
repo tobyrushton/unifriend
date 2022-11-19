@@ -1,24 +1,24 @@
 import { useMutation } from '@apollo/client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
-    graphQLHookReturn,
+    graphQLHookReturnMutation,
     UpdateUserParamaters,
     UserObjectWithID,
 } from '../../../types'
 import { UpdateUserMutation } from '../../../graphql/queries'
 
-export const useUpdateUser = (
-    updates: UpdateUserParamaters
-): graphQLHookReturn => {
-    // defines state types which allow for dynamic return values
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<Error>()
-    const [success, setSuccess] = useState<boolean>(false)
+export const useUpdateUser =
+    (): graphQLHookReturnMutation<UpdateUserParamaters> => {
+        // defines state types which allow for dynamic return values
+        const [loading, setLoading] = useState<boolean>(true)
+        const [error, setError] = useState<Error>()
+        const [success, setSuccess] = useState<boolean>(false)
 
-    // defines function updateUser using the mutation defined previously.
-    const [updateUser] = useMutation<UserObjectWithID, UpdateUserParamaters>(
-        UpdateUserMutation,
-        {
+        // defines function updateUser using the mutation defined previously.
+        const [updateUser] = useMutation<
+            UserObjectWithID,
+            UpdateUserParamaters
+        >(UpdateUserMutation, {
             onError: err => {
                 // updates state on error.
                 setError(err)
@@ -30,17 +30,12 @@ export const useUpdateUser = (
                 setSuccess(true)
                 setLoading(false)
             },
+        })
+
+        return {
+            loading,
+            error,
+            success,
+            mutation: updateUser as () => Promise<UserObjectWithID>,
         }
-    )
-
-    // useEffect ensures that updateUser is executed once.
-    useEffect(() => {
-        updateUser({ variables: updates })
-    }, [])
-
-    return {
-        loading,
-        error,
-        success,
     }
-}
