@@ -1,17 +1,17 @@
 import { createContext, FC, useMemo } from 'react'
-import { ChildrenProps, NotificationContextInterfrace } from '../../types'
-import { useNotificationQueue } from '../../hooks'
+import { ChildrenProps, NotificationContextInterface } from '../../types'
+import { useNotificationQueue } from '../../hooks/providers/useNotificationQueue'
 import { Notification } from '../ui'
 import styles from '../../styles/modules/UI.module.scss'
 
 export const NotificationContext =
-    createContext<NotificationContextInterfrace | null>(null)
+    createContext<NotificationContextInterface | null>(null)
 
-export const NoticiationProvider: FC<ChildrenProps> = ({ children }) => {
+export const NotificationProvider: FC<ChildrenProps> = ({ children }) => {
     const [notifications, createNotification, deleteNotification] =
         useNotificationQueue()
 
-    const ProviderValue: NotificationContextInterfrace = useMemo(
+    const ProviderValue: NotificationContextInterface = useMemo(
         () => ({
             createNotification,
         }),

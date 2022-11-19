@@ -1,22 +1,21 @@
 'use client'
 
-import { FC, ReactNode } from 'react'
+import { FC } from 'react'
 import { ApolloProvider } from '@apollo/client'
 import { ChildrenProps } from '../types'
 import apolloClient from '../lib/apollo'
-import { LoadingProvider } from '../components'
+import { LoadingProvider, NotificationProvider } from '../components'
+import '../styles/globals.scss'
 
-const RootLayout: FC<ChildrenProps> = ({
-    children,
-}: {
-    children: ReactNode
-}) => {
+const RootLayout: FC<ChildrenProps> = ({ children }) => {
     return (
         <html lang="en">
             <head />
             <body>
                 <ApolloProvider client={apolloClient}>
-                    <LoadingProvider>{children}</LoadingProvider>
+                    <LoadingProvider>
+                        <NotificationProvider>{children}</NotificationProvider>
+                    </LoadingProvider>
                 </ApolloProvider>
             </body>
         </html>

@@ -13,22 +13,25 @@ export const useNotificationQueue = (): notificationQueueReturn => {
 
     const createNotification: createNotificationType = (args): void => {
         setQueue(prevState => {
-            prevState.enQueue(args)
-            return prevState
+            const temp = { ...prevState }
+            temp.enQueue(args)
+            return temp as Queue<NotificationInterface>
         })
 
-        setTimeout(() => {
-            setQueue(prevState => {
-                prevState.deQueue()
-                return prevState
-            })
-        }, 10000)
+        // setTimeout(() => {
+        //     setQueue(prevState => {
+        //         const temp = {...prevState}
+        //         temp.deQueue()
+        //         return temp as Queue<NotificationInterface>
+        //     })
+        // }, 10000)
     }
 
     const deleteNotification = (idx: number): void => {
         setQueue(prevState => {
-            prevState.deQueueSpecific(idx)
-            return prevState
+            const temp = { ...prevState }
+            temp.deQueueSpecific(idx)
+            return temp as Queue<NotificationInterface>
         })
     }
 

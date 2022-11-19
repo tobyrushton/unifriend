@@ -22,6 +22,6 @@ export interface NotificationInterface {
 
 export type createNotificationType = (args: NotificationInterface) => void
 
-export interface NotificationContextInterfrace {
+export interface NotificationContextInterface {
     createNotification: createNotificationType
 }
