@@ -9,12 +9,10 @@ export const Notification: FC<notificationProps> = ({
     type,
     content,
     onClick,
-    id,
 }) => {
     return (
         <div
             className={styles.notification}
-            id={id}
             style={{
                 backgroundColor:
                     type === 'error'

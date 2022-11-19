@@ -45,5 +45,4 @@ export interface exitProps {
 
 export interface notificationProps extends NotificationInterface {
     onClick: () => void
-    id: string
 }
