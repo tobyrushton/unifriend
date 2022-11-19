@@ -25,5 +25,12 @@ export const useNotificationQueue = (): notificationQueueReturn => {
         }, 10000)
     }
 
-    return [queue.queue, createNotification]
+    const deleteNotification = (idx:number):void => {
+        setQueue((prevState) => {
+            prevState.deQueueSpecific(idx)
+            return prevState
+        })
+    }
+
+    return [queue.queue, createNotification, deleteNotification]
 }

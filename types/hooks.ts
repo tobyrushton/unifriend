@@ -66,6 +66,7 @@ export interface graphQLHookReturnQueryFunction extends graphQLHookReturnQuery {
 }
 
 export type notificationQueueReturn = [
-    queue: NotificationInterface[],
-    createNotification: createNotificationType
+    queue: Array<NotificationInterface | undefined>,
+    createNotification: createNotificationType,
+    deleteNotification: (idx:number) => void
 ]
