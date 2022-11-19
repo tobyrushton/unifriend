@@ -1,4 +1,5 @@
 import { ChildrenProps } from './providers'
+
 type color = 'primary' | 'secondary'
 
 export interface LogoProps {
@@ -6,11 +7,11 @@ export interface LogoProps {
 }
 
 type styleProperties = {
-    marginTop?:string
-    marginBottom?:string
-    marginLeft?:string
-    marginRight?:string
-    margin?:string
+    marginTop?: string
+    marginBottom?: string
+    marginLeft?: string
+    marginRight?: string
+    margin?: string
 }
 
 export interface TextProps extends ChildrenProps {
@@ -22,7 +23,7 @@ export interface TextProps extends ChildrenProps {
 export interface ButtonProps extends ChildrenProps {
     onClick: () => void
     filled?: boolean
-    inactive?:boolean
+    inactive?: boolean
     style?: styleProperties
 }
 
@@ -31,7 +32,7 @@ export type inputType = 'password' | 'text'
 export interface inputProps {
     placeholder: string
     type: inputType
-    setValue: (update:string) => void
+    setValue: (update: string) => void
     value?: string | undefined
     style?: styleProperties
     maxLength?: number

@@ -1,6 +1,6 @@
 import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
 import {
-    email,
+    emailQuery,
     tempUserObject,
     UserObjectWithID,
     UserUpdateObject,
@@ -229,7 +229,7 @@ export const GetAuthFromUsername = extendType({
                         // returns only the email
                         email: true,
                     },
-                }) as unknown as email
+                }) as unknown as emailQuery
             },
         })
     },

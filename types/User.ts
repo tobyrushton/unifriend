@@ -27,6 +27,6 @@ export interface tempUserObject extends UserUpdateObject {
     id?: string
 }
 
-export type email = {
+export type emailQuery = {
     email: string
 }

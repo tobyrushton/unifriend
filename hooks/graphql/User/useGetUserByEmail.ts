@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { useState } from 'react'
 import {
     UserObjectWithID,
-    email,
+    emailQuery,
     graphQLHookReturnQueryFunction,
 } from '../../../types'
 import { UserByEmailQuery } from '../../../graphql/queries'
@@ -20,15 +20,15 @@ export const useGetUserByEmail = (): graphQLHookReturnQueryFunction => {
 
     const runQuery = async (email: string): Promise<void> => {
         setLoading(true)
-        const response = await apollo
-            .query<UserObjectWithID, email>({
+        await apollo
+            .query<UserObjectWithID, emailQuery>({
                 query: UserByEmailQuery,
                 variables: {
                     email,
                 },
             })
-            .catch(error => {
-                setError(error)
+            .catch(err => {
+                setError(err)
             })
             .then(response => {
                 if (response) {

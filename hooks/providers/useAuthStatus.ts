@@ -13,7 +13,7 @@ export const useAuthStatus = (): authStatusReturnType => {
         setLoading(true)
 
         // Check active sessions and sets the user
-        const getSession = async () => {
+        const getSession = async (): Promise<void> => {
             const authSession = await supabase.auth.getSession()
             setSession(authSession?.data.session ?? null)
             setLoading(false)

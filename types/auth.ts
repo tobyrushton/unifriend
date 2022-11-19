@@ -20,6 +20,6 @@ export interface signUpState {
 }
 
 export interface logInState {
-    email:string
+    email: string
     password: string
 }

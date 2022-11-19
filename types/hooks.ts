@@ -36,7 +36,7 @@ export interface SelectUserByIDParameters {
 export interface AuthenticationHookReturn<T> {
     loading: boolean
     error: AuthError | null
-    response: (email:T, password: T) => Promise<void>
+    response: (email: T, password: T) => Promise<void>
 }
 
 export interface AuthenticationHookReturnWithData<T>
