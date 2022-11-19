@@ -1,5 +1,6 @@
 import { AuthError, Session, User } from '@supabase/supabase-js'
 import { UserObjectWithID } from './User'
+import { createNotificationType, NotificationInterface } from './providers'
 
 export interface graphQLHookReturn {
     success: boolean
@@ -63,3 +64,8 @@ export interface authStatusReturnType {
 export interface graphQLHookReturnQueryFunction extends graphQLHookReturnQuery {
     runQuery: (email: string) => Promise<void>
 }
+
+export type notificationQueueReturn  = [
+    queue:NotificationInterface[],
+    createNotification: createNotificationType
+]
