@@ -4,10 +4,14 @@ import {
     UserObject,
     UserObjectWithID,
     graphQLHookReturnMutation,
+    graphQLMutationParameters,
 } from '../../../types/index'
 import { CreateUserMutation } from '../../../graphql/queries'
 
-export const useCreateUser = (): graphQLHookReturnMutation<UserObject> => {
+export const useCreateUser = (): graphQLHookReturnMutation<
+    UserObjectWithID,
+    UserObject
+> => {
     // defines state types which allow for dynamic return values
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<Error>()
@@ -35,6 +39,8 @@ export const useCreateUser = (): graphQLHookReturnMutation<UserObject> => {
         success,
         loading,
         error,
-        mutation: createUser as () => Promise<UserObjectWithID>,
+        mutation: createUser as (
+            args: graphQLMutationParameters<UserObjectWithID, UserObject>
+        ) => Promise<UserObjectWithID>,
     } as const
 }

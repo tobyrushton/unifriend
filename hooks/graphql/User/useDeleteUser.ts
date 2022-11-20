@@ -1,11 +1,20 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { graphQLHookReturnMutation, UserObjectWithID } from '../../../types'
+import {
+    graphQLHookReturnMutation,
+    UserObjectWithID,
+    graphQLMutationParameters,
+} from '../../../types'
 import { DeleteUserMutation } from '../../../graphql/queries'
 
-export const useDeleteUser = (): graphQLHookReturnMutation<{
-    userID: string
-}> => {
+type userID = { userID: string }
+
+export const useDeleteUser = (): graphQLHookReturnMutation<
+    UserObjectWithID,
+    {
+        userID: string
+    }
+> => {
     // defines state types which allow for dynamic return values
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<Error>()
@@ -33,6 +42,13 @@ export const useDeleteUser = (): graphQLHookReturnMutation<{
         loading,
         error,
         success,
-        mutation: deleteUser as () => Promise<UserObjectWithID>,
+        mutation: deleteUser as (
+            args: graphQLMutationParameters<
+                UserObjectWithID,
+                {
+                    userID: string
+                }
+            >
+        ) => Promise<UserObjectWithID>,
     }
 }
