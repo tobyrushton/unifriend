@@ -1,12 +1,18 @@
-export interface UserObject {
+export interface createUserObject {
     birthday: string
     firstName: string
     lastName: string
-    university: string
     course: string
     username: string
-    bio: string
     email: string
+}
+
+export interface createUserObjectWithUniversity extends createUserObject {
+    university: string
+}
+
+export interface UserObject extends createUserObjectWithUniversity {
+    bio: string
 }
 
 export interface UserObjectWithID extends UserObject {
