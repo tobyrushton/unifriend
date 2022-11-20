@@ -1,9 +1,4 @@
 import { AuthError, Session, User } from '@supabase/supabase-js'
-import {
-    MutationFunctionOptions,
-    DefaultContext,
-    ApolloCache,
-} from '@apollo/client'
 import { UserObjectWithID } from './User'
 import { createNotificationType, NotificationInterface } from './providers'
 
@@ -13,22 +8,8 @@ export interface graphQLHookReturn {
     loading: boolean
 }
 
-export type graphQLMutationParameters<Return, Options> = {
-    options?:
-        | MutationFunctionOptions<
-              Return,
-              Options,
-              DefaultContext,
-              ApolloCache<any>
-          >
-        | undefined
-}
-
-export interface graphQLHookReturnMutation<Return, Options>
-    extends graphQLHookReturn {
-    mutation: (
-        args: graphQLMutationParameters<Return, Options>
-    ) => Promise<UserObjectWithID>
+export interface graphQLHookReturnMutation<T> extends graphQLHookReturn {
+    mutation: (args: T) => Promise<UserObjectWithID>
 }
 
 export interface graphQLHookReturnQuery extends graphQLHookReturn {

@@ -4,23 +4,21 @@ import {
     graphQLHookReturnMutation,
     UpdateUserParamaters,
     UserObjectWithID,
-    graphQLMutationParameters,
 } from '../../../types'
 import { UpdateUserMutation } from '../../../graphql/queries'
 
-export const useUpdateUser = (): graphQLHookReturnMutation<
-    UserObjectWithID,
-    UpdateUserParamaters
-> => {
-    // defines state types which allow for dynamic return values
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<Error>()
-    const [success, setSuccess] = useState<boolean>(false)
+export const useUpdateUser =
+    (): graphQLHookReturnMutation<UpdateUserParamaters> => {
+        // defines state types which allow for dynamic return values
+        const [loading, setLoading] = useState<boolean>(false)
+        const [error, setError] = useState<Error>()
+        const [success, setSuccess] = useState<boolean>(false)
 
-    // defines function updateUser using the mutation defined previously.
-    const [updateUser] = useMutation<UserObjectWithID, UpdateUserParamaters>(
-        UpdateUserMutation,
-        {
+        // defines function updateUser using the mutation defined previously.
+        const [updateUser] = useMutation<
+            UserObjectWithID,
+            UpdateUserParamaters
+        >(UpdateUserMutation, {
             onError: err => {
                 // updates state on error.
                 setError(err)
@@ -32,18 +30,19 @@ export const useUpdateUser = (): graphQLHookReturnMutation<
                 setSuccess(true)
                 setLoading(false)
             },
-        }
-    )
+        })
 
-    return {
-        loading,
-        error,
-        success,
-        mutation: updateUser as (
-            args: graphQLMutationParameters<
-                UserObjectWithID,
-                UpdateUserParamaters
-            >
-        ) => Promise<UserObjectWithID>,
+        const mutation = async (
+            args: UpdateUserParamaters
+        ): Promise<UserObjectWithID> => {
+            setLoading(true)
+            return (await updateUser({ variables: args })) as UserObjectWithID
+        }
+
+        return {
+            loading,
+            error,
+            success,
+            mutation,
+        }
     }
-}
