@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
     authProps,
     logInState,
@@ -50,6 +51,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         loading: createUserLoading,
         error: createUserError,
     } = useCreateUser()
+    const router = useRouter()
 
     useEffect(() => {
         setLoading(signInLoading || signUpLoading || createUserLoading)
@@ -168,13 +170,9 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                         ...(temp as createUserObject),
                         ...(university as { university: string }),
                     }
-                    await createUser({
-                        options: {
-                            variables: CreateUserObject,
-                        },
-                    })
+                    await createUser(CreateUserObject)
                     if (createUserSuccess) {
-                        // insert logic to redirect to home here.
+                        router.push('/home')
                     }
                 } else
                     createNotification({
