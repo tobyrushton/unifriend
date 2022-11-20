@@ -4,16 +4,24 @@ import {
     logInState,
     signUpState,
     signUpSlidesInterface,
+    createUserObject,
+    createUserObjectWithUniversity,
 } from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
 import { Input, Text, Button, Exit } from '../ui'
-import { useLogIn, useNotifications } from '../../hooks'
+import {
+    useLogIn,
+    useNotifications,
+    useSignUp,
+    useCreateUser,
+} from '../../hooks'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 import {
     isSignUpState,
     isValidEmail,
     isValidPassword,
     isValidUsername,
+    getUniversity,
 } from '../../lib/utils'
 
 export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
@@ -31,10 +39,21 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     } = useLogIn()
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
+    const {
+        response: register,
+        error: signUpError,
+        loading: signUpLoading,
+    } = useSignUp()
+    const {
+        mutation: createUser,
+        success: createUserSuccess,
+        loading: createUserLoading,
+        error: createUserError,
+    } = useCreateUser()
 
     useEffect(() => {
-        setLoading(signInLoading)
-    }, [signInLoading, setLoading])
+        setLoading(signInLoading || signUpLoading || createUserLoading)
+    }, [signInLoading, setLoading, signUpLoading, createUserLoading])
 
     useEffect(() => {
         if (signInError)
@@ -43,6 +62,22 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 content: signInError.message as string,
             })
     }, [signInError, createNotification])
+
+    useEffect(() => {
+        if (signUpError)
+            createNotification({
+                type: 'error',
+                content: signUpError.message as string,
+            })
+    }, [signUpError, createNotification])
+
+    useEffect(() => {
+        if (createUserError)
+            createNotification({
+                type: 'error',
+                content: createUserError.message as string,
+            })
+    }, [createUserError, createNotification])
 
     useEffect(() => {
         if (logIn && state === undefined) setState({ email: '', password: '' })
@@ -121,7 +156,34 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     }
 
     const clickSignUp = async (): Promise<void> => {
-        // logic for sign up here.
+        if (isSignUpState(state)) {
+            await register(state.email, state.password)
+            if (signUpError === undefined) {
+                const temp: Partial<Pick<signUpState, 'password'>> &
+                    Omit<signUpState, 'password'> = state
+                delete temp.password
+                const university = { university: getUniversity(state.email) }
+                if (typeof university.university === 'string') {
+                    const CreateUserObject: createUserObjectWithUniversity = {
+                        ...(temp as createUserObject),
+                        ...(university as { university: string }),
+                    }
+                    await createUser({
+                        options: {
+                            variables: CreateUserObject,
+                        },
+                    })
+                    if (createUserSuccess) {
+                        // insert logic to redirect to home here.
+                    }
+                } else
+                    createNotification({
+                        type: 'error',
+                        content:
+                            'Invalid email, please enter a valid UK university email',
+                    })
+            }
+        }
     }
 
     return (
