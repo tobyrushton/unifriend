@@ -4,7 +4,11 @@ import { FC } from 'react'
 import { ApolloProvider } from '@apollo/client'
 import { ChildrenProps } from '../types'
 import apolloClient from '../lib/apollo'
-import { LoadingProvider, NotificationProvider } from '../components'
+import {
+    LoadingProvider,
+    NotificationProvider,
+    UserProvider,
+} from '../components'
 import '../styles/globals.scss'
 
 const RootLayout: FC<ChildrenProps> = ({ children }) => {
@@ -14,7 +18,9 @@ const RootLayout: FC<ChildrenProps> = ({ children }) => {
             <body>
                 <ApolloProvider client={apolloClient}>
                     <LoadingProvider>
-                        <NotificationProvider>{children}</NotificationProvider>
+                        <NotificationProvider>
+                            <UserProvider>{children}</UserProvider>
+                        </NotificationProvider>
                     </LoadingProvider>
                 </ApolloProvider>
             </body>

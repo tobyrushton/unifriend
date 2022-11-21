@@ -4,6 +4,7 @@ import {
     UserObjectWithID,
     emailQuery,
     graphQLHookReturnQueryFunction,
+    getUserFromAuthQuery,
 } from '../../../types'
 import { UserByEmailQuery } from '../../../graphql/queries'
 
@@ -21,7 +22,7 @@ export const useGetUserByEmail = (): graphQLHookReturnQueryFunction<string> => {
     const runQuery = async (email: string): Promise<void> => {
         setLoading(true)
         await apollo
-            .query<UserObjectWithID, emailQuery>({
+            .query<getUserFromAuthQuery<UserObjectWithID, 'User'>, emailQuery>({
                 query: UserByEmailQuery,
                 variables: {
                     email,
@@ -32,7 +33,18 @@ export const useGetUserByEmail = (): graphQLHookReturnQueryFunction<string> => {
             })
             .then(response => {
                 if (response) {
-                    setData(response.data)
+                    const temp = response.data.getUserFromAuth
+                    setData({
+                        firstName: temp.firstName,
+                        lastName: temp.lastName,
+                        bio: temp.bio,
+                        birthday: temp.birthday,
+                        course: temp.course,
+                        email: temp.email,
+                        username: temp.username,
+                        id: temp.id,
+                        university: temp.university,
+                    })
                     setSuccess(true)
                     setLoading(false)
                 }

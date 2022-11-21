@@ -6,6 +6,7 @@ const UniversityEmailEndings: UniversityEmailArray =
 
 // checks whether an input is a valid email ending in .ac.uk
 export const isValidEmail = (email: string): boolean => {
+    if (email.split('@')[1] === 'gmail.com') return true // for testing code -- remove for post
     // regex experession that checks if string is in the form 'something@something.ac.uk'
     const regex = /^.*@.*[.]ac[.]uk]*.*$/i
     return regex.test(email)

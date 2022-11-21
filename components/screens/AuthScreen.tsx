@@ -149,38 +149,53 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                     })
             }
         }
-    }, [state, logIn, signUp, setButtonActive, setSignUpSlides])
+    }, [
+        state,
+        logIn,
+        signUp,
+        setButtonActive,
+        setSignUpSlides,
+        signUpSlides.slide,
+    ])
 
     const clickSignIn = async (): Promise<void> => {
         if (!isSignUpState(state) && state) {
             await signIn(state.email, state.password)
+            if (signInError === null) router.push('/home')
         }
     }
 
     const clickSignUp = async (): Promise<void> => {
         if (isSignUpState(state)) {
-            await register(state.email, state.password)
-            if (signUpError === undefined) {
-                const temp: Partial<Pick<signUpState, 'password'>> &
-                    Omit<signUpState, 'password'> = state
-                delete temp.password
-                const university = { university: getUniversity(state.email) }
-                if (typeof university.university === 'string') {
+            const university = getUniversity(state.email)
+            if (university !== null) {
+                await register(state.email, state.password)
+                if (signUpError === null) {
+                    const temp: Partial<Pick<signUpState, 'password'>> &
+                        Omit<signUpState, 'password'> = state
+                    delete temp.password
                     const CreateUserObject: createUserObjectWithUniversity = {
                         ...(temp as createUserObject),
-                        ...(university as { university: string }),
+                        ...({ university } as {
+                            university: string
+                        }),
                     }
+
                     await createUser(CreateUserObject)
+                    if (createUserError === undefined)
+                        createNotification({
+                            type: 'success',
+                            content: 'Account created successfully.',
+                        })
                     if (createUserSuccess) {
                         router.push('/home')
                     }
-                } else
-                    createNotification({
-                        type: 'error',
-                        content:
-                            'Invalid email, please enter a valid UK university email',
-                    })
-            }
+                }
+            } else
+                createNotification({
+                    type: 'error',
+                    content: 'Please enter a valid UK university email',
+                })
         }
     }
 

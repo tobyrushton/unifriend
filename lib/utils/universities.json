@@ -182,5 +182,6 @@
     { "university": "University of Worcester  ", "email": "@worc.ac.uk" },
     { "university": "University of York ", "email": "@york.ac.uk" },
     { "university": "University St Andrews", "email": "@st-andrews.ac.uk " },
-    { "university": "York St John University ", "email": "@yorksj.ac.uk" }
+    { "university": "York St John University ", "email": "@yorksj.ac.uk" },
+    {"university": "test university", "email": "@gmail.com"}
 ]

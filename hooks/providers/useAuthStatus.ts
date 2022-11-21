@@ -23,7 +23,7 @@ export const useAuthStatus = (): authStatusReturnType => {
         // Listen for changes on auth state (logged in, signed out, etc.)
         const {
             data: { subscription },
-        } = supabase.auth.onAuthStateChange(async (_event, authSession) => {
+        } = supabase.auth.onAuthStateChange((_event, authSession) => {
             setSession(authSession ?? null)
             setLoading(false)
         })

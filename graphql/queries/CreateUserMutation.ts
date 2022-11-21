@@ -8,6 +8,7 @@ export const CreateUserMutation = gql`
         $university: String!
         $course: String!
         $username: String!
+        $email: String!
     ) {
         createUser(
             firstName: $firstName
@@ -16,6 +17,7 @@ export const CreateUserMutation = gql`
             university: $university
             course: $course
             username: $username
+            email: $email
         ) {
             bio
             birthday
@@ -29,6 +31,7 @@ export const CreateUserMutation = gql`
             }
             university
             username
+            email
         }
     }
 `

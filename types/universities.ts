@@ -132,6 +132,7 @@ export type university =
     | 'University of York '
     | 'University St Andrews'
     | 'York St John University'
+    | 'test university'
 
 export interface UniversityEmail {
     university: university
