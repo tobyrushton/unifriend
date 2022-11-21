@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     UserObjectWithID,
     SelectUserByIDParameters,
@@ -10,6 +10,7 @@ import { UserByIDQuery } from '../../../graphql/queries'
 export const useGetUserByID =
     (): graphQLHookReturnQueryFunction<SelectUserByIDParameters> => {
         // defines state types which allow for dynamic return values
+        const [abort] = useState<AbortController>(new AbortController())
         const [error, setError] = useState<Error>()
         const [success, setSuccess] = useState<boolean>(false)
         const [loading, setLoading] = useState<boolean>(false)
@@ -26,6 +27,11 @@ export const useGetUserByID =
                 .query<UserObjectWithID, SelectUserByIDParameters>({
                     query: UserByIDQuery,
                     variables: args,
+                    context: {
+                        fetchOptions: {
+                            singal: abort.signal,
+                        },
+                    },
                 })
                 .catch(err => {
                     setError(err)
@@ -38,6 +44,11 @@ export const useGetUserByID =
                     }
                 })
         }
+
+        // aborts the query when the component derenders.
+        useEffect(() => {
+            return () => abort.abort()
+        }, [abort])
 
         return {
             loading,

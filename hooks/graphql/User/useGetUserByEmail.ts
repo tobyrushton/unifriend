@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     UserObjectWithID,
     emailQuery,
@@ -12,6 +12,7 @@ import { UserByEmailQuery } from '../../../graphql/queries'
 
 export const useGetUserByEmail = (): graphQLHookReturnQueryFunction<string> => {
     // defines state types which allow for dynamic return values
+    const [abort] = useState<AbortController>(new AbortController())
     const [error, setError] = useState<Error>()
     const [success, setSuccess] = useState<boolean>(false)
     const [data, setData] = useState<UserObjectWithID | undefined>()
@@ -26,6 +27,11 @@ export const useGetUserByEmail = (): graphQLHookReturnQueryFunction<string> => {
                 query: UserByEmailQuery,
                 variables: {
                     email,
+                },
+                context: {
+                    fetchOptions: {
+                        signal: abort.signal,
+                    },
                 },
             })
             .catch(err => {
@@ -50,6 +56,11 @@ export const useGetUserByEmail = (): graphQLHookReturnQueryFunction<string> => {
                 }
             })
     }
+
+    // aborts the query when the component derenders.
+    useEffect(() => {
+        return () => abort.abort()
+    }, [abort])
 
     return {
         loading,
