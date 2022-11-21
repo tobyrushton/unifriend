@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
     UserObjectWithID,
     SelectUserByIDParameters,
@@ -18,32 +18,34 @@ export const useGetUserByID =
 
         const apollo = useApolloClient()
 
-        const runQuery = async (
-            args: SelectUserByIDParameters
-        ): Promise<void> => {
-            setLoading(true)
-            // creates a query to the database using the grapql query previously defined.
-            await apollo
-                .query<UserObjectWithID, SelectUserByIDParameters>({
-                    query: UserByIDQuery,
-                    variables: args,
-                    context: {
-                        fetchOptions: {
-                            singal: abort.signal,
-                        },
-                    },
-                })
-                .catch(err => {
-                    setError(err)
-                })
-                .then(response => {
-                    if (response) {
-                        setData(response.data)
-                        setSuccess(true)
-                        setLoading(false)
-                    }
-                })
-        }
+        const runQuery = useMemo(
+            () =>
+                async (args: SelectUserByIDParameters): Promise<void> => {
+                    setLoading(true)
+                    // creates a query to the database using the grapql query previously defined.
+                    await apollo
+                        .query<UserObjectWithID, SelectUserByIDParameters>({
+                            query: UserByIDQuery,
+                            variables: args,
+                            context: {
+                                fetchOptions: {
+                                    singal: abort.signal,
+                                },
+                            },
+                        })
+                        .catch(err => {
+                            setError(err)
+                        })
+                        .then(response => {
+                            if (response) {
+                                setData(response.data)
+                                setSuccess(true)
+                                setLoading(false)
+                            }
+                        })
+                },
+            [abort.signal, apollo]
+        )
 
         // aborts the query when the component derenders.
         useEffect(() => {

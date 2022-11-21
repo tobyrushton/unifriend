@@ -1,5 +1,5 @@
 import { useApolloClient } from '@apollo/client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import {
     UserObjectWithID,
     emailQuery,
@@ -20,42 +20,49 @@ export const useGetUserByEmail = (): graphQLHookReturnQueryFunction<string> => {
 
     const apollo = useApolloClient()
 
-    const runQuery = async (email: string): Promise<void> => {
-        setLoading(true)
-        await apollo
-            .query<getUserFromAuthQuery<UserObjectWithID, 'User'>, emailQuery>({
-                query: UserByEmailQuery,
-                variables: {
-                    email,
-                },
-                context: {
-                    fetchOptions: {
-                        signal: abort.signal,
-                    },
-                },
-            })
-            .catch(err => {
-                setError(err)
-            })
-            .then(response => {
-                if (response) {
-                    const temp = response.data.getUserFromAuth
-                    setData({
-                        firstName: temp.firstName,
-                        lastName: temp.lastName,
-                        bio: temp.bio,
-                        birthday: temp.birthday,
-                        course: temp.course,
-                        email: temp.email,
-                        username: temp.username,
-                        id: temp.id,
-                        university: temp.university,
+    const runQuery = useMemo(
+        () =>
+            async (email: string): Promise<void> => {
+                setLoading(true)
+                await apollo
+                    .query<
+                        getUserFromAuthQuery<UserObjectWithID, 'User'>,
+                        emailQuery
+                    >({
+                        query: UserByEmailQuery,
+                        variables: {
+                            email,
+                        },
+                        context: {
+                            fetchOptions: {
+                                signal: abort.signal,
+                            },
+                        },
                     })
-                    setSuccess(true)
-                    setLoading(false)
-                }
-            })
-    }
+                    .catch(err => {
+                        setError(err)
+                    })
+                    .then(response => {
+                        if (response) {
+                            const temp = response.data.getUserFromAuth
+                            setData({
+                                firstName: temp.firstName,
+                                lastName: temp.lastName,
+                                bio: temp.bio,
+                                birthday: temp.birthday,
+                                course: temp.course,
+                                email: temp.email,
+                                username: temp.username,
+                                id: temp.id,
+                                university: temp.university,
+                            })
+                            setSuccess(true)
+                            setLoading(false)
+                        }
+                    })
+            },
+        [abort.signal, apollo]
+    )
 
     // aborts the query when the component derenders.
     useEffect(() => {

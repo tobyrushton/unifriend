@@ -1,5 +1,5 @@
 import { createContext, FC, useMemo, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import {
     userContextInterface,
     ChildrenProps,
@@ -34,6 +34,7 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
     const router = useRouter()
+    const pathname = usePathname()
 
     useEffect(() => {
         if (queryLoading || sessionLoading) setLoading(true)
@@ -58,8 +59,8 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     }, [data])
 
     useEffect(() => {
-        if (user !== defaultUser) router.push('/home')
-    }, [user, router])
+        if (user !== defaultUser && pathname === '/') router.push('/home')
+    }, [user, router, pathname])
 
     const providerValue: userContextInterface = useMemo(
         () => ({ user }),
