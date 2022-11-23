@@ -5,7 +5,8 @@ import {
     ChildrenProps,
     UserObjectWithID,
 } from '../../types'
-import { useAuthStatus, useGetUserByEmail } from '../../hooks'
+import { useGetUserByEmail } from '../../hooks/graphql/User/useGetUserByEmail'
+import { useAuthStatus } from '../../hooks/providers/useAuthStatus'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 import { useNotifications } from '../../hooks/providers/useNotifications'
 
