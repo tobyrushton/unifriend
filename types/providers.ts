@@ -3,6 +3,7 @@ import { UserObjectWithID } from './User'
 
 export interface userContextInterface {
     user: UserObjectWithID
+    resetPassword: (password: string) => Promise<void>
 }
 
 export type ChildrenProps = {

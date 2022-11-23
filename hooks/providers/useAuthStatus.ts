@@ -1,11 +1,43 @@
-import { useEffect, useState } from 'react'
-import { Session } from '@supabase/supabase-js'
+import { useEffect, useState, useMemo } from 'react'
+import { Session, AuthError } from '@supabase/supabase-js'
 import { supabase } from '../../lib/supabase'
 import { authStatusReturnType } from '../../types'
+import { useNotifications } from './useNotifications'
 
 export const useAuthStatus = (): authStatusReturnType => {
     const [session, setSession] = useState<Session | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
+    const [passwordResetRequest, setPasswordResetRequest] =
+        useState<boolean>(false)
+    const { createNotification } = useNotifications()
+
+    const resetPassword = useMemo(
+        () =>
+            async (password: string): Promise<void> => {
+                setLoading(true)
+                await supabase.auth
+                    .updateUser({
+                        password,
+                    })
+                    .catch((e: AuthError) =>
+                        createNotification({
+                            type: 'error',
+                            content: e.message,
+                        })
+                    )
+                    .then(data => {
+                        setLoading(false)
+                        if (data) {
+                            createNotification({
+                                type: 'success',
+                                content: 'Password changed successfully.',
+                            })
+                            setPasswordResetRequest(() => false)
+                        }
+                    })
+            },
+        []
+    )
 
     useEffect(() => {
         // despite the default value of loading being true
@@ -23,9 +55,10 @@ export const useAuthStatus = (): authStatusReturnType => {
         // Listen for changes on auth state (logged in, signed out, etc.)
         const {
             data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, authSession) => {
+        } = supabase.auth.onAuthStateChange((event, authSession) => {
             setSession(authSession ?? null)
             setLoading(false)
+            if (event === 'PASSWORD_RECOVERY') setPasswordResetRequest(true)
         })
 
         // unsubscribes when the prorgam derenders
@@ -37,5 +70,7 @@ export const useAuthStatus = (): authStatusReturnType => {
     return {
         session,
         loading,
+        passwordResetRequest,
+        resetPassword,
     }
 }

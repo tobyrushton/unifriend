@@ -2,72 +2,33 @@ import { FC, useEffect, useState } from 'react'
 import { AuthError } from '@supabase/supabase-js'
 import { Text, Button, Input } from '../ui'
 import { supabase } from '../../lib/supabase'
-import { isValidEmail, isValidPassword } from '../../lib/utils'
-import { ResetPasswordProps } from '../../types'
-import { useNotifications } from '../../hooks'
+import { isValidEmail } from '../../lib/utils'
+import { useLoadingScreen, useNotifications } from '../../hooks'
 
-const PasswordScreen: FC = () => {
-    const [password, setPassword] = useState<string>('')
-    const [confirmPassword, setConfirmPassword] = useState<string>('')
-    const [buttonActive, setButtonActive] = useState<boolean>(false)
-    const [error, setError] = useState<AuthError>()
-
-    const { createNotification } = useNotifications()
-
-    const resetPassword = async (): Promise<void> => {
-        await supabase.auth
-            .updateUser({
-                password,
-            })
-            .catch(e => setError(e))
-    }
-
-    useEffect(() => {
-        if (error)
-            createNotification({
-                type: 'error',
-                content: error.message,
-            })
-    }, [error, createNotification])
-
-    useEffect(() => {
-        if (isValidPassword(password) && isValidPassword(confirmPassword))
-            if (password === confirmPassword) setButtonActive(true)
-            else setButtonActive(false)
-        else setButtonActive(false)
-    }, [password, confirmPassword, setButtonActive])
-
-    return (
-        <>
-            <Text>Enter new password</Text>
-            <Input
-                type="password"
-                placeholder="New Password"
-                setValue={change => setPassword(() => change)}
-            />
-            <Input
-                type="password"
-                placeholder="Confirm Password"
-                setValue={change => setConfirmPassword(() => change)}
-            />
-            <Button onClick={resetPassword} inactive={!buttonActive}>
-                Reset
-            </Button>
-        </>
-    )
-}
-
-export const EmailScreen: FC = () => {
+export const ForgottenPasswordScreen: FC = () => {
     const [accountEmail, setAccountEmail] = useState<string>('')
     const [buttonActive, setButtonActive] = useState<boolean>(false)
+    const [emailSent, setEmailSent] = useState<boolean>(false)
     const [error, setError] = useState<AuthError>()
 
     const { createNotification } = useNotifications()
+    const { setLoading } = useLoadingScreen()
 
     const sendEmail = async (): Promise<void> => {
+        setLoading(true)
         await supabase.auth
             .resetPasswordForEmail(accountEmail)
             .catch(e => setError(e))
+            .then(data => {
+                if (data) {
+                    createNotification({
+                        type: 'success',
+                        content: 'Reset Email sent successfully',
+                    })
+                    setEmailSent(true)
+                    setLoading(false)
+                }
+            })
     }
 
     useEffect(() => {
@@ -83,7 +44,18 @@ export const EmailScreen: FC = () => {
         else setButtonActive(false)
     }, [accountEmail, setButtonActive])
 
-    return (
+    return emailSent ? (
+        <>
+            <Text header>Please check your email to reset your password</Text>
+            <Text>
+                If the email doesn&apos;t show up, please chekc your junk email
+                or retry
+            </Text>
+            <Button filled onClick={sendEmail}>
+                Retry
+            </Button>
+        </>
+    ) : (
         <>
             <Text header>Enter account email</Text>
             <Input
@@ -104,9 +76,4 @@ export const EmailScreen: FC = () => {
             </Button>
         </>
     )
-}
-
-export const ForgottenPasswordScreen: FC<ResetPasswordProps> = ({ email }) => {
-    if (email) return <EmailScreen />
-    return <PasswordScreen />
 }

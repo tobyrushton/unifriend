@@ -30,7 +30,12 @@ const defaultUser: UserObjectWithID = {
 
 export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     const [user, setUser] = useState<UserObjectWithID>(defaultUser)
-    const { session, loading: sessionLoading } = useAuthStatus()
+    const {
+        session,
+        loading: sessionLoading,
+        passwordResetRequest,
+        resetPassword,
+    } = useAuthStatus()
     const { error, loading: queryLoading, runQuery, data } = useGetUserByEmail()
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
@@ -68,11 +73,23 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     }, [data])
 
     useEffect(() => {
-        if (user !== defaultUser && pathname === '/') router.push('/a')
-    }, [user, router, pathname])
+        if (
+            user !== defaultUser &&
+            (pathname === '/' ||
+                pathname?.toLowerCase() === '/resetpassword') &&
+            !passwordResetRequest
+        )
+            router.push('/a')
+    }, [user, router, pathname, passwordResetRequest])
+
+    useEffect(() => {
+        if (passwordResetRequest) router.push('/resetPassword')
+        console.log(pathname?.toLocaleLowerCase())
+        console.log(passwordResetRequest)
+    }, [passwordResetRequest, router, pathname])
 
     const providerValue: userContextInterface = useMemo(
-        () => ({ user }),
+        () => ({ user, resetPassword }),
         [user]
     )
 

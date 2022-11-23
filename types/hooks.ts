@@ -63,6 +63,8 @@ export interface authDataType {
 export interface authStatusReturnType {
     session: Session | null
     loading: boolean
+    passwordResetRequest: boolean
+    resetPassword: (password: string) => Promise<void>
 }
 
 export interface graphQLHookReturnQueryFunction<T>
