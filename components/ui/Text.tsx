@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { TextProps } from '../../types'
 import styles from '../../styles/modules/UI.module.scss'
+import { colors } from '../../styles/reusables/colors'
 
 export const Text: FC<TextProps> = ({
     bold,
@@ -8,7 +9,19 @@ export const Text: FC<TextProps> = ({
     children,
     style,
     large,
+    small,
+    clickable,
+    color,
 }) => {
+    const styling = color
+        ? {
+              ...{
+                  color:
+                      color === 'primary' ? colors.primary : colors.secondary,
+              },
+              ...styles,
+          }
+        : styles
     return header ? (
         <h1
             className={
@@ -24,8 +37,10 @@ export const Text: FC<TextProps> = ({
         <p
             className={`${bold ? styles.fontTextBold : styles.fontText} ${
                 large ? styles.large : ''
+            } ${small ? styles.small : ''} ${
+                clickable ? styles.clickable : ''
             }`}
-            style={style}
+            style={styling}
         >
             {children}
         </p>

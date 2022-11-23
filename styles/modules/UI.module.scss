@@ -16,6 +16,14 @@
 .large {
     font-size: 2rem !important;
 }
+.small {
+    font-size: 0.5rem !important;
+}
+
+.clickable {
+    cursor: pointer;
+    text-decoration: underline;
+}
 
 .fontText {
     @include mixins.fontClass($fontWeight: 400);
