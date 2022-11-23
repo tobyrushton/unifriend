@@ -19,6 +19,10 @@ export interface TextProps extends ChildrenProps {
     header?: boolean
     style?: styleProperties
     large?: boolean
+    small?: boolean
+    clickable?: boolean
+    color?: color
+    onClick?: () => void
 }
 
 export interface ButtonProps extends ChildrenProps {

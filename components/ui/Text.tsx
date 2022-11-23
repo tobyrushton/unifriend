@@ -12,6 +12,7 @@ export const Text: FC<TextProps> = ({
     small,
     clickable,
     color,
+    onClick,
 }) => {
     const styling = color
         ? {
@@ -33,13 +34,22 @@ export const Text: FC<TextProps> = ({
         >
             {children}
         </h1>
+    ) : clickable ? (
+        <div onClick={onClick} role="button" tabIndex={0}>
+            <p
+                className={`${bold ? styles.fontTextBold : styles.fontText} ${
+                    large ? styles.large : ''
+                } ${small ? styles.small : ''} ${styles.clickable}`}
+                style={styling}
+            >
+                {children}
+            </p>
+        </div>
     ) : (
         <p
             className={`${bold ? styles.fontTextBold : styles.fontText} ${
                 large ? styles.large : ''
-            } ${small ? styles.small : ''} ${
-                clickable ? styles.clickable : ''
-            }`}
+            } ${small ? styles.small : ''}`}
             style={styling}
         >
             {children}
