@@ -25,6 +25,7 @@ import {
     isValidUsername,
     getUniversity,
 } from '../../lib/utils'
+import { ForgottenPasswordScreen } from './ForgottenPasswordScreen'
 
 export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     const [state, setState] = useState<logInState | signUpState>()
@@ -34,6 +35,8 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         slide: 1,
     })
     const [displayConfirmEmail, setDisplayConfirmEmail] =
+        useState<boolean>(false)
+    const [displayForgottenPassword, setDisplayForgottenPassword] =
         useState<boolean>(false)
 
     const {
@@ -212,123 +215,82 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 <div className={styles.offset}>
                     {displayConfirmEmail ? (
                         <ConfirmEmailScreen />
-                    ) : logIn ? (
-                        <>
-                            <Text header bold>
-                                Sign in
-                            </Text>
-                            <Input
-                                placeholder="Username or email"
-                                type="text"
-                                setValue={change => {
-                                    setState(prevState => {
-                                        const temp = {
-                                            ...prevState,
-                                        } as logInState
-                                        temp.email = change
-                                        return temp
-                                    })
-                                }}
-                                style={{ marginTop: '5%' }}
-                            />
-                            <Input
-                                placeholder="Password"
-                                type="password"
-                                setValue={change => {
-                                    setState(prevState => {
-                                        const temp = {
-                                            ...prevState,
-                                        } as logInState
-                                        temp.password = change
-                                        return temp
-                                    })
-                                }}
-                                style={{
-                                    marginTop: '5%',
-                                }}
-                            />
-                            <Button
-                                inactive={!buttonActive}
-                                onClick={clickSignIn}
-                                style={{
-                                    marginTop: '20%',
-                                }}
-                            >
-                                Sign In
-                            </Button>
-                        </>
                     ) : (
-                        <>
-                            <Text header bold>
-                                Create your account
-                            </Text>
-                            {signUpSlides.slide === 1 ? (
+                        <form className={styles.form}>
+                            {displayForgottenPassword ? (
+                                <ForgottenPasswordScreen />
+                            ) : logIn ? (
                                 <>
+                                    <Text header bold>
+                                        Sign in
+                                    </Text>
                                     <Input
-                                        placeholder="First Name"
+                                        placeholder="Username or email"
                                         type="text"
                                         setValue={change => {
                                             setState(prevState => {
                                                 const temp = {
                                                     ...prevState,
-                                                } as signUpState
-                                                temp.firstName = change
-                                                return temp
-                                            })
-                                        }}
-                                        style={{
-                                            marginTop: '2.5%',
-                                        }}
-                                        maxLength={16}
-                                    />
-                                    <Input
-                                        placeholder="Last Name"
-                                        type="text"
-                                        setValue={change => {
-                                            setState(prevState => {
-                                                const temp = {
-                                                    ...prevState,
-                                                } as signUpState
-                                                temp.lastName = change
-                                                return temp
-                                            })
-                                        }}
-                                        style={{
-                                            marginTop: '2.5%',
-                                        }}
-                                        maxLength={16}
-                                    />
-                                    <Input
-                                        placeholder="University Email"
-                                        type="text"
-                                        setValue={change => {
-                                            setState(prevState => {
-                                                const temp = {
-                                                    ...prevState,
-                                                } as signUpState
+                                                } as logInState
                                                 temp.email = change
                                                 return temp
                                             })
                                         }}
-                                        style={{
-                                            marginTop: '2.5%',
-                                        }}
-                                        maxLength={32}
+                                        style={{ marginTop: '5%' }}
                                     />
+                                    <Input
+                                        placeholder="Password"
+                                        type="password"
+                                        setValue={change => {
+                                            setState(prevState => {
+                                                const temp = {
+                                                    ...prevState,
+                                                } as logInState
+                                                temp.password = change
+                                                return temp
+                                            })
+                                        }}
+                                        style={{
+                                            marginTop: '5%',
+                                        }}
+                                    />
+                                    <Text
+                                        clickable
+                                        small
+                                        style={{ marginTop: '2%' }}
+                                        color="primary"
+                                        onClick={() =>
+                                            setDisplayForgottenPassword(true)
+                                        }
+                                    >
+                                        Forgot your password?
+                                    </Text>
+                                    <Button
+                                        inactive={!buttonActive}
+                                        onClick={clickSignIn}
+                                        style={{
+                                            marginTop: '20%',
+                                        }}
+                                    >
+                                        Sign In
+                                    </Button>
                                 </>
                             ) : (
                                 <>
-                                    {signUpSlides.slide === 2 ? (
+                                    <Text header bold>
+                                        Create your account
+                                    </Text>
+                                    {signUpSlides.slide === 1 ? (
                                         <>
                                             <Input
-                                                placeholder="Username"
+                                                placeholder="First Name"
                                                 type="text"
                                                 setValue={change => {
                                                     setState(prevState => {
                                                         const temp = {
                                                             ...prevState,
                                                         } as signUpState
-                                                        temp.username = change
+                                                        temp.firstName = change
                                                         return temp
                                                     })
                                                 }}
@@ -338,14 +300,14 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                 maxLength={16}
                                             />
                                             <Input
-                                                placeholder="Password"
-                                                type="password"
+                                                placeholder="Last Name"
+                                                type="text"
                                                 setValue={change => {
                                                     setState(prevState => {
                                                         const temp = {
                                                             ...prevState,
                                                         } as signUpState
-                                                        temp.password = change
+                                                        temp.lastName = change
                                                         return temp
                                                     })
                                                 }}
@@ -353,64 +315,144 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     marginTop: '2.5%',
                                                 }}
                                                 maxLength={16}
+                                            />
+                                            <Input
+                                                placeholder="University Email"
+                                                type="text"
+                                                setValue={change => {
+                                                    setState(prevState => {
+                                                        const temp = {
+                                                            ...prevState,
+                                                        } as signUpState
+                                                        temp.email = change
+                                                        return temp
+                                                    })
+                                                }}
+                                                style={{
+                                                    marginTop: '2.5%',
+                                                }}
+                                                maxLength={32}
                                             />
                                         </>
                                     ) : (
                                         <>
-                                            <Input
-                                                placeholder="Course"
-                                                type="text"
-                                                style={{
-                                                    marginTop: '2.5%',
-                                                }}
-                                                setValue={change => {
-                                                    setState(prevState => {
-                                                        const temp = {
-                                                            ...prevState,
-                                                        } as signUpState
-                                                        temp.course = change
-                                                        return temp
-                                                    })
-                                                }}
-                                            />
-                                            <Input
-                                                placeholder="Birthday"
-                                                type="date"
-                                                style={{
-                                                    marginTop: '2.5%',
-                                                }}
-                                                setValue={change => {
-                                                    setState(prevState => {
-                                                        const temp = {
-                                                            ...prevState,
-                                                        } as signUpState
-                                                        temp.birthday = change
-                                                        return temp
-                                                    })
-                                                }}
-                                                maxLength={16}
-                                            />
+                                            {signUpSlides.slide === 2 ? (
+                                                <>
+                                                    <Input
+                                                        placeholder="Username"
+                                                        type="text"
+                                                        setValue={change => {
+                                                            setState(
+                                                                prevState => {
+                                                                    const temp =
+                                                                        {
+                                                                            ...prevState,
+                                                                        } as signUpState
+                                                                    temp.username =
+                                                                        change
+                                                                    return temp
+                                                                }
+                                                            )
+                                                        }}
+                                                        style={{
+                                                            marginTop: '2.5%',
+                                                        }}
+                                                        maxLength={16}
+                                                    />
+                                                    <Input
+                                                        placeholder="Password"
+                                                        type="password"
+                                                        setValue={change => {
+                                                            setState(
+                                                                prevState => {
+                                                                    const temp =
+                                                                        {
+                                                                            ...prevState,
+                                                                        } as signUpState
+                                                                    temp.password =
+                                                                        change
+                                                                    return temp
+                                                                }
+                                                            )
+                                                        }}
+                                                        style={{
+                                                            marginTop: '2.5%',
+                                                        }}
+                                                        maxLength={16}
+                                                    />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Input
+                                                        placeholder="Course"
+                                                        type="text"
+                                                        style={{
+                                                            marginTop: '2.5%',
+                                                        }}
+                                                        setValue={change => {
+                                                            setState(
+                                                                prevState => {
+                                                                    const temp =
+                                                                        {
+                                                                            ...prevState,
+                                                                        } as signUpState
+                                                                    temp.course =
+                                                                        change
+                                                                    return temp
+                                                                }
+                                                            )
+                                                        }}
+                                                    />
+                                                    <Input
+                                                        placeholder="Birthday"
+                                                        type="date"
+                                                        style={{
+                                                            marginTop: '2.5%',
+                                                        }}
+                                                        setValue={change => {
+                                                            setState(
+                                                                prevState => {
+                                                                    const temp =
+                                                                        {
+                                                                            ...prevState,
+                                                                        } as signUpState
+                                                                    temp.birthday =
+                                                                        change
+                                                                    return temp
+                                                                }
+                                                            )
+                                                        }}
+                                                        maxLength={16}
+                                                    />
+                                                </>
+                                            )}
                                         </>
                                     )}
+                                    <Button
+                                        onClick={() =>
+                                            signUpSlides.slide === 3
+                                                ? clickSignUp()
+                                                : setSignUpSlides(
+                                                      prevState => ({
+                                                          buttonActive: false,
+                                                          slide:
+                                                              prevState.slide +
+                                                              1,
+                                                      })
+                                                  )
+                                        }
+                                        style={{
+                                            marginTop: '2.5%',
+                                        }}
+                                        inactive={!signUpSlides.buttonActive}
+                                    >
+                                        {signUpSlides.slide === 3
+                                            ? 'Sign Up'
+                                            : 'Next'}
+                                    </Button>
                                 </>
                             )}
-                            <Button
-                                onClick={() =>
-                                    signUpSlides.slide === 3
-                                        ? clickSignUp()
-                                        : setSignUpSlides(prevState => ({
-                                              buttonActive: false,
-                                              slide: prevState.slide + 1,
-                                          }))
-                                }
-                                style={{
-                                    marginTop: '2.5%',
-                                }}
-                                inactive={!signUpSlides.buttonActive}
-                            >
-                                {signUpSlides.slide === 3 ? 'Sign Up' : 'Next'}
-                            </Button>
-                        </>
+                        </form>
                     )}
                 </div>
             </div>

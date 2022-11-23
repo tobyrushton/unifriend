@@ -23,3 +23,13 @@ export interface logInState {
     email: string
     password: string
 }
+
+export type ResetPasswordProps =
+    | {
+          email?: true
+          password?: never
+      }
+    | {
+          email?: never
+          password?: true
+      }

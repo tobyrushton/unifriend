@@ -68,7 +68,6 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     }, [data])
 
     useEffect(() => {
-        console.log(user)
         if (user !== defaultUser && pathname === '/') router.push('/a')
     }, [user, router, pathname])
 
