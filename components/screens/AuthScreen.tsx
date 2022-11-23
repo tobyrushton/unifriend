@@ -10,6 +10,7 @@ import {
 } from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
 import { Input, Text, Button, Exit } from '../ui'
+import { ConfirmEmailScreen } from './ConfirmEmailScreen'
 import {
     useLogIn,
     useNotifications,
@@ -32,6 +33,8 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         buttonActive: false,
         slide: 1,
     })
+    const [displayConfirmEmail, setDisplayConfirmEmail] =
+        useState<boolean>(false)
 
     const {
         response: signIn,
@@ -58,11 +61,15 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     }, [signInLoading, setLoading, signUpLoading, createUserLoading])
 
     useEffect(() => {
-        if (signInError)
-            createNotification({
-                type: 'error',
-                content: signInError.message as string,
-            })
+        if (signInError) {
+            if (signInError.message === 'Email not confirmed')
+                setDisplayConfirmEmail(true)
+            else
+                createNotification({
+                    type: 'error',
+                    content: signInError.message as string,
+                })
+        }
     }, [signInError, createNotification])
 
     useEffect(() => {
@@ -161,7 +168,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     const clickSignIn = async (): Promise<void> => {
         if (!isSignUpState(state) && state) {
             await signIn(state.email, state.password)
-            if (signInError === null) router.push('/home')
         }
     }
 
@@ -188,7 +194,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                             content: 'Account created successfully.',
                         })
                     if (createUserSuccess) {
-                        router.push('/home')
+                        router.push('/a')
                     }
                 }
             } else
@@ -204,7 +210,9 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
             <div className={styles.authContainer}>
                 <Exit onClick={() => changeAuth({ active: false })} />
                 <div className={styles.offset}>
-                    {logIn ? (
+                    {displayConfirmEmail ? (
+                        <ConfirmEmailScreen />
+                    ) : logIn ? (
                         <>
                             <Text header bold>
                                 Sign in

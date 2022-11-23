@@ -51,16 +51,25 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     }, [error, createNotification])
 
     useEffect(() => {
+        // if there is no session, redirects user to the landing page
+        // and iof user is defined then resets to the default.
+        if (session?.user === undefined) {
+            if (pathname !== '/') router.push('/')
+            if (user !== defaultUser) setUser(defaultUser)
+        }
         // implement get user from auth hook here once created.
-        if (session?.user) if (session.user.email) runQuery(session.user.email)
-    }, [session, runQuery])
+        if (session?.user)
+            if (session.user.email && user === defaultUser)
+                runQuery(session.user.email)
+    }, [session, runQuery, pathname, router, user])
 
     useEffect(() => {
         if (data) setUser(data)
     }, [data])
 
     useEffect(() => {
-        if (user !== defaultUser && pathname === '/') router.push('/home')
+        console.log(user)
+        if (user !== defaultUser && pathname === '/') router.push('/a')
     }, [user, router, pathname])
 
     const providerValue: userContextInterface = useMemo(
