@@ -8,7 +8,7 @@ const UniversityEmailEndings: UniversityEmailArray =
 export const isValidEmail = (email: string): boolean => {
     if (email.split('@')[1] === 'gmail.com') return true // for testing code -- remove for post
     // regex experession that checks if string is in the form 'something@something.ac.uk'
-    const regex = /^.*@.*[.]ac[.]uk]*.*$/i
+    const regex = /^.*@.*[.]ac[.]uk$/i
     const emailLowerCase = email.toLowerCase()
     const regexTest: boolean = regex.test(emailLowerCase)
     const madeOfTwoParts: boolean = email.split('@')[0].length !== 0
@@ -17,7 +17,7 @@ export const isValidEmail = (email: string): boolean => {
 
 // checks if the password is valid
 export const isValidPassword = (password: string): boolean => {
-    if (password.length < 8) return false
+    if (password.length < 8 || password.length > 16) return false
     // regex expression that checks if the password has a special character or upper case character
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-+_!@#$%^&*.,?]).+$/
     return regex.test(password)
