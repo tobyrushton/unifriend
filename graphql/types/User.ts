@@ -8,6 +8,7 @@ import {
 import { Friend, FriendRequest } from './Friends'
 import { Settings } from './Settings'
 import { Message } from './Messages'
+import { isValidEmail, isValidUsername } from '../../lib/utils'
 
 // types User that's defined within the graphQL api.
 export const User = objectType({
@@ -112,6 +113,15 @@ export const CreateUserMutation = extendType({
                 email: nonNull(stringArg()),
             },
             async resolve(_parent, args, ctx) {
+                if (!isValidEmail(args.email))
+                    throw new Error(
+                        'Email is not a valid university email. Please enter a valid university email'
+                    )
+                if (!isValidUsername(args.username))
+                    throw new Error(
+                        'Username is not valid. Please ensure it contains no special characters'
+                    )
+
                 const newUser = {
                     firstName: args.firstName,
                     lastName: args.lastName,
@@ -152,6 +162,12 @@ export const UpdateUserMutation = extendType({
                 const temp: tempUserObject = { ...args } as tempUserObject
                 delete temp.id // removes id property so that it is not passed in the updates.
                 const userUpdates: UserUpdateObject = temp
+
+                if (args.username)
+                    if (!isValidUsername(args.username))
+                        throw new Error(
+                            'Username is not valid. Please ensure it contains no special characters'
+                        )
 
                 return ctx.prisma.users.update({
                     // updates the row corresponding to the id passed as an arguement.
