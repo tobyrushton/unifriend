@@ -46,12 +46,14 @@ export const ForgottenPasswordScreen: FC = () => {
 
     return emailSent ? (
         <>
-            <Text header>Please check your email to reset your password</Text>
-            <Text>
-                If the email doesn&apos;t show up, please chekc your junk email
+            <Text header textAlign="center">
+                Please check your email to reset your password
+            </Text>
+            <Text textAlign="center" style={{ marginTop: '2%' }}>
+                If the email doesn&apos;t show up, please check your junk email
                 or retry
             </Text>
-            <Button filled onClick={sendEmail}>
+            <Button filled onClick={sendEmail} style={{ marginTop: '5%' }}>
                 Retry
             </Button>
         </>

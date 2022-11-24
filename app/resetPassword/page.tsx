@@ -23,20 +23,25 @@ const ResetPassword: FC = () => {
     return (
         <div className={styles.resetContainer}>
             <form>
-                <Text>Enter new password</Text>
+                <Text header textAlign="center">
+                    Enter new password
+                </Text>
                 <Input
                     type="password"
                     placeholder="New Password"
                     setValue={change => setPassword(() => change)}
+                    style={{ marginTop: '10%' }}
                 />
                 <Input
                     type="password"
                     placeholder="Confirm Password"
                     setValue={change => setConfirmPassword(() => change)}
+                    style={{ marginTop: '2%' }}
                 />
                 <Button
                     onClick={() => resetPassword(password)}
                     inactive={!buttonActive}
+                    style={{ marginTop: '5%' }}
                 >
                     Change Password
                 </Button>

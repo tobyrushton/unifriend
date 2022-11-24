@@ -8,7 +8,7 @@ import { authState } from '../types'
 const Home: FC = () => {
     const [auth, setAuth] = useState<authState>({ active: false })
 
-    // referncing this function instead of using the setter directly, forces a rerender.
+    // refrencing this function instead of using the setter directly, forces a rerender.
     const changeAuth = (change: authState): void => {
         setAuth(change)
     }
@@ -20,7 +20,7 @@ const Home: FC = () => {
             </div>
             <div className={styles.line} />
             <div className={styles.accountContainer}>
-                <Text header bold>
+                <Text header bold textAlign="center">
                     Join UniFriend today.
                 </Text>
                 <Button
@@ -39,7 +39,7 @@ const Home: FC = () => {
                 >
                     Create an account
                 </Button>
-                <Text bold style={{ marginTop: '15%' }}>
+                <Text bold style={{ marginTop: '10%' }} textAlign="center">
                     Already have an account?
                 </Text>
                 <Button
@@ -49,7 +49,11 @@ const Home: FC = () => {
                             type: 'log in',
                         })
                     }}
-                    style={{ marginRight: 'auto', marginLeft: 'auto' }}
+                    style={{
+                        marginRight: 'auto',
+                        marginLeft: 'auto',
+                        marginTop: '2%',
+                    }}
                 >
                     Sign In
                 </Button>
