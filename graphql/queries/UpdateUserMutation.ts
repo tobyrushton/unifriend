@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-micro'
 
 export const UpdateUserMutation = gql`
     mutation UpdateUser(
-        $userId: String!
+        $id: String!
         $firstName: String
         $lastName: String
         $birthday: String
@@ -12,7 +12,7 @@ export const UpdateUserMutation = gql`
         $bio: String
     ) {
         updateUser(
-            id: $userId
+            id: $id
             firstName: $firstName
             lastName: $lastName
             birthday: $birthday
@@ -21,7 +21,7 @@ export const UpdateUserMutation = gql`
             username: $username
             bio: $bio
         ) {
-            userId
+            id
             firstName
             lastName
             university

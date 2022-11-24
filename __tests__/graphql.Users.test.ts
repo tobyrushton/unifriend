@@ -3,21 +3,30 @@ import { MockContext, Context, createMockContext } from './__helpers__/context'
 import { schema } from '../graphql/schema'
 import { resolvers } from '../graphql/resolvers'
 import { UserObjectWithID } from '../types'
-
-let mockCtx: MockContext
-let ctx: Context
-let ApolloMockServer: ApolloServer
+import {
+    CreateUserMutation,
+    UpdateUserMutation,
+    UserByEmailQuery,
+    UserByIDQuery,
+    GetAuthFromUsername,
+} from '../graphql/queries'
 
 describe('user query tests', () => {
-    mockCtx = createMockContext()
-    ctx = mockCtx as unknown as Context
-    ApolloMockServer = new ApolloServer({
-        schema,
-        context: ctx,
-        resolvers,
+    let mockCtx: MockContext
+    let ctx: Context
+    let ApolloMockServer: ApolloServer
+
+    beforeEach(() => {
+        mockCtx = createMockContext()
+        ctx = mockCtx as unknown as Context
+        ApolloMockServer = new ApolloServer({
+            schema,
+            context: ctx,
+            resolvers,
+        })
     })
 
-    const user: UserObjectWithID = {
+    const failedUser: UserObjectWithID = {
         id: '1234817245dshfjsahdfa34',
         email: 'testEmail@email.com',
         firstName: 'Toby',
@@ -29,13 +38,21 @@ describe('user query tests', () => {
         bio: '',
     }
 
+    const userObject: UserObjectWithID = {
+        id: '1234817245dshfjsahdfa34',
+        email: 'testEmail@kcl.ac.uk',
+        firstName: 'Toby',
+        lastName: 'Rushton',
+        birthday: '12062005',
+        course: 'Computer Science',
+        university: 'UCL',
+        username: 'tobyrushton',
+        bio: '',
+    }
+
     it('should fail with missing variable', async () => {
         const response = await ApolloMockServer.executeOperation({
-            query: `query Query($usersId: String!, $firstName: Boolean, $lastName: Boolean) {
-            users(id: $usersId, firstName: $firstName, lastName: $lastName) {
-              bio
-            }
-          }`,
+            query: UserByIDQuery,
             variables: {
                 firstName: true,
                 lastName: true,
@@ -43,30 +60,55 @@ describe('user query tests', () => {
         })
 
         expect(response.errors?.toString()).toBe(
-            `Variable "$usersId" of required type "String!" was not provided.`
+            `Variable "$id" of required type "String!" was not provided.`
         )
     })
 
+    it('should fail with invalid email on create user', async () => {
+        const response = await ApolloMockServer.executeOperation({
+            query: CreateUserMutation,
+            variables: failedUser,
+        })
+
+        if (response.errors)
+            expect(response.errors[0].message).toEqual(
+                'Email is not a valid university email. Please enter a valid university email'
+            )
+    })
+
+    it('should fail with invalid username on update user', async () => {
+        const response = await ApolloMockServer.executeOperation({
+            query: UpdateUserMutation,
+            variables: {
+                id: failedUser.id,
+                username: 't%df',
+            },
+        })
+
+        if (response.errors)
+            expect(response.errors[0].message).toEqual(
+                'Username is not valid. Please ensure it contains no special characters'
+            )
+    })
+
     it('should create new user', async () => {
-        mockCtx.prisma.users.create.mockResolvedValue(user)
+        mockCtx.prisma.users.create.mockResolvedValue(userObject)
 
         const response = await ApolloMockServer.executeOperation({
-            query: `mutation Mutation($firstName: String!, $lastName: String!, $birthday: String!, $university: String!, $course: String!, $username: String!, $email: String!) {
-                createUser(firstName: $firstName, lastName: $lastName, birthday: $birthday, university: $university, course: $course, username: $username, email: $email) {
-                    id
-                    bio
-                    birthday
-                    course
-                    email
-                    firstName
-                    lastName
-                    university
-                    username
-                }
-            }`,
-            variables: user,
+            query: CreateUserMutation,
+            variables: userObject,
         })
-        expect(response.data?.createUser).toEqual(user)
+        expect(response.data?.createUser).toEqual({
+            email: 'testEmail@kcl.ac.uk',
+            firstName: 'Toby',
+            lastName: 'Rushton',
+            birthday: '12062005',
+            course: 'Computer Science',
+            university: 'UCL',
+            username: 'tobyrushton',
+            bio: '',
+            settings: null,
+        })
     })
 
     it('should fail to create new user', async () => {
@@ -78,19 +120,7 @@ describe('user query tests', () => {
         }
 
         const response = await ApolloMockServer.executeOperation({
-            query: `mutation Mutation($firstName: String!, $lastName: String!, $birthday: String!, $university: String!, $course: String!, $username: String!, $email: String!) {
-            createUser(firstName: $firstName, lastName: $lastName, birthday: $birthday, university: $university, course: $course, username: $username, email: $email) {
-                id
-                bio
-                birthday
-                course
-                email
-                firstName
-                lastName
-                university
-                username
-            }
-        }`,
+            query: CreateUserMutation,
             variables: failUser,
         })
 
@@ -98,58 +128,74 @@ describe('user query tests', () => {
     })
 
     it('should update users username', async () => {
+        const user = { ...userObject }
         user.username = 'tobyrushton1'
         mockCtx.prisma.users.update.mockResolvedValue(user)
 
         const response = await ApolloMockServer.executeOperation({
-            query: `mutation UpdateUser($id: String!, $username: String) {
-            updateUser(id: $id, username: $username) {
-              username
-            }
-          }`,
+            query: UpdateUserMutation,
             variables: {
                 id: user.id,
                 username: user.username,
             },
         })
 
-        expect(response.data?.updateUser).toEqual({ username: 'tobyrushton1' })
+        expect(response.data?.updateUser.username).toEqual('tobyrushton1')
     })
 
     it('should return users email from username', async () => {
-        mockCtx.prisma.users.findUnique.mockResolvedValue(user)
+        mockCtx.prisma.users.findUnique.mockResolvedValue(userObject)
 
         const response = await ApolloMockServer.executeOperation({
-            query: `query GetAuthFromUsername($username: String!) {
-      getAuthFromUsername(username: $username) {
-        email
-      }
-    }`,
+            query: GetAuthFromUsername,
             variables: {
-                username: user.username,
+                username: userObject.username,
             },
         })
 
         expect(response.data?.getAuthFromUsername).toEqual({
-            email: 'testEmail@email.com',
+            email: 'testEmail@kcl.ac.uk',
         })
     })
 
-    // it('should not return users email', async () => {
+    it('should return user from email', async () => {
+        mockCtx.prisma.users.findUnique.mockResolvedValue(userObject)
 
-    //     // mockCtx.prisma.users.findUnique.mockRejectedValue('"Cannot return null for non-nullable field Query.getAuthFromUsername."')
+        const response = await ApolloMockServer.executeOperation({
+            query: UserByEmailQuery,
+            variables: {
+                email: userObject.email,
+            },
+        })
 
-    //     const response = await ApolloMockServer.executeOperation({
-    //         query: `query GetAuthFromUsername($username: String!) {
-    //   getAuthFromUsername(username: $username) {
-    //     email
-    //   }
-    // }`,
-    //         variables: {
-    //             username: 'tobyrushto',
-    //         },
-    //     })
+        expect(response.data?.getUserFromAuth).toEqual({
+            id: '1234817245dshfjsahdfa34',
+            email: 'testEmail@kcl.ac.uk',
+            firstName: 'Toby',
+            lastName: 'Rushton',
+            birthday: '12062005',
+            course: 'Computer Science',
+            university: 'UCL',
+            username: 'tobyrushton',
+            bio: '',
+        })
+    })
 
-    //     expect(response).toEqual('"Cannot return null for non-nullable field Query.getAuthFromUsername."')
-    // })
+    it('should not return users email', async () => {
+        mockCtx.prisma.users.findUnique.mockRejectedValue(
+            '"Cannot return null for non-nullable field Query.getAuthFromUsername."'
+        )
+
+        const response = await ApolloMockServer.executeOperation({
+            query: GetAuthFromUsername,
+            variables: {
+                username: 'tobyrushton',
+            },
+        })
+
+        if (response.errors)
+            expect(response.errors[0].message).toEqual(
+                'Unexpected error value: "\\"Cannot return null for non-nullable field Query.getAuthFromUsername.\\""'
+            )
+    })
 })
