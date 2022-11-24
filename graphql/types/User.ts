@@ -115,7 +115,7 @@ export const CreateUserMutation = extendType({
             async resolve(_parent, args, ctx) {
                 if (!isValidEmail(args.email))
                     throw new Error(
-                        'Email is not a valid university email. Please enter a valid university email'
+                        'Email is not valid. Please enter a valid university email'
                     )
                 if (!isValidUsername(args.username))
                     throw new Error(

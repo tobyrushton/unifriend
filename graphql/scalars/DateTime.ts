@@ -7,9 +7,9 @@ export const DateTime = scalarType({
     asNexusMethod: 'dateTime',
     description: 'DateTime custom scalar type.',
     parseValue: value => value,
-    serialize: value => new Date((value as number) * 1000).toISOString(), // creates ISO string of time
+    serialize: value => new Date((value as number) * 1000).toISOString(), // creates ISO string
     parseLiteral: ast =>
         ast.kind === Kind.INT
-            ? new Date(parseInt(ast.value, 10) * 1000).toISOString() // creates ISO string of time
+            ? new Date(parseInt(ast.value, 10) * 1000).toISOString() // creates ISO string
             : null,
 })

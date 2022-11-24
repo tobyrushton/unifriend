@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 // creates fake data in the database in order for testing purposes
-async function main() {
+async function main(): Promise<void> {
     await prisma.users.create({
         data: {
             firstName: 'Toby',

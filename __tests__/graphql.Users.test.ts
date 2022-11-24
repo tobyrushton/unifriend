@@ -1,4 +1,5 @@
 import { ApolloServer } from 'apollo-server-micro'
+import { GraphQLFormattedError } from 'graphql'
 import { MockContext, Context, createMockContext } from './__helpers__/context'
 import { schema } from '../graphql/schema'
 import { resolvers } from '../graphql/resolvers'
@@ -70,10 +71,9 @@ describe('user query tests', () => {
             variables: failedUser,
         })
 
-        if (response.errors)
-            expect(response.errors[0].message).toEqual(
-                'Email is not a valid university email. Please enter a valid university email'
-            )
+        expect(
+            (response.errors as unknown as GraphQLFormattedError[])[0].message
+        ).toEqual('Email is not valid. Please enter a valid university email')
     })
 
     it('should fail with invalid username on update user', async () => {
@@ -85,10 +85,11 @@ describe('user query tests', () => {
             },
         })
 
-        if (response.errors)
-            expect(response.errors[0].message).toEqual(
-                'Username is not valid. Please ensure it contains no special characters'
-            )
+        expect(
+            (response.errors as unknown as GraphQLFormattedError[])[0].message
+        ).toEqual(
+            'Username is not valid. Please ensure it contains no special characters'
+        )
     })
 
     it('should create new user', async () => {
@@ -192,10 +193,11 @@ describe('user query tests', () => {
                 username: 'tobyrushton',
             },
         })
-
-        if (response.errors)
-            expect(response.errors[0].message).toEqual(
-                'Unexpected error value: "\\"Cannot return null for non-nullable field Query.getAuthFromUsername.\\""'
-            )
+        expect(
+            (response.errors as unknown as GraphQLFormattedError[])[0].message
+        ).toEqual(
+            /* eslint-disable-next-line */
+            'Unexpected error value: "\\"Cannot return null for non-nullable field Query.getAuthFromUsername.\\""'
+        )
     })
 })

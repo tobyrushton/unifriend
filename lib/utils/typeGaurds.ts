@@ -4,7 +4,8 @@ import { logInState, signUpState } from '../../types'
 export const isSignUpState = (
     toBeDetermined: logInState | signUpState | undefined
 ): toBeDetermined is signUpState => {
-    // birthday is a property unique to signUpState so this will determine whether it is of the typ signUpState or not.
+    // birthday is a property unique to signUpState
+    // so this will determine whether it is of the typ signUpState or not.
     if (toBeDetermined) {
         if ((toBeDetermined as signUpState).birthday !== undefined) {
             return true

@@ -36,7 +36,7 @@ export const useAuthStatus = (): authStatusReturnType => {
                         }
                     })
             },
-        []
+        [createNotification]
     )
 
     useEffect(() => {

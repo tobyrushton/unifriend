@@ -40,7 +40,6 @@ export const useCheckUsername = (): graphQLHookReturnQueryFunction<
                     })
                     .catch(e => setError(e))
                     .then(response => {
-                        console.log(response)
                         if (response) {
                             setData({
                                 result: response.data.CheckUsernameIsTaken,
@@ -55,7 +54,7 @@ export const useCheckUsername = (): graphQLHookReturnQueryFunction<
 
     useEffect(() => {
         return () => abort.abort()
-    }, [])
+    }, [abort])
 
     return {
         error,

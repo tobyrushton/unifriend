@@ -84,13 +84,11 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
 
     useEffect(() => {
         if (passwordResetRequest) router.push('/resetPassword')
-        console.log(pathname?.toLocaleLowerCase())
-        console.log(passwordResetRequest)
     }, [passwordResetRequest, router, pathname])
 
     const providerValue: userContextInterface = useMemo(
         () => ({ user, resetPassword }),
-        [user]
+        [user, resetPassword]
     )
 
     return (
