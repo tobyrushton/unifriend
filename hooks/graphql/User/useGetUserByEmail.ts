@@ -10,7 +10,10 @@ import { UserByEmailQuery } from '../../../graphql/queries'
 
 // as this function will be designed differently, (for use inside a useEffect call back it will need to be designed differently)
 
-export const useGetUserByEmail = (): graphQLHookReturnQueryFunction<string> => {
+export const useGetUserByEmail = (): graphQLHookReturnQueryFunction<
+    string,
+    UserObjectWithID
+> => {
     // defines state types which allow for dynamic return values
     const [abort] = useState<AbortController>(new AbortController())
     const [error, setError] = useState<Error>()

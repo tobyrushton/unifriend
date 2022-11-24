@@ -12,8 +12,8 @@ export interface graphQLHookReturnMutation<T> extends graphQLHookReturn {
     mutation: (args: T) => Promise<UserObjectWithID>
 }
 
-export interface graphQLHookReturnQuery extends graphQLHookReturn {
-    data: UserObjectWithID
+export interface graphQLHookReturnQuery<T> extends graphQLHookReturn {
+    data: T
 }
 
 export interface UpdateUserParamaters {
@@ -67,8 +67,8 @@ export interface authStatusReturnType {
     resetPassword: (password: string) => Promise<void>
 }
 
-export interface graphQLHookReturnQueryFunction<T>
-    extends graphQLHookReturnQuery {
+export interface graphQLHookReturnQueryFunction<T, Data>
+    extends graphQLHookReturnQuery<Data> {
     runQuery: (args: T) => Promise<void>
 }
 
@@ -77,3 +77,11 @@ export type notificationQueueReturn = [
     createNotification: createNotificationType,
     deleteNotification: (idx: number) => void
 ]
+
+export interface CheckUsernameArgs {
+    username: string
+}
+
+export interface BooleanReturn {
+    result: boolean
+}

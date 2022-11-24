@@ -44,3 +44,7 @@ export type userQueryReturnInterface<Return extends object, T> = Return & {
 export interface getUserFromAuthQuery<Return extends object, T> {
     getUserFromAuth: userQueryReturnInterface<Return, T>
 }
+
+export interface CheckUsernameIsTakenQuery<Return> {
+    CheckUsernameIsTaken: Return
+}

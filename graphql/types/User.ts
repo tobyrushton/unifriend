@@ -250,3 +250,28 @@ export const GetAuthFromUsername = extendType({
         })
     },
 })
+
+// query to check whether username is taken or not
+export const CheckUsernameIsTaken = extendType({
+    type: 'Query',
+    definition(t) {
+        t.nonNull.field('CheckUsernameIsTaken', {
+            type: 'Boolean',
+            args: {
+                username: nonNull(stringArg()), // takes potential username as an arguement
+            },
+            resolve: async (_, args, ctx) => {
+                // attempts to find a row in the table users with the matching username
+                const user = await ctx.prisma.users.findUnique({
+                    where: {
+                        username: args.username,
+                    },
+                })
+
+                // if defined returns true else false.
+                const result = !!user
+                return result
+            },
+        })
+    },
+})
