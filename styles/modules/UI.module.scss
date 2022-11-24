@@ -25,6 +25,18 @@
     text-decoration: underline;
 }
 
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+}
+
+.center {
+    text-align: center;
+}
+
 .fontText {
     @include mixins.fontClass($fontWeight: 400);
 }

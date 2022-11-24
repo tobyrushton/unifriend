@@ -13,6 +13,7 @@ export const Text: FC<TextProps> = ({
     clickable,
     color,
     onClick,
+    textAlign,
 }) => {
     const styling = color
         ? {
@@ -20,15 +21,19 @@ export const Text: FC<TextProps> = ({
                   color:
                       color === 'primary' ? colors.primary : colors.secondary,
               },
-              ...styles,
+              ...style,
           }
-        : styles
+        : style
     return header ? (
         <h1
             className={
                 bold
-                    ? `${styles.fontTextBold} ${styles.extraLarge}`
-                    : `${styles.fontText} ${styles.extraLarge}`
+                    ? `${styles.fontTextBold} ${styles.extraLarge} ${
+                          styles[textAlign ?? 'left']
+                      }`
+                    : `${styles.fontText} ${styles.extraLarge} ${
+                          styles[textAlign ?? 'left']
+                      }`
             }
             style={style}
         >
@@ -39,7 +44,9 @@ export const Text: FC<TextProps> = ({
             <p
                 className={`${bold ? styles.fontTextBold : styles.fontText} ${
                     large ? styles.large : ''
-                } ${small ? styles.small : ''} ${styles.clickable}`}
+                } ${small ? styles.small : ''} ${styles.clickable} ${
+                    styles[textAlign ?? 'left']
+                }`}
                 style={styling}
             >
                 {children}
@@ -49,7 +56,7 @@ export const Text: FC<TextProps> = ({
         <p
             className={`${bold ? styles.fontTextBold : styles.fontText} ${
                 large ? styles.large : ''
-            } ${small ? styles.small : ''}`}
+            } ${small ? styles.small : ''} ${styles[textAlign ?? 'left']}`}
             style={styling}
         >
             {children}

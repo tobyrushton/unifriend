@@ -6,6 +6,8 @@ export interface LogoProps {
     color: color
 }
 
+type textAlign = 'left' | 'center' | 'right'
+
 type styleProperties = {
     marginTop?: string
     marginBottom?: string
@@ -23,6 +25,7 @@ export interface TextProps extends ChildrenProps {
     clickable?: boolean
     color?: color
     onClick?: () => void
+    textAlign?: textAlign
 }
 
 export interface ButtonProps extends ChildrenProps {
