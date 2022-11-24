@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import {
     authProps,
     logInState,
@@ -57,7 +56,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         loading: createUserLoading,
         error: createUserError,
     } = useCreateUser()
-    const router = useRouter()
 
     useEffect(() => {
         setLoading(signInLoading || signUpLoading || createUserLoading)
@@ -90,6 +88,16 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 content: createUserError.message as string,
             })
     }, [createUserError, createNotification])
+
+    useEffect(() => {
+        if (createUserSuccess) {
+            createNotification({
+                type: 'success',
+                content: 'Account created successfully.',
+            })
+            setDisplayConfirmEmail(true)
+        }
+    }, [createUserSuccess, createNotification, setDisplayConfirmEmail])
 
     useEffect(() => {
         if (logIn && state === undefined) setState({ email: '', password: '' })
@@ -191,14 +199,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                     }
 
                     await createUser(CreateUserObject)
-                    if (createUserError === undefined)
-                        createNotification({
-                            type: 'success',
-                            content: 'Account created successfully.',
-                        })
-                    if (createUserSuccess) {
-                        router.push('/a')
-                    }
                 }
             } else
                 createNotification({
