@@ -67,7 +67,7 @@ export default {
     // globalTeardown: undefined,
 
     // A set of global variables that need to be available in all test environments
-    // globals: {},
+    // globals: {}
 
     // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
     // maxWorkers: "50%",
@@ -81,7 +81,9 @@ export default {
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-    // moduleNameMapper: {},
+    moduleNameMapper: {
+        '\\.(css|scss)$': 'identity-obj-proxy'
+    },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],
@@ -93,7 +95,7 @@ export default {
     // notifyMode: "failure-change",
 
     // A preset that is used as a base for Jest's configuration
-    // preset: undefined,
+    preset: 'ts-jest',
 
     // Run tests from one or more projects
     // projects: undefined,
@@ -125,7 +127,7 @@ export default {
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    // setupFiles: [],
+    setupFiles: ['<rootDir>/__tests__/setEnvVars.ts'],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     // setupFilesAfterEnv: [],
@@ -152,7 +154,7 @@ export default {
     // ],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-    testPathIgnorePatterns: ['\\\\node_modules\\\\', '__helpers__'],
+    testPathIgnorePatterns: ['\\\\node_modules\\\\', '__helpers__', 'setEnvVars.ts'],
 
     // The regexp pattern or array of patterns that Jest uses to detect test files
     // testRegex: [],
@@ -164,7 +166,14 @@ export default {
     // testRunner: "jest-circus/runner",
 
     // A map from regular expressions to paths to transformers
-    // transform: undefined,
+    transform: {
+        '^.+\\.tsx?$': [
+            'ts-jest',
+            // required due to custom location of tsconfig.json configuration file
+            // https://kulshekhar.github.io/ts-jest/docs/getting-started/options/tsconfig
+            {tsconfig: './__tests__/tsconfig.json'},
+          ],
+    },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
     // transformIgnorePatterns: [
