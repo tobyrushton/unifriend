@@ -28,7 +28,22 @@ import {
 import { ForgottenPasswordScreen } from './ForgottenPasswordScreen'
 
 export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
-    const [state, setState] = useState<logInState | signUpState>()
+    const [state, setState] = useState<logInState | signUpState>(
+        logIn
+            ? {
+                  email: '',
+                  password: '',
+              }
+            : {
+                  firstName: '',
+                  lastName: '',
+                  birthday: '',
+                  email: '',
+                  username: '',
+                  course: '',
+                  password: '',
+              }
+    )
     const [buttonActive, setButtonActive] = useState<boolean>(false)
     const [signUpSlides, setSignUpSlides] = useState<signUpSlidesInterface>({
         buttonActive: false,
@@ -168,17 +183,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     }, [setDisplayErrorText, state])
 
     useEffect(() => {
-        if (logIn && state === undefined) setState({ email: '', password: '' })
-        if (signUp && state === undefined)
-            setState({
-                firstName: '',
-                lastName: '',
-                birthday: '',
-                email: '',
-                username: '',
-                course: '',
-                password: '',
-            })
         if (state) {
             if (logIn) {
                 if (state.password.length >= 8 && state.email.length >= 3) {
@@ -366,6 +370,10 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     marginTop: '2.5%',
                                                 }}
                                                 maxLength={16}
+                                                value={
+                                                    (state as signUpState)
+                                                        .firstName
+                                                }
                                             />
                                             <Input
                                                 placeholder="Last Name"
@@ -383,6 +391,10 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     marginTop: '2.5%',
                                                 }}
                                                 maxLength={16}
+                                                value={
+                                                    (state as signUpState)
+                                                        .lastName
+                                                }
                                             />
                                             <Input
                                                 placeholder="University Email"
@@ -400,6 +412,9 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     marginTop: '2.5%',
                                                 }}
                                                 maxLength={32}
+                                                value={
+                                                    (state as signUpState).email
+                                                }
                                             />
                                             {displayErrorText[0].active ? (
                                                 <Text color="error" small>
@@ -434,6 +449,11 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                             marginTop: '2.5%',
                                                         }}
                                                         maxLength={16}
+                                                        value={
+                                                            (
+                                                                state as signUpState
+                                                            ).username
+                                                        }
                                                     />
                                                     {displayErrorText[0]
                                                         .active ? (
@@ -467,6 +487,11 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                             marginTop: '2.5%',
                                                         }}
                                                         maxLength={16}
+                                                        value={
+                                                            (
+                                                                state as signUpState
+                                                            ).password
+                                                        }
                                                     />
                                                     {displayErrorText[1]
                                                         .active ? (
@@ -502,6 +527,11 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                                 }
                                                             )
                                                         }}
+                                                        value={
+                                                            (
+                                                                state as signUpState
+                                                            ).course
+                                                        }
                                                     />
                                                     <Input
                                                         placeholder="Birthday"
@@ -523,6 +553,11 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                             )
                                                         }}
                                                         maxLength={16}
+                                                        value={
+                                                            (
+                                                                state as signUpState
+                                                            ).birthday
+                                                        }
                                                     />
                                                 </>
                                             )}
@@ -559,6 +594,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     slide: prevState.slide - 1,
                                                 }))
                                                 setDisplayErrorText([
+                                                    { active: false },
                                                     { active: false },
                                                 ])
                                             }}
