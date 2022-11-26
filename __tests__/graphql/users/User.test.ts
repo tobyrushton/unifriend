@@ -1,6 +1,10 @@
 import { ApolloServer } from 'apollo-server-micro'
 import { GraphQLFormattedError } from 'graphql'
-import { MockContext, Context, createMockContext } from '../../__helpers__/context'
+import {
+    MockContext,
+    Context,
+    createMockContext,
+} from '../../__helpers__/context'
 import { schema } from '../../../graphql/schema'
 import { resolvers } from '../../../graphql/resolvers'
 import { UserObjectWithID } from '../../../types'
