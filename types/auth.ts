@@ -23,3 +23,12 @@ export interface logInState {
     email: string
     password: string
 }
+
+export type ErrorTextState =
+    | {
+          active: false
+      }
+    | {
+          active: true
+          content: string
+      }

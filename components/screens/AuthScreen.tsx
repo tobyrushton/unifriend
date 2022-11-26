@@ -6,6 +6,7 @@ import {
     signUpSlidesInterface,
     createUserObject,
     createUserObjectWithUniversity,
+    ErrorTextState,
 } from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
 import { Input, Text, Button, Exit } from '../ui'
@@ -37,6 +38,12 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         useState<boolean>(false)
     const [displayForgottenPassword, setDisplayForgottenPassword] =
         useState<boolean>(false)
+    const [displayErrorText, setDisplayErrorText] = useState<ErrorTextState[]>([
+        {
+            active: false,
+        },
+        { active: false },
+    ])
 
     const {
         response: signIn,
@@ -98,6 +105,67 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
             setDisplayConfirmEmail(true)
         }
     }, [createUserSuccess, createNotification, setDisplayConfirmEmail])
+
+    useEffect(() => {
+        // displays whether the user has entered a valid email or not
+        if (state?.email && state.email !== '')
+            if (isValidEmail(state.email))
+                setDisplayErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[0] = { active: false }
+                    return temp
+                })
+            else
+                setDisplayErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[0] = {
+                        active: true,
+                        content: 'Please enter a valid UK univeristy email.',
+                    }
+                    return temp
+                })
+    }, [state?.email, setDisplayErrorText])
+
+    useEffect(() => {
+        // displays whether the user has enter a valid password upon sign up or not
+        if (state?.password && state.password !== '' && isSignUpState(state))
+            if (isValidPassword(state.password))
+                setDisplayErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[1] = { active: false }
+                    return temp
+                })
+            else
+                setDisplayErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[1] = {
+                        active: true,
+                        content:
+                            /* eslint-disable-next-line */
+                            'Password must contain a special character, a number and an upper case letter.',
+                    }
+                    return temp
+                })
+    }, [setDisplayErrorText, state])
+
+    useEffect(() => {
+        if (isSignUpState(state) && state.username !== '')
+            if (isValidUsername(state.username))
+                setDisplayErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[0] = { active: false }
+                    return temp
+                })
+            else
+                setDisplayErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[0] = {
+                        active: true,
+                        content: 'Username must contain no special characters',
+                    }
+                    return temp
+                })
+    }, [setDisplayErrorText, state])
 
     useEffect(() => {
         if (logIn && state === undefined) setState({ email: '', password: '' })
@@ -333,6 +401,14 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                 }}
                                                 maxLength={32}
                                             />
+                                            {displayErrorText[0].active ? (
+                                                <Text color="error" small>
+                                                    {
+                                                        displayErrorText[0]
+                                                            .content
+                                                    }
+                                                </Text>
+                                            ) : null}
                                         </>
                                     ) : (
                                         <>
@@ -359,6 +435,18 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                         }}
                                                         maxLength={16}
                                                     />
+                                                    {displayErrorText[0]
+                                                        .active ? (
+                                                        <Text
+                                                            color="error"
+                                                            small
+                                                        >
+                                                            {
+                                                                displayErrorText[0]
+                                                                    .content
+                                                            }
+                                                        </Text>
+                                                    ) : null}
                                                     <Input
                                                         placeholder="Password"
                                                         type="password"
@@ -380,6 +468,18 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                         }}
                                                         maxLength={16}
                                                     />
+                                                    {displayErrorText[1]
+                                                        .active ? (
+                                                        <Text
+                                                            color="error"
+                                                            small
+                                                        >
+                                                            {
+                                                                displayErrorText[1]
+                                                                    .content
+                                                            }
+                                                        </Text>
+                                                    ) : null}
                                                 </>
                                             ) : (
                                                 <>
@@ -450,6 +550,25 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                             ? 'Sign Up'
                                             : 'Next'}
                                     </Button>
+                                    {signUpSlides.slide !== 1 ? (
+                                        <Button
+                                            onClick={() => {
+                                                setSignUpSlides(prevState => ({
+                                                    buttonActive:
+                                                        prevState.buttonActive,
+                                                    slide: prevState.slide - 1,
+                                                }))
+                                                setDisplayErrorText([
+                                                    { active: false },
+                                                ])
+                                            }}
+                                            style={{
+                                                marginTop: '2%',
+                                            }}
+                                        >
+                                            Back
+                                        </Button>
+                                    ) : null}
                                 </>
                             )}
                         </form>
