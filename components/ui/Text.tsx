@@ -18,8 +18,7 @@ export const Text: FC<TextProps> = ({
     const styling = color
         ? {
               ...{
-                  color:
-                      color === 'primary' ? colors.primary : colors.secondary,
+                  color: colors[color],
               },
               ...style,
           }

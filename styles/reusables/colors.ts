@@ -1,14 +1,9 @@
-interface colorsInterface {
-    primary: string
-    secondary: string
-    errorColor: string
-    successColor: string
-}
+import { color } from '../../types'
 
 // allows for the use of color variables using inline styles.
-export const colors: colorsInterface = {
+export const colors: Record<color, string> = {
     primary: '#1976D2',
     secondary: 'white',
-    errorColor: '#ff3333',
-    successColor: '#22C55E',
+    error: '#ff3333',
+    success: '#22C55E',
 }

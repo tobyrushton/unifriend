@@ -1,6 +1,6 @@
 import { ChildrenProps, NotificationInterface } from './providers'
 
-type color = 'primary' | 'secondary'
+export type color = 'primary' | 'secondary' | 'error' | 'success'
 
 export interface LogoProps {
     color: color
