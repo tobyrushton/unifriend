@@ -103,7 +103,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     ])
 
     useEffect(() => {
-        if (usernameIsTaken)
+        if (usernameIsTaken.result)
             setDisplayErrorText(prevState => {
                 const temp = [...prevState]
                 temp[0] = { active: true, content: 'Username is taken' }
@@ -260,7 +260,8 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
             } else if (signUpSlides.slide === 2) {
                 if (
                     isValidPassword(state.password) &&
-                    isValidUsername(state.username)
+                    isValidUsername(state.username) &&
+                    !usernameIsTaken
                 )
                     setSignUpSlides(prevState => {
                         const temp = { ...prevState }
@@ -295,6 +296,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         setButtonActive,
         setSignUpSlides,
         signUpSlides.slide,
+        usernameIsTaken,
     ])
 
     const clickSignIn = async (): Promise<void> => {
