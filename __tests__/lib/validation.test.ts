@@ -3,9 +3,9 @@ import {
     isValidUsername,
     isValidEmail,
     getUniversity,
-} from '../lib/utils'
-import data from '../lib/utils/universities.json'
-import { UniversityEmailArray } from '../types'
+} from '../../lib/utils'
+import data from '../../lib/utils/universities.json'
+import { UniversityEmailArray } from '../../types'
 
 describe('validation tests', () => {
     it('should return false with invalid username', () => {

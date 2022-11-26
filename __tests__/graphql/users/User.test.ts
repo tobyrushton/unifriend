@@ -1,16 +1,16 @@
 import { ApolloServer } from 'apollo-server-micro'
 import { GraphQLFormattedError } from 'graphql'
-import { MockContext, Context, createMockContext } from './__helpers__/context'
-import { schema } from '../graphql/schema'
-import { resolvers } from '../graphql/resolvers'
-import { UserObjectWithID } from '../types'
+import { MockContext, Context, createMockContext } from '../../__helpers__/context'
+import { schema } from '../../../graphql/schema'
+import { resolvers } from '../../../graphql/resolvers'
+import { UserObjectWithID } from '../../../types'
 import {
     CreateUserMutation,
     UpdateUserMutation,
     UserByEmailQuery,
     UserByIDQuery,
     GetAuthFromUsername,
-} from '../graphql/queries'
+} from '../../../graphql/queries'
 
 describe('user query tests', () => {
     let mockCtx: MockContext
