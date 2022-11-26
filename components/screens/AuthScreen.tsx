@@ -16,6 +16,7 @@ import {
     useNotifications,
     useSignUp,
     useCreateUser,
+    useCheckUsername,
 } from '../../hooks'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 import {
@@ -78,10 +79,43 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         loading: createUserLoading,
         error: createUserError,
     } = useCreateUser()
+    const {
+        runQuery: checkUsername,
+        success: checkUsernameSuccess,
+        error: checkUsernameError,
+        loading: checkUsernameLoading,
+        data: usernameIsTaken,
+    } = useCheckUsername()
 
     useEffect(() => {
-        setLoading(signInLoading || signUpLoading || createUserLoading)
-    }, [signInLoading, setLoading, signUpLoading, createUserLoading])
+        setLoading(
+            signInLoading ||
+                signUpLoading ||
+                createUserLoading ||
+                checkUsernameLoading
+        )
+    }, [
+        signInLoading,
+        setLoading,
+        signUpLoading,
+        createUserLoading,
+        checkUsernameLoading,
+    ])
+
+    useEffect(() => {
+        if (usernameIsTaken)
+            setDisplayErrorText(prevState => {
+                const temp = [...prevState]
+                temp[0] = { active: true, content: 'Username is taken' }
+                return temp
+            })
+        else
+            setDisplayErrorText(prevState => {
+                const temp = [...prevState]
+                temp[0] = { active: false }
+                return temp
+            })
+    }, [usernameIsTaken, setDisplayErrorText])
 
     useEffect(() => {
         if (signInError) {
@@ -94,6 +128,23 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 })
         }
     }, [signInError, createNotification])
+
+    useEffect(() => {
+        if (checkUsernameSuccess)
+            setDisplayErrorText(prevState => {
+                const temp = [...prevState]
+                temp[0] = { active: false }
+                return temp
+            })
+    }, [checkUsernameSuccess, setDisplayErrorText])
+
+    useEffect(() => {
+        if (checkUsernameError)
+            createNotification({
+                type: 'error',
+                content: checkUsernameError.message,
+            })
+    }, [checkUsernameError, createNotification])
 
     useEffect(() => {
         if (signUpError)
@@ -166,10 +217,8 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     useEffect(() => {
         if (isSignUpState(state) && state.username !== '')
             if (isValidUsername(state.username))
-                setDisplayErrorText(prevState => {
-                    const temp = [...prevState]
-                    temp[0] = { active: false }
-                    return temp
+                checkUsername({
+                    username: state.username,
                 })
             else
                 setDisplayErrorText(prevState => {
@@ -180,7 +229,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                     }
                     return temp
                 })
-    }, [setDisplayErrorText, state])
+    }, [setDisplayErrorText, state, checkUsername])
 
     useEffect(() => {
         if (state) {
