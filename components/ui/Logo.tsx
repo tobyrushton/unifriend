@@ -6,7 +6,7 @@ import { colors } from '../../styles/reusables/colors'
 export const Logo: FC<LogoProps> = ({ color }) => (
     <div
         style={{
-            color: color === 'primary' ? colors.primary : colors.secondary,
+            color: colors[color],
         }}
         className={styles.fontLogo}
     >

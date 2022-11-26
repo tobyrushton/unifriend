@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { notificationProps } from '../../types'
+import { color, notificationProps } from '../../types'
 import { Text } from './Text'
 import { Exit } from './Exit'
 import { colors } from '../../styles/reusables/colors'
@@ -14,12 +14,7 @@ export const Notification: FC<notificationProps> = ({
         <div
             className={styles.notification}
             style={{
-                backgroundColor:
-                    type === 'error'
-                        ? colors.errorColor
-                        : type === 'success'
-                        ? colors.successColor
-                        : 'white',
+                backgroundColor: colors[type as color],
                 color:
                     type === 'error' || type === 'success' ? 'white' : 'black',
             }}
