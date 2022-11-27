@@ -59,7 +59,3 @@ export interface signUpSlidesInterface {
     buttonActive: boolean
     slide: number
 }
-
-export interface NavbarProps {
-    hidden?: boolean
-}
