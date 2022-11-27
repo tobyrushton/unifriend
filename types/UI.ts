@@ -2,10 +2,6 @@ import { ChildrenProps, NotificationInterface } from './providers'
 
 export type color = 'primary' | 'secondary' | 'error' | 'success'
 
-export interface LogoProps {
-    color: color
-}
-
 type textAlign = 'left' | 'center' | 'right'
 
 type styleProperties = {
@@ -14,6 +10,11 @@ type styleProperties = {
     marginLeft?: string
     marginRight?: string
     margin?: string
+}
+
+export interface LogoProps {
+    color: color
+    style?: styleProperties
 }
 
 export interface TextProps extends ChildrenProps {
