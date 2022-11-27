@@ -471,7 +471,17 @@ describe('AuthScreen tests', () => {
                 },
                 result: {
                     data: {
-                        createUser: {},
+                        createUser: {
+                            firstName: 'Toby',
+                            lastName: 'Rushton',
+                            email: 'test@kcl.ac.uk',
+                            university: 'Kings College London',
+                            course: 'Computer Science',
+                            birthday: '2005-06-12',
+                            username: 'toby',
+                            bio: '',
+                            settings: null,
+                        },
                     },
                 },
             },

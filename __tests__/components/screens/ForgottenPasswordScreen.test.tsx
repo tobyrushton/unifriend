@@ -139,8 +139,8 @@ describe('Forgotten Password screen tests', () => {
 
         await waitFor(() =>
             expect(
-                screen.queryByText('Reset Email sent successfully')
-            ).toBeTruthy()
+                screen.queryAllByText('Reset Email sent successfully').length
+            ).toBe(2)
         )
     })
 })
