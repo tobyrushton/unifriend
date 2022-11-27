@@ -16,7 +16,7 @@ export const useCheckUsername = (): graphQLHookReturnQueryFunction<
     const [error, setError] = useState<Error>()
     const [success, setSuccess] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
-    const [data, setData] = useState<BooleanReturn>()
+    const [data, setData] = useState<BooleanReturn>({ result: false })
 
     const apollo = useApolloClient()
 

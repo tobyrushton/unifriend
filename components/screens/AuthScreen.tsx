@@ -81,7 +81,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     } = useCreateUser()
     const {
         runQuery: checkUsername,
-        success: checkUsernameSuccess,
         error: checkUsernameError,
         loading: checkUsernameLoading,
         data: usernameIsTaken,
@@ -103,7 +102,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     ])
 
     useEffect(() => {
-        if (usernameIsTaken.result)
+        if (usernameIsTaken && usernameIsTaken.result)
             setDisplayErrorText(prevState => {
                 const temp = [...prevState]
                 temp[0] = { active: true, content: 'Username is taken' }
@@ -115,7 +114,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 temp[0] = { active: false }
                 return temp
             })
-    }, [usernameIsTaken, setDisplayErrorText])
+    }, [usernameIsTaken, setDisplayErrorText, usernameIsTaken.result])
 
     useEffect(() => {
         if (signInError) {
@@ -128,15 +127,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 })
         }
     }, [signInError, createNotification])
-
-    useEffect(() => {
-        if (checkUsernameSuccess)
-            setDisplayErrorText(prevState => {
-                const temp = [...prevState]
-                temp[0] = { active: false }
-                return temp
-            })
-    }, [checkUsernameSuccess, setDisplayErrorText])
 
     useEffect(() => {
         if (checkUsernameError)
@@ -261,7 +251,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 if (
                     isValidPassword(state.password) &&
                     isValidUsername(state.username) &&
-                    !usernameIsTaken
+                    !usernameIsTaken.result
                 )
                     setSignUpSlides(prevState => {
                         const temp = { ...prevState }
@@ -320,7 +310,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                             university: string
                         }),
                     }
-
                     await createUser(CreateUserObject)
                 }
             } else
