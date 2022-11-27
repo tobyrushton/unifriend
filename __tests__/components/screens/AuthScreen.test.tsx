@@ -471,7 +471,7 @@ describe('AuthScreen tests', () => {
                 },
                 result: {
                     data: {
-                        CreateUserMutation: {},
+                        createUser: {},
                     },
                 },
             },
