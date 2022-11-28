@@ -82,7 +82,8 @@ export default {
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
-        '\\.(css|scss)$': 'identity-obj-proxy'
+        '\\.(css|scss)$': 'identity-obj-proxy',
+        '^.+.(png|jpg)$': 'jest-transform-stub'
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
