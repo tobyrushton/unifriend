@@ -1,4 +1,4 @@
-import { ImageProps, StaticImageData } from 'next/image'
+import { StaticImageData } from 'next/image'
 import { ChildrenProps, NotificationInterface } from './providers'
 
 export type color = 'primary' | 'secondary' | 'error' | 'success'
@@ -60,9 +60,14 @@ export interface signUpSlidesInterface {
     buttonActive: boolean
     slide: number
 }
+
 export interface ProfilePictureProps {
     width?: number
     height?: number
     style?: styleProperties
     image: StaticImageData
+}
+
+export interface DropDownProps {
+    exit: () => void
 }
