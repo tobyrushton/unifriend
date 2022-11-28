@@ -1,4 +1,4 @@
-import { StaticImageData } from 'next/image'
+import { ImageProps, StaticImageData } from 'next/image'
 import { ChildrenProps, NotificationInterface } from './providers'
 
 export type color = 'primary' | 'secondary' | 'error' | 'success'
