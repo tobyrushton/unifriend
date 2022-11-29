@@ -195,6 +195,7 @@
     a{
         text-decoration: none;
         color: black;
+        @include mixins.fontClass($fontWeight: 400);
     }
 
     div:nth-child(3){

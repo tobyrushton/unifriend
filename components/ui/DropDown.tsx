@@ -1,6 +1,5 @@
 import { FC, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { Text } from './Text'
 import styles from '../../styles/modules/UI.module.scss'
 import { DropDownProps } from '../../types'
 
@@ -23,19 +22,13 @@ export const DropDown: FC<DropDownProps> = ({ handleClickOutside }) => {
     return (
         <div className={styles.dropdown} ref={containerRef}>
             <div className={styles.item}>
-                <Link href="/a/profile">
-                    <Text>View profile</Text>
-                </Link>
+                <Link href="/a/profile">View Profile</Link>
             </div>
             <div className={styles.item}>
-                <Link href="/a/settings">
-                    <Text>Settings</Text>
-                </Link>
+                <Link href="/a/settings">Settings</Link>
             </div>
             <div className={styles.item}>
-                <Link href="/a/requests">
-                    <Text>Friend Requests</Text>
-                </Link>
+                <Link href="/a/requests">Friend Requests</Link>
             </div>
         </div>
     )
