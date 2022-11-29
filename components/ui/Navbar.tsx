@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Logo } from './Logo'
@@ -9,6 +9,7 @@ import png from '../../public/Profile-picture.png'
 
 export const Navbar: FC = () => {
     const [displayDropDown, setDisplayDropDown] = useState<boolean>(false)
+    const triangleRef = useRef<HTMLDivElement>(null)
 
     return (
         <div className={styles.navbar}>
@@ -35,13 +36,17 @@ export const Navbar: FC = () => {
                         ? `${styles.triangle} ${styles.rotate}`
                         : styles.triangle
                 }
-                onClick={() => setDisplayDropDown(prevState => !prevState)}
+                onClick={() => setDisplayDropDown(!displayDropDown)}
                 role="button"
                 tabIndex={0}
                 aria-label="Display Drop Down Menu"
+                ref={triangleRef}
             />
             {displayDropDown ? (
-                <DropDown exit={() => setDisplayDropDown(false)} />
+                <DropDown
+                    exit={() => setDisplayDropDown(false)}
+                    buttonRef={triangleRef}
+                />
             ) : null}
         </div>
     )

@@ -1,4 +1,5 @@
 import { StaticImageData } from 'next/image'
+import { RefObject } from 'react'
 import { ChildrenProps, NotificationInterface } from './providers'
 
 export type color = 'primary' | 'secondary' | 'error' | 'success'
@@ -70,4 +71,5 @@ export interface ProfilePictureProps {
 
 export interface DropDownProps {
     exit: () => void
+    buttonRef: RefObject<HTMLDivElement>
 }

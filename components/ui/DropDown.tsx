@@ -4,24 +4,28 @@ import { Text } from './Text'
 import styles from '../../styles/modules/UI.module.scss'
 import { DropDownProps } from '../../types'
 
-export const DropDown: FC<DropDownProps> = ({ exit }) => {
+export const DropDown: FC<DropDownProps> = ({ exit, buttonRef }) => {
     const containerRef = useRef<HTMLDivElement>(null)
 
     const handleClickOutside = useMemo(
         () =>
             (event: MouseEvent): void => {
                 const { current: wrap } = containerRef
+                const { current: buttonWrap } = buttonRef
                 // on click if the click is outside the drop down menu it will close the menu
                 if (
                     wrap &&
                     !wrap.contains(
+                        event.target instanceof Node ? event.target : null
+                    ) &&
+                    !buttonWrap?.contains(
                         event.target instanceof Node ? event.target : null
                     )
                 ) {
                     exit()
                 }
             },
-        [exit]
+        [exit, buttonRef]
     )
 
     useEffect(() => {
