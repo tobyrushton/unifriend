@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, RefObject, useRef, useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Logo } from './Logo'
@@ -10,6 +10,30 @@ import png from '../../public/Profile-picture.png'
 export const Navbar: FC = () => {
     const [displayDropDown, setDisplayDropDown] = useState<boolean>(false)
     const triangleRef = useRef<HTMLDivElement>(null)
+
+    const handleClickOutside = useMemo(
+        () =>
+            (
+                event: MouseEvent,
+                containerRef: RefObject<HTMLDivElement>
+            ): void => {
+                const { current: wrap } = containerRef
+                const { current: buttonWrap } = triangleRef
+                // on click if the click is outside the drop down menu it will close the menu
+                if (
+                    wrap &&
+                    !wrap.contains(
+                        event.target instanceof Node ? event.target : null
+                    ) &&
+                    !buttonWrap?.contains(
+                        event.target instanceof Node ? event.target : null
+                    )
+                ) {
+                    setDisplayDropDown(false)
+                }
+            },
+        []
+    )
 
     return (
         <div className={styles.navbar}>
@@ -43,10 +67,7 @@ export const Navbar: FC = () => {
                 ref={triangleRef}
             />
             {displayDropDown ? (
-                <DropDown
-                    exit={() => setDisplayDropDown(false)}
-                    buttonRef={triangleRef}
-                />
+                <DropDown handleClickOutside={handleClickOutside} />
             ) : null}
         </div>
     )

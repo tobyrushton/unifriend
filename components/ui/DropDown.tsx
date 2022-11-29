@@ -1,39 +1,22 @@
-import { FC, useEffect, useRef, useMemo } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Text } from './Text'
 import styles from '../../styles/modules/UI.module.scss'
 import { DropDownProps } from '../../types'
 
-export const DropDown: FC<DropDownProps> = ({ exit, buttonRef }) => {
+export const DropDown: FC<DropDownProps> = ({ handleClickOutside }) => {
     const containerRef = useRef<HTMLDivElement>(null)
-
-    const handleClickOutside = useMemo(
-        () =>
-            (event: MouseEvent): void => {
-                const { current: wrap } = containerRef
-                const { current: buttonWrap } = buttonRef
-                // on click if the click is outside the drop down menu it will close the menu
-                if (
-                    wrap &&
-                    !wrap.contains(
-                        event.target instanceof Node ? event.target : null
-                    ) &&
-                    !buttonWrap?.contains(
-                        event.target instanceof Node ? event.target : null
-                    )
-                ) {
-                    exit()
-                }
-            },
-        [exit, buttonRef]
-    )
 
     useEffect(() => {
         // creates an event listener to listen for clicks.
-        document.addEventListener('mousedown', handleClickOutside)
+        document.addEventListener('mousedown', e =>
+            handleClickOutside(e, containerRef)
+        )
 
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
+            document.removeEventListener('mousedown', e =>
+                handleClickOutside(e, containerRef)
+            )
         }
     }, [handleClickOutside])
 

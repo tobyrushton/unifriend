@@ -70,6 +70,9 @@ export interface ProfilePictureProps {
 }
 
 export interface DropDownProps {
-    exit: () => void
-    buttonRef: RefObject<HTMLDivElement>
+    // exit?: () => void
+    handleClickOutside: (
+        event: MouseEvent,
+        containerRef: RefObject<HTMLDivElement>
+    ) => void
 }
