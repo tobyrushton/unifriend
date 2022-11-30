@@ -1,6 +1,7 @@
 import { FC, useState, useRef, RefObject } from 'react'
 import { render, screen, act, waitFor } from '@testing-library/react'
 import { DropDown } from '../../../components'
+import '@testing-library/jest-dom'
 
 const TestComponent: FC = () => {
     const [display, setDisplay] = useState<boolean>(true)
@@ -61,9 +62,6 @@ const TestComponent: FC = () => {
 }
 
 describe('DropDown component tests', () => {
-    jest.spyOn(window, 'addEventListener')
-    jest.spyOn(window, 'removeEventListener')
-
     it('component renders', async () => {
         const { container } = await act(async () =>
             render(<DropDown handleClickOutside={() => ''} />)
@@ -92,5 +90,20 @@ describe('DropDown component tests', () => {
         await waitFor(() => {
             expect(screen.queryByText('Friend Requests')).toBeFalsy()
         })
+    })
+
+    it('links all contain correct hrefs', () => {
+        render(<DropDown handleClickOutside={jest.fn()} />)
+
+        expect(
+            screen.getByRole('link', { name: 'View Profile' })
+        ).toHaveAttribute('href', '/a/profile')
+        expect(screen.getByRole('link', { name: 'Settings' })).toHaveAttribute(
+            'href',
+            '/a/settings'
+        )
+        expect(
+            screen.getByRole('link', { name: 'Friend Requests' })
+        ).toHaveAttribute('href', '/a/requests')
     })
 })
