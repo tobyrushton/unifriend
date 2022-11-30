@@ -66,7 +66,7 @@ export interface ProfilePictureProps {
     width?: number
     height?: number
     style?: styleProperties
-    image: StaticImageData
+    image: StaticImageData | string
 }
 
 export interface DropDownProps {
