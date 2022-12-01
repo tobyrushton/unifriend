@@ -1,4 +1,4 @@
-import { extendType, intArg, nonNull, objectType, stringArg } from 'nexus'
+import { extendType, nonNull, objectType, stringArg } from 'nexus'
 import { MessageId, MessageWithId } from '../../types'
 import { DateTime } from '../scalars/DateTime'
 
@@ -6,7 +6,7 @@ import { DateTime } from '../scalars/DateTime'
 export const Message = objectType({
     name: 'Message',
     definition(t) {
-        t.int('id')
+        t.string('id')
         t.string('senderID')
         t.string('recipientID')
         t.boolean('seen')
@@ -46,7 +46,7 @@ export const MarkMessageAsRead = extendType({
             type: Message, // users the type Message defined previously.
             args: {
                 // takes the  id of the message as a parameter.
-                id: nonNull(intArg()),
+                id: nonNull(stringArg()),
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.update({
@@ -68,7 +68,7 @@ export const DeleteMessage = extendType({
             type: Message, // users the type Message defined previously.
             args: {
                 // takes the id of the message as a parameter
-                id: nonNull(intArg()),
+                id: nonNull(stringArg()),
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.delete({

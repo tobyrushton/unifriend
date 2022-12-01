@@ -7,7 +7,7 @@ import {
 } from '../../__helpers__/context'
 import { schema } from '../../../graphql/schema'
 import { resolvers } from '../../../graphql/resolvers'
-import { UserObjectWithID } from '../../../types'
+import { UserObjectWithSettings, UserObjectWithID } from '../../../types'
 import {
     CreateUserMutation,
     UpdateUserMutation,
@@ -43,7 +43,7 @@ describe('user query tests', () => {
         bio: '',
     }
 
-    const userObject: UserObjectWithID = {
+    const userObject: UserObjectWithSettings = {
         id: '1234817245dshfjsahdfa34',
         email: 'testEmail@kcl.ac.uk',
         firstName: 'Toby',
@@ -53,6 +53,7 @@ describe('user query tests', () => {
         university: 'UCL',
         username: 'tobyrushton',
         bio: '',
+        settings: { darkMode: false, universityPreference: 'OWN' },
     }
 
     it('should fail with missing variable', async () => {
@@ -112,7 +113,11 @@ describe('user query tests', () => {
             university: 'UCL',
             username: 'tobyrushton',
             bio: '',
-            settings: null,
+            settings: {
+                darkMode: false,
+                universityPreference: 'OWN',
+                usersId: null,
+            },
         })
     })
 

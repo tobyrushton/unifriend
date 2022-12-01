@@ -37,7 +37,7 @@ model Friends {
 }
 
 model FriendRequests {
-  id                                   Int      @id @unique @default(autoincrement())
+  id                                   String   @id @unique @default(uuid())
   createdAt                            DateTime @default(now())
   friendID                             String   @unique
   status                               Boolean  @default(false)
@@ -47,7 +47,7 @@ model FriendRequests {
 }
 
 model Messages {
-  id          Int      @id @unique @default(autoincrement())
+  id          String   @id @unique @default(uuid())
   sentAt      DateTime @default(now())
   seen        Boolean  @default(false)
   senderID    String
@@ -58,7 +58,7 @@ model Messages {
 }
 
 model Settings {
-  id                   Int     @id @unique @default(autoincrement())
+  id                   String  @id @unique @default(uuid())
   darkMode             Boolean @default(false)
   universityPreference String  @default("OWN")
   usersId              String  @unique

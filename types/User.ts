@@ -1,3 +1,5 @@
+import { Settings } from './settings'
+
 export interface createUserObject {
     birthday: string
     firstName: string
@@ -27,6 +29,10 @@ export interface UserUpdateObject {
     course?: string
     username?: string
     bio?: string
+}
+
+export interface UserObjectWithSettings extends UserObjectWithID {
+    settings: Settings
 }
 
 export interface tempUserObject extends UserUpdateObject {

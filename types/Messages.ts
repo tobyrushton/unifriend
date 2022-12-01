@@ -7,9 +7,9 @@ export interface Message {
 }
 
 export interface MessageWithId extends Message {
-    id: number
+    id: string
 }
 
 export type MessageId = {
-    id: number
+    id: string
 }

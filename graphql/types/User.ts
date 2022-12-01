@@ -3,6 +3,7 @@ import {
     emailQuery,
     tempUserObject,
     UserObjectWithID,
+    UserObjectWithSettings,
     UserUpdateObject,
 } from '../../types'
 import { Friend, FriendRequest } from './Friends'
@@ -58,8 +59,9 @@ export const UserQueryByID = extendType({
                 bio: booleanArg(),
                 username: booleanArg(),
                 email: booleanArg(),
+                settings: booleanArg(),
             },
-            resolve(_parent, args, ctx) {
+            resolve: (_parent, args, ctx) => {
                 return ctx.prisma.users.findUnique({
                     where: {
                         // finds the unique user row in the databse with corresponding id
@@ -75,8 +77,9 @@ export const UserQueryByID = extendType({
                         bio: args.bio ?? false,
                         username: args.username ?? false,
                         email: args.email ?? false,
+                        settings: args.settings ?? false,
                     },
-                })
+                }) as unknown as UserObjectWithSettings
             },
         })
     },
@@ -88,7 +91,7 @@ export const UserQuery = extendType({
     definition(t) {
         t.nonNull.list.field('user', {
             type: 'User',
-            resolve(_parent, _args, ctx) {
+            resolve: (_parent, _args, ctx) => {
                 // returns all rows in the user table
                 return ctx.prisma.users.findMany()
             },
@@ -122,19 +125,21 @@ export const CreateUserMutation = extendType({
                         'Username is not valid. Please ensure it contains no special characters'
                     )
 
-                const newUser = {
-                    firstName: args.firstName,
-                    lastName: args.lastName,
-                    university: args.university,
-                    course: args.course,
-                    birthday: args.birthday,
-                    username: args.username,
-                    email: args.email,
-                    bio: '',
-                }
-
                 return ctx.prisma.users.create({
-                    data: newUser, // creates new row in users table.
+                    data: {
+                        firstName: args.firstName,
+                        lastName: args.lastName,
+                        university: args.university,
+                        course: args.course,
+                        birthday: args.birthday,
+                        username: args.username,
+                        email: args.email,
+                        bio: '',
+                        settings: {
+                            create: {},
+                        },
+                    },
+                    include: { settings: true },
                 })
             },
         })
