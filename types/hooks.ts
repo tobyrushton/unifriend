@@ -1,5 +1,4 @@
 import { AuthError, Session, User } from '@supabase/supabase-js'
-import { UserObjectWithID } from './User'
 import { createNotificationType, NotificationInterface } from './providers'
 
 export interface graphQLHookReturn {
@@ -8,8 +7,8 @@ export interface graphQLHookReturn {
     loading: boolean
 }
 
-export interface graphQLHookReturnMutation<T> extends graphQLHookReturn {
-    mutation: (args: T) => Promise<UserObjectWithID>
+export interface graphQLHookReturnMutation<Arg, Return> extends graphQLHookReturn {
+    mutation: (args: Arg) => Promise<Return>
 }
 
 export interface graphQLHookReturnQuery<T> extends graphQLHookReturn {
