@@ -75,3 +75,8 @@ export interface DropDownProps {
         containerRef: RefObject<HTMLDivElement>
     ) => void
 }
+
+export interface ToggleProps {
+    onCheck: (change: boolean) => void
+    style: styleProperties
+}
