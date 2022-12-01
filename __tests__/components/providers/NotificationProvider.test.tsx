@@ -1,9 +1,4 @@
-import {
-    render,
-    screen,
-    fireEvent,
-    waitForElementToBeRemoved,
-} from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { FC, useEffect } from 'react'
 import { act } from 'react-dom/test-utils'
 import { NotificationProvider, Text } from '../../../components'
@@ -106,7 +101,9 @@ describe('Notification provider tests', () => {
     })
 
     it('derenders after 10 seconds', async () => {
-        act(() => {
+        jest.useFakeTimers()
+
+        await act(async () => {
             render(
                 <NotificationProvider>
                     <TestComponent
@@ -117,10 +114,13 @@ describe('Notification provider tests', () => {
                 </NotificationProvider>
             )
         })
-        await waitForElementToBeRemoved(
-            () => screen.queryByText(/^Test Notification$/i),
-            { timeout: 15_000 }
+
+        act(() => {
+            jest.advanceTimersByTime(10_000)
+        })
+
+        await waitFor(() =>
+            expect(screen.queryByText(/^Test Notification$/i)).toBeFalsy()
         )
-        expect(screen.queryByText(/^Test Notification$/i)).toBeFalsy()
-    }, 20_000)
+    })
 })
