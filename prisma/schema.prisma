@@ -28,7 +28,7 @@ model Users {
 }
 
 model Friends {
-  id                            Int      @id @unique @default(autoincrement())
+  id                            String      @id @unique @default(uuid())
   friendedAt                    DateTime @default(now())
   friendID                      String   @unique
   usersId                       String?

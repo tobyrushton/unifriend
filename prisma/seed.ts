@@ -16,6 +16,9 @@ async function main(): Promise<void> {
             birthday: '12062005',
             bio: '',
             email: 'temp@email.com',
+            settings: {
+                create: {},
+            },
         },
     })
     await prisma.users.create({
@@ -28,6 +31,9 @@ async function main(): Promise<void> {
             birthday: '27072002',
             bio: '',
             email: 'temp2@email.com',
+            settings: {
+                create: {},
+            },
         },
     })
 }
