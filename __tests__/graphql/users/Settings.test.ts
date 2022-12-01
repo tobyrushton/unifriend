@@ -3,7 +3,7 @@ import { ApolloServer } from 'apollo-server-micro'
 import { createMockContext, MockContext } from '../../__helpers__/context'
 import { schema } from '../../../graphql/schema'
 import { resolvers } from '../../../graphql/resolvers'
-import { UpdateSettingsMutation } from '../../../graphql/queries/UpdateSettingsMutation'
+import { UpdateSettingsMutation } from '../../../graphql/queries'
 
 describe('Settings tests', () => {
     let mockCtx: MockContext
