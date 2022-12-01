@@ -115,7 +115,7 @@ export const CreateUserMutation = extendType({
                 username: nonNull(stringArg()),
                 email: nonNull(stringArg()),
             },
-            async resolve(_parent, args, ctx) {
+            resolve: (_parent, args, ctx) => {
                 if (!isValidEmail(args.email))
                     throw new Error(
                         'Email is not valid. Please enter a valid university email'
@@ -140,7 +140,7 @@ export const CreateUserMutation = extendType({
                         },
                     },
                     include: { settings: true },
-                })
+                }) as unknown as UserObjectWithSettings
             },
         })
     },
