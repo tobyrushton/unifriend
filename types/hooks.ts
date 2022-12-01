@@ -7,7 +7,8 @@ export interface graphQLHookReturn {
     loading: boolean
 }
 
-export interface graphQLHookReturnMutation<Arg, Return> extends graphQLHookReturn {
+export interface graphQLHookReturnMutation<Arg, Return>
+    extends graphQLHookReturn {
     mutation: (args: Arg) => Promise<Return>
 }
 
@@ -83,4 +84,16 @@ export interface CheckUsernameArgs {
 
 export interface BooleanReturn {
     result: boolean
+}
+
+export type AddTypename<Return extends object, T> = Return & {
+    __typename: T
+}
+
+export type QueryReturn<
+    Return extends object,
+    Attribute extends string,
+    T extends string
+> = {
+    [P in Attribute]: AddTypename<Return, T>
 }
