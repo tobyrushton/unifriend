@@ -1,6 +1,7 @@
 export type UniversityPreference = 'OWN' | 'ALL'
 
 export interface settingsUpdateObject {
+    id: string
     universityPreference?: UniversityPreference
     darkMode?: boolean
 }

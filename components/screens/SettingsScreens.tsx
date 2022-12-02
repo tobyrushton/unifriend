@@ -14,6 +14,7 @@ import {
     UpdateUserParamaters,
 } from '../../types'
 import { useNotifications, useLoadingScreen, useUser } from '../../hooks'
+import styles from '../../styles/modules/Settings.module.scss'
 
 // updates colour theme
 export const SlideOne: FC = () => {
@@ -26,12 +27,14 @@ export const SlideOne: FC = () => {
     >(UpdateSettingsMutation)
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
+    const { user } = useUser()
 
     useEffect(() => {
-        if (exec) mutation({ darkMode: dark })
-    }, [exec, dark, mutation])
+        if (exec) mutation({ darkMode: dark, id: user.id })
+    }, [exec, dark, mutation, user.id])
 
     useEffect(() => {
+        // creates a success notification on success
         if (success) {
             createNotification({
                 type: 'success',
@@ -46,9 +49,10 @@ export const SlideOne: FC = () => {
     }, [loading, setLoading])
 
     useEffect(() => {
+        // creates an error notification on error
         if (error) {
             createNotification({
-                type: 'success',
+                type: 'error',
                 content: error.message,
             })
             setExec(false)
@@ -60,12 +64,16 @@ export const SlideOne: FC = () => {
             <Text header style={{ marginLeft: '10%', marginTop: '2rem' }}>
                 Set colour theme
             </Text>
-            <Toggle
-                onCheck={change => {
-                    setDark(change)
-                    setExec(true)
-                }}
-            />
+            <div className={styles.toggleContainer}>
+                <Text>Light</Text>
+                <Toggle
+                    onCheck={change => {
+                        setDark(change)
+                        setExec(true)
+                    }}
+                />
+                <Text>Dark</Text>
+            </div>
         </>
     )
 }
@@ -82,12 +90,14 @@ export const SlideTwo: FC = () => {
     >(UpdateSettingsMutation)
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
+    const { user } = useUser()
 
     useEffect(() => {
-        if (exec) mutation({ universityPreference: preference })
-    }, [exec, preference, mutation])
+        if (exec) mutation({ universityPreference: preference, id: user.id })
+    }, [exec, preference, mutation, user.id])
 
     useEffect(() => {
+        // creates a success notification on success
         if (success) {
             createNotification({
                 type: 'success',
@@ -102,9 +112,10 @@ export const SlideTwo: FC = () => {
     }, [loading, setLoading])
 
     useEffect(() => {
+        // creates an error notification on error
         if (error) {
             createNotification({
-                type: 'success',
+                type: 'error',
                 content: error.message,
             })
             setExec(false)
@@ -114,14 +125,18 @@ export const SlideTwo: FC = () => {
     return (
         <>
             <Text header style={{ marginLeft: '10%', marginTop: '2rem' }}>
-                Set colour theme
+                Set university preference
             </Text>
-            <Toggle
-                onCheck={change => {
-                    setPreference(change ? 'ALL' : 'OWN')
-                    setExec(true)
-                }}
-            />
+            <div className={styles.toggleContainer}>
+                <Text>Own university only</Text>
+                <Toggle
+                    onCheck={change => {
+                        setPreference(change ? 'ALL' : 'OWN')
+                        setExec(true)
+                    }}
+                />
+                <Text>All UK universities</Text>
+            </div>
         </>
     )
 }
@@ -147,6 +162,7 @@ export const SlideThree: FC = () => {
     }, [loading, setLoading, setButtonInactive])
 
     useEffect(() => {
+        // creates a success notification on success
         if (success) {
             createNotification({
                 type: 'success',
@@ -157,6 +173,7 @@ export const SlideThree: FC = () => {
 
     useEffect(() => {
         if (error) {
+            // creates an error notification on error
             createNotification({
                 type: 'error',
                 content: error.message,
@@ -170,74 +187,88 @@ export const SlideThree: FC = () => {
 
     return (
         <>
-            <Text>Update account information</Text>
-            <Input
-                placeholder="First Name"
-                type="text"
-                setValue={val =>
-                    setState(prevState => {
-                        const temp = { ...prevState }
-                        temp.firstName = val
-                        return temp
-                    })
-                }
-                value={user.firstName}
-            />
-            <Input
-                placeholder="Last Name"
-                type="text"
-                setValue={val =>
-                    setState(prevState => {
-                        const temp = { ...prevState }
-                        temp.lastName = val
-                        return temp
-                    })
-                }
-                value={user.lastName}
-            />
-            <Input
-                placeholder="First Name"
-                type="text"
-                setValue={val =>
-                    setState(prevState => {
-                        const temp = { ...prevState }
-                        temp.username = val
-                        return temp
-                    })
-                }
-                value={user.username}
-            />
-            <Input
-                placeholder="Course"
-                type="text"
-                setValue={val =>
-                    setState(prevState => {
-                        const temp = { ...prevState }
-                        temp.course = val
-                        return temp
-                    })
-                }
-                value={user.course}
-            />
-            <Input
-                placeholder="Bio"
-                type="text"
-                setValue={val =>
-                    setState(prevState => {
-                        const temp = { ...prevState }
-                        temp.bio = val
-                        return temp
-                    })
-                }
-                value={user.bio}
-            />
-            <Button
-                onClick={() => setExec(true)}
-                inactive={buttonInactive}
-                filled
-            >
-                Update
-            </Button>
+            <Text header bold textAlign="center">
+                Update account information
+            </Text>
+            <div className={styles.inputContainer}>
+                <Text bold>Name</Text>
+                <Input
+                    placeholder="First Name"
+                    type="text"
+                    setValue={val =>
+                        setState(prevState => {
+                            const temp = { ...prevState }
+                            temp.firstName = val
+                            return temp
+                        })
+                    }
+                    value={user.firstName}
+                />
+                <Input
+                    placeholder="Last Name"
+                    type="text"
+                    setValue={val =>
+                        setState(prevState => {
+                            const temp = { ...prevState }
+                            temp.lastName = val
+                            return temp
+                        })
+                    }
+                    value={user.lastName}
+                />
+                <Text bold style={{ marginTop: '5%' }}>
+                    Username
+                </Text>
+                <Input
+                    placeholder="username"
+                    type="text"
+                    setValue={val =>
+                        setState(prevState => {
+                            const temp = { ...prevState }
+                            temp.username = val
+                            return temp
+                        })
+                    }
+                    value={user.username}
+                />
+                <Text bold style={{ marginTop: '5%' }}>
+                    Course
+                </Text>
+                <Input
+                    placeholder="Course"
+                    type="text"
+                    setValue={val =>
+                        setState(prevState => {
+                            const temp = { ...prevState }
+                            temp.course = val
+                            return temp
+                        })
+                    }
+                    value={user.course}
+                />
+                <Text bold style={{ marginTop: '5%' }}>
+                    Bio
+                </Text>
+                <Input
+                    placeholder="Bio"
+                    type="text"
+                    setValue={val =>
+                        setState(prevState => {
+                            const temp = { ...prevState }
+                            temp.bio = val
+                            return temp
+                        })
+                    }
+                    value={user.bio}
+                />
+                <Button
+                    onClick={() => setExec(true)}
+                    inactive={buttonInactive}
+                    filled
+                >
+                    Update
+                </Button>
+            </div>
         </>
     )
 }
