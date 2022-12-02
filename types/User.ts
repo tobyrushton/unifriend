@@ -1,11 +1,14 @@
 import { Settings } from './settings'
 
-export interface createUserObject {
+export interface ShellUser {
     birthday: string
     firstName: string
     lastName: string
     course: string
     username: string
+}
+
+export interface createUserObject extends ShellUser {
     email: string
 }
 
@@ -19,6 +22,11 @@ export interface UserObject extends createUserObjectWithUniversity {
 
 export interface UserObjectWithID extends UserObject {
     id: string
+}
+
+export interface UpdateUserReturn extends ShellUser {
+    id: string
+    bio: string
 }
 
 export interface UserUpdateObject {

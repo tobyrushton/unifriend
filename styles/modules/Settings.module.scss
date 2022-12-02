@@ -1,0 +1,36 @@
+@use '../reusables/variables' as variables;
+
+.container {
+    position: absolute;
+    top: 100px;
+    width: 100%;
+    height: calc(100% - 100px);
+}
+
+.optionsContainer {
+    position: absolute;
+    left: 0;
+    display: flex;
+    width: 25%;
+    height: 100%;
+    flex-direction: column;
+    border-style: none solid none none;
+    border-color: variables.$accent_color;
+    border-width: 2px;
+
+    p, h1 {
+        width: calc(100% - 2rem);
+        border-style: none none solid none;
+        border-color: variables.$accent_color;
+        border-width: 2px;
+        padding: 2.5rem 1rem;
+        text-decoration: none;
+    }
+}
+
+.changesContainer {
+    position: absolute;
+    right: 0;
+    width: 75%;
+    height: 100%;
+}
