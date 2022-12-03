@@ -15,8 +15,8 @@ export const Button: FC<ButtonProps> = ({
         }}
         role="button"
         className={`${styles.fontText} ${styles.button} ${
-            filled ? styles.filled : inactive ? styles.inactive : ''
-        }`}
+            filled ? styles.filled : ''
+        } ${inactive ? styles.inactive : ''}`}
         tabIndex={0}
         style={style}
     >
