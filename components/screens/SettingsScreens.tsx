@@ -12,8 +12,14 @@ import {
     UserUpdateObject,
     UpdateUserReturn,
     UpdateUserParamaters,
+    ErrorTextState,
 } from '../../types'
-import { useNotifications, useLoadingScreen, useUser } from '../../hooks'
+import {
+    useNotifications,
+    useLoadingScreen,
+    useUser,
+    useCheckUsername,
+} from '../../hooks'
 import styles from '../../styles/modules/Settings.module.scss'
 
 // updates colour theme
@@ -30,8 +36,11 @@ export const SlideOne: FC = () => {
     const { user } = useUser()
 
     useEffect(() => {
-        if (exec) mutation({ darkMode: dark, id: user.id })
-    }, [exec, dark, mutation, user.id])
+        if (exec) {
+            mutation({ darkMode: dark, id: user.id })
+            setExec(false)
+        }
+    }, [exec, dark, mutation, user.id, setExec])
 
     useEffect(() => {
         // creates a success notification on success
@@ -40,7 +49,6 @@ export const SlideOne: FC = () => {
                 type: 'success',
                 content: 'Colour mode updated successfully',
             })
-            setExec(false)
         }
     }, [success, createNotification, setExec])
 
@@ -55,7 +63,6 @@ export const SlideOne: FC = () => {
                 type: 'error',
                 content: error.message,
             })
-            setExec(false)
         }
     }, [error, createNotification, setExec])
 
@@ -93,8 +100,11 @@ export const SlideTwo: FC = () => {
     const { user } = useUser()
 
     useEffect(() => {
-        if (exec) mutation({ universityPreference: preference, id: user.id })
-    }, [exec, preference, mutation, user.id])
+        if (exec) {
+            mutation({ universityPreference: preference, id: user.id })
+            setExec(false)
+        }
+    }, [exec, preference, mutation, user.id, setExec])
 
     useEffect(() => {
         // creates a success notification on success
@@ -103,7 +113,6 @@ export const SlideTwo: FC = () => {
                 type: 'success',
                 content: 'University preference updated successfully',
             })
-            setExec(false)
         }
     }, [success, createNotification, setExec])
 
@@ -118,7 +127,6 @@ export const SlideTwo: FC = () => {
                 type: 'error',
                 content: error.message,
             })
-            setExec(false)
         }
     }, [error, createNotification, setExec])
 
@@ -147,6 +155,10 @@ export const SlideThree: FC = () => {
     const [exec, setExec] = useState<boolean>(false)
     // ensures that the user cannot call requests infintely
     const [buttonInactive, setButtonInactive] = useState<boolean>(true)
+    const [errorText, setErrorText] = useState<ErrorTextState[]>([
+        { active: false },
+        { active: false },
+    ])
     const { loading, success, error, mutation } = useMutation<
         UpdateUserParamaters,
         UpdateUserReturn
@@ -154,22 +166,77 @@ export const SlideThree: FC = () => {
     const { user } = useUser()
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
+    const {
+        data,
+        loading: checkUsernameLoading,
+        runQuery: checkUsername,
+    } = useCheckUsername()
 
     useEffect(() => {
-        // when the mutation is loading, the button is disabled
-        setLoading(loading)
-        setButtonInactive(loading)
-    }, [loading, setLoading, setButtonInactive])
+        // when the mutation or query is loading, the button is disabled
+        setLoading(loading || checkUsernameLoading)
+        setButtonInactive(loading || checkUsernameLoading)
+    }, [loading, checkUsernameLoading, setLoading, setButtonInactive])
+
+    useEffect(() => {
+        if (state?.course) {
+            if (state.course.length < 3) {
+                setErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[1] = {
+                        active: true,
+                        content: 'Course length be atleast three characters',
+                    }
+                    return temp
+                })
+                setButtonInactive(true)
+            } else {
+                setErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[1] = { active: false }
+                    return temp
+                })
+                setButtonInactive(false)
+            }
+        }
+    }, [state?.course, setButtonInactive, setErrorText])
+
+    useEffect(() => {
+        if (data) {
+            if (data.result) {
+                setErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[0] = { active: true, content: 'Username is taken' }
+                    return temp
+                })
+                setButtonInactive(true)
+            } else {
+                setErrorText(prevState => {
+                    const temp = [...prevState]
+                    temp[0] = { active: false }
+                    return temp
+                })
+                setButtonInactive(false)
+            }
+        }
+    }, [data, setErrorText, setButtonInactive])
+
+    useEffect(() => {
+        if (state?.username) {
+            if (state.username !== user.username)
+                checkUsername({ username: state.username })
+        }
+    }, [state, user, checkUsername])
 
     useEffect(() => {
         // creates a success notification on success
-        if (success) {
+        if (success && !loading) {
             createNotification({
                 type: 'success',
                 content: 'Account details updated successfully',
             })
         }
-    }, [success, createNotification])
+    }, [success, loading, createNotification])
 
     useEffect(() => {
         if (error) {
@@ -182,8 +249,11 @@ export const SlideThree: FC = () => {
     }, [error, createNotification])
 
     useEffect(() => {
-        if (exec) mutation({ id: user.id, ...state })
-    }, [exec, state, user, mutation])
+        if (exec) {
+            mutation({ id: user.id, ...state })
+            setExec(false)
+        }
+    }, [exec, state, user, mutation, setExec])
 
     return (
         <>
@@ -202,7 +272,8 @@ export const SlideThree: FC = () => {
                             return temp
                         })
                     }
-                    value={user.firstName}
+                    value={state?.firstName ?? user.firstName}
+                    maxLength={16}
                 />
                 <Input
                     placeholder="Last Name"
@@ -214,7 +285,8 @@ export const SlideThree: FC = () => {
                             return temp
                         })
                     }
-                    value={user.lastName}
+                    value={state?.lastName ?? user.lastName}
+                    maxLength={16}
                 />
                 <Text bold style={{ marginTop: '5%' }}>
                     Username
@@ -229,8 +301,14 @@ export const SlideThree: FC = () => {
                             return temp
                         })
                     }
-                    value={user.username}
+                    value={state?.username ?? user.username}
+                    maxLength={16}
                 />
+                {errorText[0].active ? (
+                    <Text color="error" small>
+                        {errorText[0].content}
+                    </Text>
+                ) : null}
                 <Text bold style={{ marginTop: '5%' }}>
                     Course
                 </Text>
@@ -244,8 +322,14 @@ export const SlideThree: FC = () => {
                             return temp
                         })
                     }
-                    value={user.course}
+                    value={state?.course ?? user.course}
+                    maxLength={32}
                 />
+                {errorText[1].active ? (
+                    <Text color="error" small>
+                        {errorText[1].content}
+                    </Text>
+                ) : null}
                 <Text bold style={{ marginTop: '5%' }}>
                     Bio
                 </Text>
@@ -259,7 +343,8 @@ export const SlideThree: FC = () => {
                             return temp
                         })
                     }
-                    value={user.bio}
+                    value={state?.bio ?? user.bio}
+                    maxLength={256}
                 />
                 <Button
                     onClick={() => setExec(true)}
