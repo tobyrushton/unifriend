@@ -14,17 +14,20 @@ export const ForgottenPasswordScreen: FC = () => {
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
 
+    // function to send a reset email
     const sendEmail = async (): Promise<void> => {
         setLoading(true)
         await supabase.auth
-            .resetPasswordForEmail(accountEmail)
-            .catch(e => setError(e))
+            .resetPasswordForEmail(accountEmail) // sends to the email inputted by the user
+            .catch(e => setError(e)) // sets state on error
             .then(data => {
                 if (data) {
+                    // if successful creates a success notificiation
                     createNotification({
                         type: 'success',
                         content: 'Reset Email sent successfully',
                     })
+                    // update state on completion
                     setEmailSent(true)
                     setLoading(false)
                 }
@@ -32,6 +35,7 @@ export const ForgottenPasswordScreen: FC = () => {
     }
 
     useEffect(() => {
+        // when there is an error, creates notification
         if (error)
             createNotification({
                 type: 'error',
@@ -39,6 +43,7 @@ export const ForgottenPasswordScreen: FC = () => {
             })
     }, [error, createNotification])
 
+    // sets the button to be active if the email is valid
     useEffect(() => {
         if (isValidEmail(accountEmail)) setButtonActive(true)
         else setButtonActive(false)

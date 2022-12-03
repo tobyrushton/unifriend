@@ -29,6 +29,7 @@ import {
 import { ForgottenPasswordScreen } from './ForgottenPasswordScreen'
 
 export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
+    // all state defined that is used for this screen
     const [state, setState] = useState<logInState | signUpState>(
         logIn
             ? {
@@ -61,6 +62,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         { active: false },
     ])
 
+    // all hook responses that are needed to sign up and log in
     const {
         response: signIn,
         error: signInError,
@@ -87,6 +89,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     } = useCheckUsername()
 
     useEffect(() => {
+        // sets loading screen when any loading variable is true
         setLoading(
             signInLoading ||
                 signUpLoading ||
@@ -102,12 +105,14 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     ])
 
     useEffect(() => {
+        // sets error text on the result of checkUsername query
         if (usernameIsTaken && usernameIsTaken.result)
             setDisplayErrorText(prevState => {
                 const temp = [...prevState]
                 temp[0] = { active: true, content: 'Username is taken' }
                 return temp
             })
+        // if not taken, removes error text
         else
             setDisplayErrorText(prevState => {
                 const temp = [...prevState]
@@ -118,8 +123,10 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
 
     useEffect(() => {
         if (signInError) {
+            // displays the email confirm screen if email not confirmed
             if (signInError.message === 'Email not confirmed')
                 setDisplayConfirmEmail(true)
+            // else displays the error in a notification
             else
                 createNotification({
                     type: 'error',
@@ -129,6 +136,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     }, [signInError, createNotification])
 
     useEffect(() => {
+        // displays the error if there's an error with checkUsername query
         if (checkUsernameError)
             createNotification({
                 type: 'error',
@@ -137,6 +145,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     }, [checkUsernameError, createNotification])
 
     useEffect(() => {
+        // if sign up error, displays the error
         if (signUpError)
             createNotification({
                 type: 'error',
@@ -145,6 +154,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     }, [signUpError, createNotification])
 
     useEffect(() => {
+        // if create user error, displays error
         if (createUserError)
             createNotification({
                 type: 'error',
@@ -153,11 +163,13 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     }, [createUserError, createNotification])
 
     useEffect(() => {
+        // on create user success creates notification to display this
         if (createUserSuccess) {
             createNotification({
                 type: 'success',
                 content: 'Account created successfully.',
             })
+            // then sets the display confirm email screen to true
             setDisplayConfirmEmail(true)
         }
     }, [createUserSuccess, createNotification, setDisplayConfirmEmail])
@@ -207,9 +219,11 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     useEffect(() => {
         if (isSignUpState(state) && state.username !== '')
             if (isValidUsername(state.username))
+                // if a valid username is entered, runs check username query
                 checkUsername({
                     username: state.username,
                 })
+            // else sets the error message
             else
                 setDisplayErrorText(prevState => {
                     const temp = [...prevState]
@@ -224,6 +238,8 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     useEffect(() => {
         if (state) {
             if (logIn) {
+                // if component is in logIn mode, and password and email are above certain length,
+                // sets button active
                 if (state.password.length >= 8 && state.email.length >= 3) {
                     setButtonActive(true)
                 } else setButtonActive(false)
@@ -236,11 +252,13 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                     state.firstName.length >= 2 &&
                     state.lastName.length >= 2
                 )
+                    // sets the 2nd slide to true so user can click onto it.
                     setSignUpSlides(prevState => {
                         const temp = { ...prevState }
                         temp.buttonActive = true
                         return temp
                     })
+                // else sets false
                 else
                     setSignUpSlides(prevState => {
                         const temp = { ...prevState }
@@ -253,11 +271,13 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                     isValidUsername(state.username) &&
                     !usernameIsTaken.result
                 )
+                    // sets the 3rd slide to true so user can click onto it.
                     setSignUpSlides(prevState => {
                         const temp = { ...prevState }
                         temp.buttonActive = true
                         return temp
                     })
+                // else sets false
                 else
                     setSignUpSlides(prevState => {
                         const temp = { ...prevState }
@@ -271,6 +291,8 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                         temp.buttonActive = true
                         return temp
                     })
+                // sets the last slide to true, allowing user to sign up
+                // else sets to false
                 else
                     setSignUpSlides(prevState => {
                         const temp = { ...prevState }
@@ -289,18 +311,25 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         usernameIsTaken,
     ])
 
+    // handles sign in click
     const clickSignIn = async (): Promise<void> => {
         if (!isSignUpState(state) && state) {
+            // ensures that the state exists
             await signIn(state.email, state.password)
         }
     }
 
+    // handles sign ups
     const clickSignUp = async (): Promise<void> => {
         if (isSignUpState(state)) {
-            const university = getUniversity(state.email)
+            const university = getUniversity(state.email) // gets the users university
             if (university !== null) {
+                // continues if the a university is returned
                 await register(state.email, state.password)
+                // ensures that their is not an error with auth provider
+                // before creating a row in the database
                 if (signUpError === null) {
+                    // removes the password property from state as not needed
                     const temp: Partial<Pick<signUpState, 'password'>> &
                         Omit<signUpState, 'password'> = state
                     delete temp.password
@@ -309,10 +338,11 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                         ...({ university } as {
                             university: string
                         }),
-                    }
-                    await createUser(CreateUserObject)
+                    } // combines state with the university given
+                    await createUser(CreateUserObject) // creates the user
                 }
-            } else
+            } // else throws error for invalid email
+            else
                 createNotification({
                     type: 'error',
                     content: 'Please enter a valid UK university email',

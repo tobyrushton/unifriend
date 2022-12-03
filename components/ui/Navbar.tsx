@@ -10,6 +10,7 @@ export const Navbar: FC = () => {
     const [displayDropDown, setDisplayDropDown] = useState<boolean>(false)
     const triangleRef = useRef<HTMLDivElement>(null)
 
+    // function to handle everytime a click is registered.
     const handleClickOutside = useMemo(
         () =>
             (
@@ -18,7 +19,8 @@ export const Navbar: FC = () => {
             ): void => {
                 const { current: wrap } = containerRef
                 const { current: buttonWrap } = triangleRef
-                // on click if the click is outside the drop down menu it will close the menu
+                // if the click is not either on the button to
+                // enable it or the drop down it sets display to false
                 if (
                     wrap &&
                     !wrap.contains(

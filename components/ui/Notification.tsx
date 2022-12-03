@@ -20,7 +20,7 @@ export const Notification: FC<notificationProps> = ({
             }}
         >
             <Exit onClick={onClick} />
-            <Text>&#9432;</Text>
+            <Text>&#9432;</Text> {/* Information symbol */}
             <Text>{content}</Text>
         </div>
     )

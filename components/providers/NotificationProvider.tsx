@@ -8,10 +8,13 @@ export const NotificationContext =
     createContext<NotificationContextInterface | null>(null)
 
 export const NotificationProvider: FC<ChildrenProps> = ({ children }) => {
+    // uses the notification queue
     const [notifications, createNotification, deleteNotification] =
         useNotificationQueue()
 
+    // passes down the create notification function
     const ProviderValue: NotificationContextInterface = useMemo(
+        // memoised
         () => ({
             createNotification,
         }),
@@ -21,6 +24,7 @@ export const NotificationProvider: FC<ChildrenProps> = ({ children }) => {
     return (
         <NotificationContext.Provider value={ProviderValue}>
             <div className={styles.notificationContainer}>
+                {/* renders all the notification */}
                 {notifications.map((notification, idx) =>
                     notification ? (
                         <Notification

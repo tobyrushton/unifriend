@@ -10,10 +10,7 @@ import { useAuthStatus } from '../../hooks/providers/useAuthStatus'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 import { useNotifications } from '../../hooks/providers/useNotifications'
 
-// start second iteration with this file
-// define a provider that will spread user information throughout the program
-// check for auth session and if not logged in, put user to the login/signup page
-
+// creates context for the provider.
 export const UserContext = createContext<userContextInterface | null>(null)
 
 const defaultUser: UserObjectWithID = {
@@ -26,10 +23,12 @@ const defaultUser: UserObjectWithID = {
     username: '',
     bio: '',
     email: '',
-}
+} // default user value, all empty fields
 
 export const UserProvider: FC<ChildrenProps> = ({ children }) => {
+    // creates state to store the users details
     const [user, setUser] = useState<UserObjectWithID>(defaultUser)
+    // all hooks used
     const {
         session,
         loading: sessionLoading,
@@ -43,11 +42,12 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     const pathname = usePathname()
 
     useEffect(() => {
-        if (queryLoading || sessionLoading) setLoading(true)
-        else setLoading(false)
+        // sets loading
+        setLoading(queryLoading || sessionLoading)
     }, [queryLoading, sessionLoading, setLoading])
 
     useEffect(() => {
+        // creates notification on error
         if (error)
             createNotification({
                 type: 'error',
@@ -79,14 +79,18 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
                 pathname?.toLowerCase() === '/resetpassword') &&
             !passwordResetRequest
         )
+            // if authorised and not on pathname '/a' pushes the user to '/a'
             router.push('/a')
     }, [user, router, pathname, passwordResetRequest])
 
     useEffect(() => {
+        // if user has created a password reset request, pushes them to the screen
         if (passwordResetRequest) router.push('/resetPassword')
     }, [passwordResetRequest, router, pathname])
 
+    // value that is passed down
     const providerValue: userContextInterface = useMemo(
+        // memoised
         () => ({ user, resetPassword }),
         [user, resetPassword]
     )
