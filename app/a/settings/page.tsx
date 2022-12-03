@@ -11,6 +11,7 @@ import {
 import styles from '../../../styles/modules/Settings.module.scss'
 
 const Page: FC = () => {
+    // state to determine what slide to display
     const [slide, setSlide] = useState<number>(1)
 
     return (

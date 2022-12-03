@@ -14,10 +14,14 @@ const ResetPassword: FC = () => {
     const { resetPassword } = useUser()
 
     useEffect(() => {
+        // if both passwords are valid continue
         if (isValidPassword(password) && isValidPassword(confirmPassword))
-            if (password === confirmPassword) setButtonActive(true)
+            if (password === confirmPassword)
+                // if both passwords the same, allows the user to reset
+                setButtonActive(true)
             else setButtonActive(false)
-        else setButtonActive(false)
+        // else button false
+        else setButtonActive(false) // else button false
     }, [password, confirmPassword, setButtonActive])
 
     return (
