@@ -11,27 +11,32 @@ export const useAuthStatus = (): authStatusReturnType => {
         useState<boolean>(false)
     const { createNotification } = useNotifications()
 
+    // function to handle reset password
     const resetPassword = useMemo(
+        // memoised
         () =>
             async (password: string): Promise<void> => {
                 setLoading(true)
                 await supabase.auth
                     .updateUser({
                         password,
-                    })
-                    .catch((e: AuthError) =>
-                        createNotification({
-                            type: 'error',
-                            content: e.message,
-                        })
+                    }) // updates user details with the new password
+                    .catch(
+                        (e: AuthError) =>
+                            createNotification({
+                                type: 'error',
+                                content: e.message,
+                            }) // on error creates a notification
                     )
                     .then(data => {
-                        setLoading(false)
+                        setLoading(false) // sets loading to false on completion
                         if (data) {
                             createNotification({
+                                // on success creates notification
                                 type: 'success',
                                 content: 'Password changed successfully.',
                             })
+                            // sets the need for passwordRequest to false
                             setPasswordResetRequest(() => false)
                         }
                     })
