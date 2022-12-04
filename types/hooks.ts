@@ -44,6 +44,10 @@ export interface AuthenticationHookReturn<T> {
     response: (email: T, password: T) => Promise<void>
 }
 
+export interface GetEmailParams {
+    username: string
+}
+
 export interface AuthenticationHookReturnWithData<T>
     extends AuthenticationHookReturn<T> {
     data: authDataType
@@ -96,4 +100,14 @@ export type QueryReturn<
     T extends string
 > = {
     [P in Attribute]: AddTypename<Return, T>
+}
+
+export type ExperimentalQueryFunctionReturn<T> = {
+    data: T | undefined
+    error: Error | undefined
+}
+
+export interface ExperimentalQueryReturn<Params, Return> {
+    loading: boolean
+    query: (args: Params) => Promise<ExperimentalQueryFunctionReturn<Return>>
 }
