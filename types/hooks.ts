@@ -1,4 +1,4 @@
-import { AuthError, Session, User } from '@supabase/supabase-js'
+import { AuthError, Session } from '@supabase/supabase-js'
 import { DocumentNode, GraphQLError } from 'graphql'
 import { createNotificationType, NotificationInterface } from './providers'
 
@@ -24,30 +24,27 @@ export interface SelectUserByIDParameters {
     username?: boolean
 }
 
-export interface AuthenticationHookReturn<T> {
-    loading: boolean
+export interface AuthenticationParams {
+    email: string
+    password: string
+}
+
+export interface AuthenticationFunctionReturn {
     error: AuthError | null
-    response: (email: T, password: T) => Promise<void>
+    success: boolean
+}
+
+export type AuthenticationFunction<T> = (
+    args: T
+) => Promise<AuthenticationFunctionReturn>
+
+export interface AuthenticationHook<T> {
+    loading: boolean
+    response: AuthenticationFunction<T>
 }
 
 export interface GetEmailParams {
     username: string
-}
-
-export interface AuthenticationHookReturnWithData<T>
-    extends AuthenticationHookReturn<T> {
-    data: authDataType
-}
-
-export interface authDataType {
-    user: User | null
-    session:
-        | Session
-        | null
-        | {
-              user: null
-              session: null
-          }
 }
 
 export interface authStatusReturnType {
@@ -104,6 +101,7 @@ export interface ApolloMutationFunctionReturn {
     error: readonly GraphQLError[] | undefined
 }
 
+/* eslint-disable-next-line */
 export type ApolloMutationFunction = <Return, Params>(
     args: Join<Mutation, Params>
 ) => Promise<ApolloMutationFunctionReturn>

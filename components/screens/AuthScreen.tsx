@@ -69,18 +69,10 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     ])
 
     // all hook responses that are needed to sign up and log in
-    const {
-        response: signIn,
-        error: signInError,
-        loading: signInLoading,
-    } = useLogIn()
+    const { response: signIn, loading: signInLoading } = useLogIn()
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
-    const {
-        response: register,
-        error: signUpError,
-        loading: signUpLoading,
-    } = useSignUp()
+    const { response: register, loading: signUpLoading } = useSignUp()
 
     const { loading: queryLoading, query } = useQuery()
     const { loading: mutationLoading, mutation } = useMutation()
@@ -97,29 +89,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         queryLoading,
         mutationLoading,
     ])
-
-    useEffect(() => {
-        if (signInError) {
-            // displays the email confirm screen if email not confirmed
-            if (signInError.message === 'Email not confirmed')
-                setDisplayConfirmEmail(true)
-            // else displays the error in a notification
-            else
-                createNotification({
-                    type: 'error',
-                    content: signInError.message as string,
-                })
-        }
-    }, [signInError, createNotification])
-
-    useEffect(() => {
-        // if sign up error, displays the error
-        if (signUpError)
-            createNotification({
-                type: 'error',
-                content: signUpError.message as string,
-            })
-    }, [signUpError, createNotification])
 
     useEffect(() => {
         // displays whether the user has entered a valid email or not
@@ -290,7 +259,21 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     const clickSignIn = async (): Promise<void> => {
         if (!isSignUpState(state) && state) {
             // ensures that the state exists
-            await signIn(state.email, state.password)
+            const { error } = await signIn({
+                email: state.email,
+                password: state.password,
+            })
+            if (error) {
+                // displays the email confirm screen if email not confirmed
+                if (error.message === 'Email not confirmed')
+                    setDisplayConfirmEmail(true)
+                // else displays the error in a notification
+                else
+                    createNotification({
+                        type: 'error',
+                        content: error.message as string,
+                    })
+            }
         }
     }
 
@@ -300,10 +283,18 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
             const university = getUniversity(state.email) // gets the users university
             if (university !== null) {
                 // continues if the a university is returned
-                await register(state.email, state.password)
+                const { error: signUpError } = await register({
+                    email: state.email,
+                    password: state.password,
+                })
                 // ensures that their is not an error with auth provider
                 // before creating a row in the database
-                if (signUpError === null) {
+                if (signUpError)
+                    createNotification({
+                        type: 'error',
+                        content: signUpError.message,
+                    })
+                else {
                     // removes the password property from state as not needed
                     const temp: Partial<Pick<signUpState, 'password'>> &
                         Omit<signUpState, 'password'> = state

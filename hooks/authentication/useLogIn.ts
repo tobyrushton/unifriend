@@ -1,34 +1,35 @@
-import { AuthError } from '@supabase/supabase-js'
 import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
-import { AuthenticationHookReturnWithData, authDataType } from '../../types'
+import {
+    AuthenticationHook,
+    AuthenticationParams,
+    AuthenticationFunction,
+} from '../../types'
 
-export const useLogIn = (): AuthenticationHookReturnWithData<string> => {
+export const useLogIn = (): AuthenticationHook<AuthenticationParams> => {
     // defines state types which allow for dynamic return values
     const [loading, setLoading] = useState<boolean>(false)
-    const [data, setData] = useState<authDataType>({
-        user: null,
-        session: null,
-    })
-    const [error, setError] = useState<AuthError | null>(null)
 
-    const response = async (email: string, password: string): Promise<void> => {
+    const response: AuthenticationFunction<AuthenticationParams> = async ({
+        email,
+        password,
+    }) => {
         setLoading(true)
-        const { data: authData, error: authErorr } =
-            await supabase.auth.signInWithPassword({
-                email,
-                password,
-            }) // signs in with email and password
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        }) // signs in with email and password
 
         // updates state on completion
         setLoading(false)
-        setError(authErorr)
-        setData(authData)
+
+        return {
+            error,
+            success: !!data,
+        }
     }
 
     return {
-        data,
-        error,
         loading,
         response,
     }

@@ -1,25 +1,26 @@
-import { AuthError } from '@supabase/supabase-js'
 import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
-import { AuthenticationHookReturn } from '../../types'
+import { AuthenticationHook, AuthenticationFunction } from '../../types'
 
-export const useSignOut = (): AuthenticationHookReturn<undefined> => {
+export const useSignOut = (): AuthenticationHook<never> => {
     // defines state types which allow for dynamic return values
     const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<AuthError | null>(null)
 
-    const response = async (): Promise<void> => {
+    const response: AuthenticationFunction<never> = async () => {
         setLoading(true)
         // uses sign out method
-        const { error: errorFromAuth } = await supabase.auth.signOut()
+        const { error } = await supabase.auth.signOut()
         // updates state upon completion
-        setError(errorFromAuth)
         setLoading(false)
+
+        return {
+            error,
+            success: !!error,
+        }
     }
 
     return {
         loading,
-        error,
         response,
     }
 }
