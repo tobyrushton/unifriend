@@ -26,6 +26,8 @@ export const useMutation = (): ApolloMutationReturn => {
             variables,
         })
 
+        setLoading(false)
+
         return {
             error: errors,
             success: !!data,
