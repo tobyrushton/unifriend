@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { AuthenticationHook, AuthenticationFunction } from '../../types'
 
-export const useSignOut = (): AuthenticationHook<never> => {
+export const useSignOut = (): AuthenticationHook => {
     // defines state types which allow for dynamic return values
     const [loading, setLoading] = useState<boolean>(false)
 
-    const response: AuthenticationFunction<never> = async () => {
+    const response: AuthenticationFunction = async () => {
         setLoading(true)
         // uses sign out method
         const { error } = await supabase.auth.signOut()

@@ -34,11 +34,11 @@ export interface AuthenticationFunctionReturn {
     success: boolean
 }
 
-export type AuthenticationFunction<T> = (
+export type AuthenticationFunction<T = void> = (
     args: T
 ) => Promise<AuthenticationFunctionReturn>
 
-export interface AuthenticationHook<T> {
+export interface AuthenticationHook<T = void> {
     loading: boolean
     response: AuthenticationFunction<T>
 }

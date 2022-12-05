@@ -8,9 +8,7 @@ const A: FC = () => {
     const { response } = useSignOut()
     return (
         <div>
-            <Button onClick={() => response(undefined, undefined)}>
-                Sign Out
-            </Button>
+            <Button onClick={() => response()}>Sign Out</Button>
         </div>
     )
 }
