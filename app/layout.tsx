@@ -10,6 +10,7 @@ import {
     UserProvider,
 } from '../components'
 import '../styles/globals.scss'
+import "@fontsource/orbitron"
 
 const RootLayout: FC<ChildrenProps> = ({ children }) => {
     return (
