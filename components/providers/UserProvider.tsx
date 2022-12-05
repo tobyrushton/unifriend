@@ -4,8 +4,12 @@ import {
     userContextInterface,
     ChildrenProps,
     UserObjectWithID,
+    emailQuery,
+    getUserFromAuthQuery,
+    userQueryReturnInterface,
 } from '../../types'
-import { useGetUserByEmail } from '../../hooks/graphql/User/useGetUserByEmail'
+import { UserByEmailQuery } from '../../graphql/queries'
+import { useQuery } from '../../hooks/graphql/useQuery'
 import { useAuthStatus } from '../../hooks/providers/useAuthStatus'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 import { useNotifications } from '../../hooks/providers/useNotifications'
@@ -35,7 +39,7 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         passwordResetRequest,
         resetPassword,
     } = useAuthStatus()
-    const { error, loading: queryLoading, runQuery, data } = useGetUserByEmail()
+    const { loading: queryLoading, query } = useQuery()
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
     const router = useRouter()
@@ -47,15 +51,34 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     }, [queryLoading, sessionLoading, setLoading])
 
     useEffect(() => {
-        // creates notification on error
-        if (error)
-            createNotification({
-                type: 'error',
-                content: error?.message as string,
-            })
-    }, [error, createNotification])
+        // executes query to get the users details
+        const run = async (): Promise<void> => {
+            if (session?.user.email) {
+                const { data, error } = await query<
+                    getUserFromAuthQuery<UserObjectWithID, 'User'>,
+                    emailQuery
+                >({ query: UserByEmailQuery, email: session.user.email })
 
-    useEffect(() => {
+                if (data) {
+                    const temp: Partial<
+                        Pick<
+                            userQueryReturnInterface<UserObjectWithID, 'User'>,
+                            '__typename'
+                        >
+                    > &
+                        Omit<
+                            userQueryReturnInterface<UserObjectWithID, 'User'>,
+                            '__typename'
+                        > = data.getUserFromAuth
+                    delete temp.__typename
+                    setUser(temp)
+                } else if (error)
+                    createNotification({
+                        type: 'error',
+                        content: error.message,
+                    })
+            }
+        }
         // if there is no session, redirects user to the landing page
         // and iof user is defined then resets to the default.
         if (session?.user === undefined) {
@@ -63,14 +86,8 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
             if (user !== defaultUser) setUser(defaultUser)
         }
         // implement get user from auth hook here once created.
-        if (session?.user)
-            if (session.user.email && user === defaultUser)
-                runQuery(session.user.email)
-    }, [session, runQuery, pathname, router, user])
-
-    useEffect(() => {
-        if (data) setUser(data)
-    }, [data])
+        if (session?.user) if (session.user.email && user === defaultUser) run()
+    }, [session, pathname, router, user, createNotification, query])
 
     useEffect(() => {
         if (

@@ -1,20 +1,6 @@
 import { AuthError, Session, User } from '@supabase/supabase-js'
+import { DocumentNode, GraphQLError } from 'graphql'
 import { createNotificationType, NotificationInterface } from './providers'
-
-export interface graphQLHookReturn {
-    success: boolean
-    error: Error | undefined
-    loading: boolean
-}
-
-export interface graphQLHookReturnMutation<Arg, Return>
-    extends graphQLHookReturn {
-    mutation: (args: Arg) => Promise<Return>
-}
-
-export interface graphQLHookReturnQuery<T> extends graphQLHookReturn {
-    data: T
-}
 
 export interface UpdateUserParamaters {
     id: string
@@ -71,11 +57,6 @@ export interface authStatusReturnType {
     resetPassword: (password: string) => Promise<void>
 }
 
-export interface graphQLHookReturnQueryFunction<T, Data>
-    extends graphQLHookReturnQuery<Data> {
-    runQuery: (args: T) => Promise<void>
-}
-
 export type notificationQueueReturn = [
     queue: Array<NotificationInterface | undefined>,
     createNotification: createNotificationType,
@@ -94,20 +75,56 @@ export type AddTypename<Return extends object, T> = Return & {
     __typename: T
 }
 
-export type QueryReturn<
-    Return extends object,
-    Attribute extends string,
-    T extends string
-> = {
-    [P in Attribute]: AddTypename<Return, T>
-}
-
-export type ExperimentalQueryFunctionReturn<T> = {
+export interface ApolloQueryFunctionReturn<T> {
     data: T | undefined
     error: Error | undefined
 }
 
-export interface ExperimentalQueryReturn<Params, Return> {
+export type Join<X, Y> = X & Y
+
+export interface Query {
+    query: DocumentNode
+}
+
+export interface Mutation {
+    mutation: DocumentNode
+}
+
+export type ApolloQueryFunction = <Return, Params>(
+    args: Join<Params, Query>
+) => Promise<ApolloQueryFunctionReturn<Return>>
+
+export interface ApolloQueryReturn {
     loading: boolean
-    query: (args: Params) => Promise<ExperimentalQueryFunctionReturn<Return>>
+    query: ApolloQueryFunction
+}
+
+export interface ApolloMutationFunctionReturn {
+    success: boolean
+    error: readonly GraphQLError[] | undefined
+}
+
+export type ApolloMutationFunction = <Return, Params>(
+    args: Join<Mutation, Params>
+) => Promise<ApolloMutationFunctionReturn>
+
+export interface ApolloMutationReturn {
+    loading: boolean
+    mutation: ApolloMutationFunction
+}
+
+export type emailQuery = {
+    email: string
+}
+
+export type userQueryReturnInterface<Return extends object, T> = Return & {
+    __typename: T
+}
+
+export interface getUserFromAuthQuery<Return extends object, T> {
+    getUserFromAuth: userQueryReturnInterface<Return, T>
+}
+
+export interface CheckUsernameIsTaken<Return> {
+    CheckUsernameIsTaken: Return
 }

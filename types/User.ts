@@ -46,19 +46,3 @@ export interface UserObjectWithSettings extends UserObjectWithID {
 export interface tempUserObject extends UserUpdateObject {
     id?: string
 }
-
-export type emailQuery = {
-    email: string
-}
-
-export type userQueryReturnInterface<Return extends object, T> = Return & {
-    __typename: T
-}
-
-export interface getUserFromAuthQuery<Return extends object, T> {
-    getUserFromAuth: userQueryReturnInterface<Return, T>
-}
-
-export interface CheckUsernameIsTakenQuery<Return> {
-    CheckUsernameIsTaken: Return
-}

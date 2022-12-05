@@ -1,9 +1,9 @@
 import { FC, useState, useEffect } from 'react'
 import { Text, Toggle, Input, Button } from '../ui'
-import { useMutation } from '../../hooks/graphql/useMutation'
 import {
     UpdateSettingsMutation,
     UpdateUserMutation,
+    CheckUsernameIsTakenQuery,
 } from '../../graphql/queries'
 import {
     Settings,
@@ -13,12 +13,15 @@ import {
     UpdateUserReturn,
     UpdateUserParamaters,
     ErrorTextState,
+    CheckUsernameArgs,
+    CheckUsernameIsTaken,
 } from '../../types'
 import {
     useNotifications,
     useLoadingScreen,
     useUser,
-    useCheckUsername,
+    useQuery,
+    useMutation,
 } from '../../hooks'
 import styles from '../../styles/modules/Settings.module.scss'
 
@@ -27,44 +30,46 @@ export const SlideOne: FC = () => {
     const [dark, setDark] = useState<boolean>(false) // implement default val later using useUser
     // implements a restraint so the mutation is only executed when it's meant to be
     const [exec, setExec] = useState<boolean>(false)
-    const { success, loading, error, mutation } = useMutation<
-        settingsUpdateObject,
-        Settings
-    >(UpdateSettingsMutation)
+    // const { success, loading, error, mutation } = useMutation<
+    //     settingsUpdateObject,
+    //     Settings
+    // >(UpdateSettingsMutation)
+    const { loading, mutation } = useMutation()
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
     const { user } = useUser()
 
     useEffect(() => {
+        // function to run the update settings mutation
+        const run = async (): Promise<void> => {
+            const { success, error } = await mutation<
+                Settings,
+                settingsUpdateObject
+            >({ mutation: UpdateSettingsMutation, darkMode: dark, id: user.id })
+            if (success)
+                // creates success notification if successful
+                createNotification({
+                    type: 'success',
+                    content: 'Colour mode updated successfully',
+                })
+            else if (error)
+                // creates error notification for errors
+                error.forEach(err =>
+                    createNotification({
+                        type: 'error',
+                        content: err.message,
+                    })
+                )
+        }
         if (exec) {
-            mutation({ darkMode: dark, id: user.id })
+            run()
             setExec(false)
         }
-    }, [exec, dark, mutation, user.id, setExec])
-
-    useEffect(() => {
-        // creates a success notification on success
-        if (success) {
-            createNotification({
-                type: 'success',
-                content: 'Colour mode updated successfully',
-            })
-        }
-    }, [success, createNotification, setExec])
+    }, [exec, dark, mutation, user.id, setExec, createNotification])
 
     useEffect(() => {
         setLoading(loading)
     }, [loading, setLoading])
-
-    useEffect(() => {
-        // creates an error notification on error
-        if (error) {
-            createNotification({
-                type: 'error',
-                content: error.message,
-            })
-        }
-    }, [error, createNotification, setExec])
 
     return (
         <>
@@ -91,44 +96,46 @@ export const SlideTwo: FC = () => {
     const [preference, setPreference] = useState<UniversityPreference>('OWN')
     // implements a restraint so the mutation is only executed when it's meant to be
     const [exec, setExec] = useState<boolean>(false)
-    const { success, loading, error, mutation } = useMutation<
-        settingsUpdateObject,
-        Settings
-    >(UpdateSettingsMutation)
+    const { loading, mutation } = useMutation()
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
     const { user } = useUser()
 
     useEffect(() => {
+        // function to run the update settings mutation
+        const run = async (): Promise<void> => {
+            const { success, error } = await mutation<
+                Settings,
+                settingsUpdateObject
+            >({
+                mutation: UpdateSettingsMutation,
+                universityPreference: preference,
+                id: user.id,
+            })
+            if (success)
+                // creates success notification if successful
+                createNotification({
+                    type: 'success',
+                    content: 'Colour mode updated successfully',
+                })
+            else if (error)
+                // creates error notification for errors
+                error.forEach(err =>
+                    createNotification({
+                        type: 'error',
+                        content: err.message,
+                    })
+                )
+        }
         if (exec) {
-            mutation({ universityPreference: preference, id: user.id })
+            run()
             setExec(false)
         }
-    }, [exec, preference, mutation, user.id, setExec])
-
-    useEffect(() => {
-        // creates a success notification on success
-        if (success) {
-            createNotification({
-                type: 'success',
-                content: 'University preference updated successfully',
-            })
-        }
-    }, [success, createNotification, setExec])
+    }, [exec, preference, mutation, user.id, setExec, createNotification])
 
     useEffect(() => {
         setLoading(loading)
     }, [loading, setLoading])
-
-    useEffect(() => {
-        // creates an error notification on error
-        if (error) {
-            createNotification({
-                type: 'error',
-                content: error.message,
-            })
-        }
-    }, [error, createNotification, setExec])
 
     return (
         <>
@@ -159,27 +166,21 @@ export const SlideThree: FC = () => {
         { active: false },
         { active: false },
     ])
-    const { loading, success, error, mutation } = useMutation<
-        UpdateUserParamaters,
-        UpdateUserReturn
-    >(UpdateUserMutation)
+    const { loading: mutationLoading, mutation } = useMutation()
     const { user } = useUser()
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
-    const {
-        data,
-        loading: checkUsernameLoading,
-        runQuery: checkUsername,
-    } = useCheckUsername()
+    const { loading: queryLoading, query } = useQuery()
 
     useEffect(() => {
         // when the mutation or query is loading, the button is disabled
-        setLoading(loading || checkUsernameLoading)
-        setButtonInactive(loading || checkUsernameLoading)
-    }, [loading, checkUsernameLoading, setLoading, setButtonInactive])
+        setLoading(queryLoading || mutationLoading)
+        setButtonInactive(queryLoading || mutationLoading)
+    }, [queryLoading, mutationLoading, setLoading, setButtonInactive])
 
     useEffect(() => {
         if (state?.course) {
+            // ensures that the length of the course inputted is 3 characters or more
             if (state.course.length < 3) {
                 setErrorText(prevState => {
                     const temp = [...prevState]
@@ -202,58 +203,61 @@ export const SlideThree: FC = () => {
     }, [state?.course, setButtonInactive, setErrorText])
 
     useEffect(() => {
-        if (data) {
-            if (data.result) {
-                setErrorText(prevState => {
-                    const temp = [...prevState]
-                    temp[0] = { active: true, content: 'Username is taken' }
-                    return temp
+        // fucntion to run the check username query
+        const run = async (): Promise<void> => {
+            if (state?.username) {
+                const { data, error } = await query<
+                    CheckUsernameIsTaken<boolean>,
+                    CheckUsernameArgs
+                >({
+                    query: CheckUsernameIsTakenQuery,
+                    username: state.username,
                 })
-                setButtonInactive(true)
-            } else {
-                setErrorText(prevState => {
-                    const temp = [...prevState]
-                    temp[0] = { active: false }
-                    return temp
-                })
+                if (error)
+                    // creates error notification on error
+                    createNotification({
+                        type: 'error',
+                        content: error.message,
+                    })
+                else if (data && !data.CheckUsernameIsTaken) {
+                    setErrorText(prevState => {
+                        const temp = [...prevState]
+                        temp[0] = { active: true, content: 'Username is taken' }
+                        return temp
+                    })
+                }
                 setButtonInactive(false)
-            }
+            } else setButtonInactive(true)
         }
-    }, [data, setErrorText, setButtonInactive])
-
-    useEffect(() => {
         if (state?.username) {
-            if (state.username !== user.username)
-                checkUsername({ username: state.username })
+            if (state.username !== user.username) run()
         }
-    }, [state, user, checkUsername])
+    }, [state, user, createNotification, query])
 
     useEffect(() => {
-        // creates a success notification on success
-        if (success && !loading) {
-            createNotification({
-                type: 'success',
-                content: 'Account details updated successfully',
-            })
+        const run = async (): Promise<void> => {
+            const { success, error } = await mutation<
+                UpdateUserReturn,
+                UpdateUserParamaters
+            >({ mutation: UpdateUserMutation, id: user.id, ...state })
+            if (success)
+                createNotification({
+                    type: 'success',
+                    content: 'Account details updated successfully',
+                })
+            else if (error)
+                error.forEach(err =>
+                    createNotification({
+                        type: 'error',
+                        content: err.message,
+                    })
+                )
         }
-    }, [success, loading, createNotification])
-
-    useEffect(() => {
-        if (error) {
-            // creates an error notification on error
-            createNotification({
-                type: 'error',
-                content: error.message,
-            })
-        }
-    }, [error, createNotification])
-
-    useEffect(() => {
         if (exec) {
-            mutation({ id: user.id, ...state })
+            run()
             setExec(false)
         }
-    }, [exec, state, user, mutation, setExec])
+    }, [exec, state, user, mutation, setExec, createNotification])
 
     return (
         <>

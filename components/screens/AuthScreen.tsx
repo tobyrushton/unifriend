@@ -7,6 +7,8 @@ import {
     createUserObject,
     createUserObjectWithUniversity,
     ErrorTextState,
+    CheckUsernameArgs,
+    CheckUsernameIsTaken,
 } from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
 import { Input, Text, Button, Exit } from '../ui'
@@ -15,8 +17,8 @@ import {
     useLogIn,
     useNotifications,
     useSignUp,
-    useCreateUser,
-    useCheckUsername,
+    useQuery,
+    useMutation,
 } from '../../hooks'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 import {
@@ -27,6 +29,10 @@ import {
     getUniversity,
 } from '../../lib/utils'
 import { ForgottenPasswordScreen } from './ForgottenPasswordScreen'
+import {
+    CheckUsernameIsTakenQuery,
+    CreateUserMutation,
+} from '../../graphql/queries'
 
 export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     // all state defined that is used for this screen
@@ -75,51 +81,22 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         error: signUpError,
         loading: signUpLoading,
     } = useSignUp()
-    const {
-        mutation: createUser,
-        success: createUserSuccess,
-        loading: createUserLoading,
-        error: createUserError,
-    } = useCreateUser()
-    const {
-        runQuery: checkUsername,
-        error: checkUsernameError,
-        loading: checkUsernameLoading,
-        data: usernameIsTaken,
-    } = useCheckUsername()
+
+    const { loading: queryLoading, query } = useQuery()
+    const { loading: mutationLoading, mutation } = useMutation()
 
     useEffect(() => {
         // sets loading screen when any loading variable is true
         setLoading(
-            signInLoading ||
-                signUpLoading ||
-                createUserLoading ||
-                checkUsernameLoading
+            signInLoading || signUpLoading || queryLoading || mutationLoading
         )
     }, [
         signInLoading,
         setLoading,
         signUpLoading,
-        createUserLoading,
-        checkUsernameLoading,
+        queryLoading,
+        mutationLoading,
     ])
-
-    useEffect(() => {
-        // sets error text on the result of checkUsername query
-        if (usernameIsTaken && usernameIsTaken.result)
-            setDisplayErrorText(prevState => {
-                const temp = [...prevState]
-                temp[0] = { active: true, content: 'Username is taken' }
-                return temp
-            })
-        // if not taken, removes error text
-        else
-            setDisplayErrorText(prevState => {
-                const temp = [...prevState]
-                temp[0] = { active: false }
-                return temp
-            })
-    }, [usernameIsTaken, setDisplayErrorText, usernameIsTaken.result])
 
     useEffect(() => {
         if (signInError) {
@@ -136,15 +113,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     }, [signInError, createNotification])
 
     useEffect(() => {
-        // displays the error if there's an error with checkUsername query
-        if (checkUsernameError)
-            createNotification({
-                type: 'error',
-                content: checkUsernameError.message,
-            })
-    }, [checkUsernameError, createNotification])
-
-    useEffect(() => {
         // if sign up error, displays the error
         if (signUpError)
             createNotification({
@@ -152,27 +120,6 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 content: signUpError.message as string,
             })
     }, [signUpError, createNotification])
-
-    useEffect(() => {
-        // if create user error, displays error
-        if (createUserError)
-            createNotification({
-                type: 'error',
-                content: createUserError.message as string,
-            })
-    }, [createUserError, createNotification])
-
-    useEffect(() => {
-        // on create user success creates notification to display this
-        if (createUserSuccess) {
-            createNotification({
-                type: 'success',
-                content: 'Account created successfully.',
-            })
-            // then sets the display confirm email screen to true
-            setDisplayConfirmEmail(true)
-        }
-    }, [createUserSuccess, createNotification, setDisplayConfirmEmail])
 
     useEffect(() => {
         // displays whether the user has entered a valid email or not
@@ -217,12 +164,40 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     }, [setDisplayErrorText, state])
 
     useEffect(() => {
+        const check = async (): Promise<void> => {
+            if (isSignUpState(state)) {
+                const { data, error } = await query<
+                    CheckUsernameIsTaken<boolean>,
+                    CheckUsernameArgs
+                >({
+                    query: CheckUsernameIsTakenQuery,
+                    username: state.username,
+                })
+                if (error)
+                    createNotification({
+                        type: 'error',
+                        content: error.message,
+                    })
+                else if (data && data.CheckUsernameIsTaken)
+                    setDisplayErrorText(prevState => {
+                        const temp = [...prevState]
+                        temp[0] = { active: true, content: 'Username is taken' }
+                        return temp
+                    })
+                // if not taken, removes error text
+                else
+                    setDisplayErrorText(prevState => {
+                        const temp = [...prevState]
+                        temp[0] = { active: false }
+                        return temp
+                    })
+            }
+        }
+
         if (isSignUpState(state) && state.username !== '')
             if (isValidUsername(state.username))
                 // if a valid username is entered, runs check username query
-                checkUsername({
-                    username: state.username,
-                })
+                check()
             // else sets the error message
             else
                 setDisplayErrorText(prevState => {
@@ -233,7 +208,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                     }
                     return temp
                 })
-    }, [setDisplayErrorText, state, checkUsername])
+    }, [setDisplayErrorText, state, createNotification, query])
 
     useEffect(() => {
         if (state) {
@@ -269,7 +244,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 if (
                     isValidPassword(state.password) &&
                     isValidUsername(state.username) &&
-                    !usernameIsTaken.result
+                    !displayErrorText[0].active
                 )
                     // sets the 3rd slide to true so user can click onto it.
                     setSignUpSlides(prevState => {
@@ -308,7 +283,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         setButtonActive,
         setSignUpSlides,
         signUpSlides.slide,
-        usernameIsTaken,
+        displayErrorText,
     ])
 
     // handles sign in click
@@ -339,7 +314,28 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                             university: string
                         }),
                     } // combines state with the university given
-                    await createUser(CreateUserObject) // creates the user
+                    // await createUser(CreateUserObject) // creates the user
+
+                    const { success, error } = await mutation({
+                        mutation: CreateUserMutation,
+                        ...CreateUserObject,
+                    })
+
+                    if (success) {
+                        createNotification({
+                            type: 'success',
+                            content: 'Account created successfully.',
+                        })
+                        // then sets the display confirm email screen to true
+                        setDisplayConfirmEmail(true)
+                    } else if (error)
+                        // creates error notification on error
+                        error.forEach(err => {
+                            createNotification({
+                                type: 'error',
+                                content: err.message,
+                            })
+                        })
                 }
             } // else throws error for invalid email
             else

@@ -1,43 +1,39 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useApolloClient, DocumentNode } from '@apollo/client'
-import { graphQLHookReturnQueryFunction, QueryReturn } from '../../types'
+import { useApolloClient } from '@apollo/client'
+import {
+    ApolloQueryReturn,
+    ApolloQueryFunction,
+    Join,
+    Query,
+} from '../../types'
 
-// not yet fully implemented
-export const useQuery = <Args, Return extends object, T extends string>(
-    gql: DocumentNode,
-    attribute: string
-): graphQLHookReturnQueryFunction<Args, Return> => {
+export const useQuery = (): ApolloQueryReturn => {
+    // abort signal that aborts the query if not complete and componenet derenders
     const [abort] = useState<AbortController>(new AbortController())
-    const [error, setError] = useState<Error>()
-    const [success, setSuccess] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
-    const [data, setData] = useState<Return>()
 
+    // creates an instance of apollo client
     const apollo = useApolloClient()
 
-    const runQuery = useMemo(
+    const runQuery: ApolloQueryFunction = useMemo(
         () =>
-            async (args: Args): Promise<void> => {
+            async <Params, Return>({ query, ...vars }: Join<Query, Params>) => {
+                const variables = { ...vars } as Params
                 setLoading(true)
-                setSuccess(false)
-                await apollo
-                    .query<QueryReturn<Return, typeof attribute, T>, Args>({
-                        query: gql,
-                        variables: args,
-                        context: {
-                            fetchOptions: {
-                                abort: abort.signal,
-                            },
+                const { data, error } = await apollo.query<Return, Params>({
+                    query,
+                    variables,
+                    context: {
+                        fetchOptions: {
+                            abort: abort.signal,
                         },
-                    })
-                    .catch(e => setError(e))
-                    .then(response => {
-                        if (response) {
-                            setData(response.data[attribute])
-                            setLoading(false)
-                            setSuccess(true)
-                        }
-                    })
+                    },
+                })
+
+                return {
+                    data,
+                    error,
+                }
             },
         [abort.signal, apollo]
     )
@@ -47,10 +43,7 @@ export const useQuery = <Args, Return extends object, T extends string>(
     }, [abort])
 
     return {
-        error,
-        success,
         loading,
-        data: data as Return,
-        runQuery,
-    }
+        query: runQuery,
+    } as const
 }
