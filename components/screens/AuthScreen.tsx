@@ -9,6 +9,9 @@ import {
     ErrorTextState,
     CheckUsernameArgs,
     CheckUsernameIsTaken,
+    emailQuery,
+    GetEmailParams,
+    GetAuthFromUsernameQuery,
 } from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
 import { Input, Text, Button, Exit } from '../ui'
@@ -32,6 +35,7 @@ import { ForgottenPasswordScreen } from './ForgottenPasswordScreen'
 import {
     CheckUsernameIsTakenQuery,
     CreateUserMutation,
+    GetAuthFromUsername,
 } from '../../graphql/queries'
 
 export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
@@ -258,9 +262,26 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
     // handles sign in click
     const clickSignIn = async (): Promise<void> => {
         if (!isSignUpState(state) && state) {
+            let { email } = state
+            // if the user types a valid username fetches their email to use for log in
+            if (isValidUsername(email)) {
+                const { data, error } = await query<
+                    GetAuthFromUsernameQuery<emailQuery, 'Email'>,
+                    GetEmailParams
+                >({ query: GetAuthFromUsername, username: email })
+                if (error) {
+                    // outputs error
+                    createNotification({
+                        type: 'error',
+                        content: error.message,
+                    })
+                    return // exits out the function on error
+                } // sets the email to be used as the email fetched
+                if (data) email = data.getAuthFromUsername.email
+            }
             // ensures that the state exists
             const { error } = await signIn({
-                email: state.email,
+                email,
                 password: state.password,
             })
             if (error) {

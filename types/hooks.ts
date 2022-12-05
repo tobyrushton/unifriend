@@ -126,3 +126,7 @@ export interface getUserFromAuthQuery<Return extends object, T> {
 export interface CheckUsernameIsTaken<Return> {
     CheckUsernameIsTaken: Return
 }
+
+export interface GetAuthFromUsernameQuery<Return extends object, T> {
+    getAuthFromUsername: userQueryReturnInterface<Return, T>
+}

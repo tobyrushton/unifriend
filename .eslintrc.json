@@ -25,7 +25,7 @@
   "rules": {
       "react/jsx-props-no-spreading": "off",
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars" : ["error"],
+      "@typescript-eslint/no-unused-vars" : ["error", { "varsIgnorePattern": "^_" }],
       "jsx-a11y/click-events-have-key-events": "off",
       "react/jsx-no-useless-fragment": [
           2,
@@ -34,7 +34,6 @@
           }
       ],
       "no-plusplus": "off",
-      "no-underscore-dangle": "off",
       "no-nested-ternary": "off",
       "react/require-default-props": "off",
       "no-use-before-define": "off",

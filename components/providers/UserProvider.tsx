@@ -6,7 +6,6 @@ import {
     UserObjectWithID,
     emailQuery,
     getUserFromAuthQuery,
-    userQueryReturnInterface,
 } from '../../types'
 import { UserByEmailQuery } from '../../graphql/queries'
 import { useQuery } from '../../hooks/graphql/useQuery'
@@ -60,18 +59,8 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
                 >({ query: UserByEmailQuery, email: session.user.email })
 
                 if (data) {
-                    const temp: Partial<
-                        Pick<
-                            userQueryReturnInterface<UserObjectWithID, 'User'>,
-                            '__typename'
-                        >
-                    > &
-                        Omit<
-                            userQueryReturnInterface<UserObjectWithID, 'User'>,
-                            '__typename'
-                        > = data.getUserFromAuth
-                    delete temp.__typename
-                    setUser(temp)
+                    const { __typename, ...userDetails } = data.getUserFromAuth
+                    setUser(userDetails)
                 } else if (error)
                     createNotification({
                         type: 'error',
