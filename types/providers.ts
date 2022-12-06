@@ -1,8 +1,15 @@
 import React from 'react'
+import { Settings, UniversityPreference } from './settings'
 import { UserObjectWithID } from './User'
 
+export interface UpdateSettingsArgs {
+    darkMode?: boolean
+    universityPreference?: UniversityPreference
+}
 export interface userContextInterface {
     user: UserObjectWithID
+    settings: Settings
+    updateSettings: (args: UpdateSettingsArgs) => void
     resetPassword: (password: string) => Promise<void>
 }
 

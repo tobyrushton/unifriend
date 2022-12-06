@@ -1,17 +1,21 @@
 import { gql } from 'apollo-server-micro'
 
 export const UserByEmailQuery = gql`
-    query Query($email: String!) {
+    query GetUserFromAuth($email: String!) {
         getUserFromAuth(email: $email) {
             bio
             birthday
-            course
             email
+            course
             firstName
             id
             lastName
             university
             username
+            settings {
+                darkMode
+                universityPreference
+            }
         }
     }
 `

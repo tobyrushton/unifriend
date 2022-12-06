@@ -28,44 +28,36 @@ import styles from '../../styles/modules/Settings.module.scss'
 // updates colour theme
 export const SlideOne: FC = () => {
     const [dark, setDark] = useState<boolean>(false) // implement default val later using useUser
-    // implements a restraint so the mutation is only executed when it's meant to be
-    const [exec, setExec] = useState<boolean>(false)
-    // const { success, loading, error, mutation } = useMutation<
-    //     settingsUpdateObject,
-    //     Settings
-    // >(UpdateSettingsMutation)
+
+    // all hook values used in the component
     const { loading, mutation } = useMutation()
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
-    const { user } = useUser()
+    const { user, settings, updateSettings } = useUser()
 
-    useEffect(() => {
-        // function to run the update settings mutation
-        const run = async (): Promise<void> => {
-            const { success, error } = await mutation<
-                Settings,
-                settingsUpdateObject
-            >({ mutation: UpdateSettingsMutation, darkMode: dark, id: user.id })
-            if (success)
-                // creates success notification if successful
+    // function to run the update settings mutation
+    const run = async (): Promise<void> => {
+        const { success, error } = await mutation<
+            Settings,
+            settingsUpdateObject
+        >({ mutation: UpdateSettingsMutation, darkMode: dark, id: user.id })
+        if (success) {
+            // creates success notification if successful
+            createNotification({
+                type: 'success',
+                content: 'Colour mode updated successfully',
+            })
+            // updates the settings stored in the provider.
+            updateSettings({ darkMode: dark })
+        } else if (error)
+            // creates error notification for errors
+            error.forEach(err =>
                 createNotification({
-                    type: 'success',
-                    content: 'Colour mode updated successfully',
+                    type: 'error',
+                    content: err.message,
                 })
-            else if (error)
-                // creates error notification for errors
-                error.forEach(err =>
-                    createNotification({
-                        type: 'error',
-                        content: err.message,
-                    })
-                )
-        }
-        if (exec) {
-            run()
-            setExec(false)
-        }
-    }, [exec, dark, mutation, user.id, setExec, createNotification])
+            )
+    }
 
     useEffect(() => {
         setLoading(loading)
@@ -81,8 +73,9 @@ export const SlideOne: FC = () => {
                 <Toggle
                     onCheck={change => {
                         setDark(change)
-                        setExec(true)
+                        run()
                     }}
+                    value={settings.darkMode}
                 />
                 <Text>Dark</Text>
             </div>
@@ -94,44 +87,39 @@ export const SlideOne: FC = () => {
 export const SlideTwo: FC = () => {
     // implement default val later using useUser
     const [preference, setPreference] = useState<UniversityPreference>('OWN')
-    // implements a restraint so the mutation is only executed when it's meant to be
-    const [exec, setExec] = useState<boolean>(false)
+
+    // hooks values used in component
     const { loading, mutation } = useMutation()
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
-    const { user } = useUser()
+    const { user, settings, updateSettings } = useUser()
 
-    useEffect(() => {
-        // function to run the update settings mutation
-        const run = async (): Promise<void> => {
-            const { success, error } = await mutation<
-                Settings,
-                settingsUpdateObject
-            >({
-                mutation: UpdateSettingsMutation,
-                universityPreference: preference,
-                id: user.id,
+    const run = async (): Promise<void> => {
+        const { success, error } = await mutation<
+            Settings,
+            settingsUpdateObject
+        >({
+            mutation: UpdateSettingsMutation,
+            universityPreference: preference,
+            id: user.id,
+        })
+        if (success) {
+            // creates success notification if successful
+            createNotification({
+                type: 'success',
+                content: 'Colour mode updated successfully',
             })
-            if (success)
-                // creates success notification if successful
+            // updates value stored in provider upon completion
+            updateSettings({ universityPreference: preference })
+        } else if (error)
+            // creates error notification for errors
+            error.forEach(err =>
                 createNotification({
-                    type: 'success',
-                    content: 'Colour mode updated successfully',
+                    type: 'error',
+                    content: err.message,
                 })
-            else if (error)
-                // creates error notification for errors
-                error.forEach(err =>
-                    createNotification({
-                        type: 'error',
-                        content: err.message,
-                    })
-                )
-        }
-        if (exec) {
-            run()
-            setExec(false)
-        }
-    }, [exec, preference, mutation, user.id, setExec, createNotification])
+            )
+    }
 
     useEffect(() => {
         setLoading(loading)
@@ -147,8 +135,9 @@ export const SlideTwo: FC = () => {
                 <Toggle
                     onCheck={change => {
                         setPreference(change ? 'ALL' : 'OWN')
-                        setExec(true)
+                        run()
                     }}
+                    value={settings.universityPreference === 'ALL'}
                 />
                 <Text>All UK universities</Text>
             </div>
@@ -159,7 +148,6 @@ export const SlideTwo: FC = () => {
 // updates account info
 export const SlideThree: FC = () => {
     const [state, setState] = useState<UserUpdateObject>()
-    const [exec, setExec] = useState<boolean>(false)
     // ensures that the user cannot call requests infintely
     const [buttonInactive, setButtonInactive] = useState<boolean>(true)
     const [errorText, setErrorText] = useState<ErrorTextState[]>([
@@ -234,30 +222,25 @@ export const SlideThree: FC = () => {
         }
     }, [state, user, createNotification, query])
 
-    useEffect(() => {
-        const run = async (): Promise<void> => {
-            const { success, error } = await mutation<
-                UpdateUserReturn,
-                UpdateUserParamaters
-            >({ mutation: UpdateUserMutation, id: user.id, ...state })
-            if (success)
+    // function to update the users details in the database
+    const run = async (): Promise<void> => {
+        const { success, error } = await mutation<
+            UpdateUserReturn,
+            UpdateUserParamaters
+        >({ mutation: UpdateUserMutation, id: user.id, ...state })
+        if (success)
+            createNotification({
+                type: 'success',
+                content: 'Account details updated successfully',
+            })
+        else if (error)
+            error.forEach(err =>
                 createNotification({
-                    type: 'success',
-                    content: 'Account details updated successfully',
+                    type: 'error',
+                    content: err.message,
                 })
-            else if (error)
-                error.forEach(err =>
-                    createNotification({
-                        type: 'error',
-                        content: err.message,
-                    })
-                )
-        }
-        if (exec) {
-            run()
-            setExec(false)
-        }
-    }, [exec, state, user, mutation, setExec, createNotification])
+            )
+    }
 
     return (
         <>
@@ -350,11 +333,7 @@ export const SlideThree: FC = () => {
                     value={state?.bio ?? user.bio}
                     maxLength={256}
                 />
-                <Button
-                    onClick={() => setExec(true)}
-                    inactive={buttonInactive}
-                    filled
-                >
+                <Button onClick={run} inactive={buttonInactive} filled>
                     Update
                 </Button>
             </div>

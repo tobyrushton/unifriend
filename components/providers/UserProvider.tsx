@@ -6,6 +6,9 @@ import {
     UserObjectWithID,
     emailQuery,
     getUserFromAuthQuery,
+    Settings,
+    UpdateSettingsArgs,
+    UserObjectWithSettings,
 } from '../../types'
 import { UserByEmailQuery } from '../../graphql/queries'
 import { useQuery } from '../../hooks/graphql/useQuery'
@@ -28,9 +31,16 @@ const defaultUser: UserObjectWithID = {
     email: '',
 } // default user value, all empty fields
 
+const defaultSettings: Settings = {
+    universityPreference: 'OWN',
+    darkMode: false,
+}
+
 export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     // creates state to store the users details
     const [user, setUser] = useState<UserObjectWithID>(defaultUser)
+    const [settings, setSettings] = useState<Settings>(defaultSettings)
+
     // all hooks used
     const {
         session,
@@ -54,13 +64,18 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         const run = async (): Promise<void> => {
             if (session?.user.email) {
                 const { data, error } = await query<
-                    getUserFromAuthQuery<UserObjectWithID, 'User'>,
+                    getUserFromAuthQuery<UserObjectWithSettings, 'User'>,
                     emailQuery
                 >({ query: UserByEmailQuery, email: session.user.email })
 
                 if (data) {
-                    const { __typename, ...userDetails } = data.getUserFromAuth
+                    const {
+                        __typename,
+                        settings: userSettings,
+                        ...userDetails
+                    } = data.getUserFromAuth
                     setUser(userDetails)
+                    setSettings(userSettings)
                 } else if (error)
                     createNotification({
                         type: 'error',
@@ -94,11 +109,24 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         if (passwordResetRequest) router.push('/resetPassword')
     }, [passwordResetRequest, router, pathname])
 
+    const updateSettings = useMemo(
+        // memoised
+        () => (args: UpdateSettingsArgs) => {
+            // updates the stored settings
+            setSettings(prevState => ({
+                universityPreference:
+                    args.universityPreference ?? prevState.universityPreference,
+                darkMode: args.darkMode ?? prevState.darkMode,
+            }))
+        },
+        []
+    )
+
     // value that is passed down
     const providerValue: userContextInterface = useMemo(
         // memoised
-        () => ({ user, resetPassword }),
-        [user, resetPassword]
+        () => ({ user, resetPassword, settings, updateSettings }),
+        [user, resetPassword, settings, updateSettings]
     )
 
     return (

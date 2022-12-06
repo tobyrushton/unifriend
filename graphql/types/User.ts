@@ -2,7 +2,6 @@ import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
 import {
     emailQuery,
     tempUserObject,
-    UserObjectWithID,
     UserObjectWithSettings,
     UserUpdateObject,
 } from '../../types'
@@ -218,7 +217,9 @@ export const GetUserFromAuth = extendType({
                     where: {
                         email: args.email,
                     },
-                }) as unknown as UserObjectWithID
+                    // gets the users settings
+                    include: { settings: true },
+                }) as unknown as UserObjectWithSettings
             },
         })
     },
