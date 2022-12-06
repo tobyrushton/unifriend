@@ -8,9 +8,11 @@ export const Button: FC<ButtonProps> = ({
     inactive,
     children,
     style,
+    type,
 }) => (
-    <div
-        onClick={() => {
+    <button
+        onClick={e => {
+            e.preventDefault()
             if (!inactive) onClick()
         }}
         role="button"
@@ -19,7 +21,8 @@ export const Button: FC<ButtonProps> = ({
         } ${inactive ? styles.inactive : ''}`}
         tabIndex={0}
         style={style}
+        type={type ?? 'button'}
     >
         {children}
-    </div>
+    </button>
 )
