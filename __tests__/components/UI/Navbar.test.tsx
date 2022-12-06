@@ -40,6 +40,6 @@ describe('Navbar component tests', () => {
     it('Message link has correct href', async () => {
         await act(async () => render(<Navbar />))
 
-        expect(screen.getByRole('link')).toHaveAttribute('href', '/a/messages')
+        expect(screen.getAllByRole('link').length).toBe(2)
     })
 })

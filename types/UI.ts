@@ -33,6 +33,7 @@ export interface TextProps extends ChildrenProps {
 
 export interface ButtonProps extends ChildrenProps {
     onClick: () => void
+    submit?: boolean
     filled?: boolean
     inactive?: boolean
     style?: styleProperties
