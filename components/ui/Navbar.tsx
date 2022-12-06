@@ -38,7 +38,12 @@ export const Navbar: FC = () => {
 
     return (
         <div className={styles.navbar}>
-            <Logo color="secondary" style={{ marginLeft: '2.5%' }} />
+            <Link href="/a" passHref legacyBehavior>
+                {/* eslint-disable-next-line */}
+                <a style={{ textDecoration: 'none'}}>
+                    <Logo color="secondary" style={{ marginLeft: '2.5%' }} />
+                </a>
+            </Link>
             <div className={styles.pushLeft}>
                 <Link href="/a/messages" passHref legacyBehavior>
                     {/* eslint-disable-next-line */}
