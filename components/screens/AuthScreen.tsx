@@ -421,7 +421,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                         style={{
                                             marginTop: '20%',
                                         }}
-                                        type="submit"
+                                        submit
                                     >
                                         Sign In
                                     </Button>
@@ -659,7 +659,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                             marginTop: '2.5%',
                                         }}
                                         inactive={!signUpSlides.buttonActive}
-                                        type="submit"
+                                        submit
                                     >
                                         {signUpSlides.slide === 3
                                             ? 'Sign Up'

@@ -31,11 +31,9 @@ export interface TextProps extends ChildrenProps {
     textAlign?: textAlign
 }
 
-export type ButtonType = 'reset' | 'button' | 'submit'
-
 export interface ButtonProps extends ChildrenProps {
     onClick: () => void
-    type?: ButtonType
+    submit?: boolean
     filled?: boolean
     inactive?: boolean
     style?: styleProperties
