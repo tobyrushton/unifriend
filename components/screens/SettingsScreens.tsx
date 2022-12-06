@@ -27,8 +27,6 @@ import styles from '../../styles/modules/Settings.module.scss'
 
 // updates colour theme
 export const SlideOne: FC = () => {
-    const [dark, setDark] = useState<boolean>(false) // implement default val later using useUser
-
     // all hook values used in the component
     const { loading, mutation } = useMutation()
     const { createNotification } = useNotifications()
@@ -36,7 +34,7 @@ export const SlideOne: FC = () => {
     const { user, settings, updateSettings } = useUser()
 
     // function to run the update settings mutation
-    const run = async (): Promise<void> => {
+    const run = async (dark: boolean): Promise<void> => {
         const { success, error } = await mutation<
             Settings,
             settingsUpdateObject
@@ -72,8 +70,7 @@ export const SlideOne: FC = () => {
                 <Text>Light</Text>
                 <Toggle
                     onCheck={change => {
-                        setDark(change)
-                        run()
+                        run(change)
                     }}
                     value={settings.darkMode}
                 />
@@ -85,16 +82,13 @@ export const SlideOne: FC = () => {
 
 // updates uni preference
 export const SlideTwo: FC = () => {
-    // implement default val later using useUser
-    const [preference, setPreference] = useState<UniversityPreference>('OWN')
-
     // hooks values used in component
     const { loading, mutation } = useMutation()
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
     const { user, settings, updateSettings } = useUser()
 
-    const run = async (): Promise<void> => {
+    const run = async (preference: UniversityPreference): Promise<void> => {
         const { success, error } = await mutation<
             Settings,
             settingsUpdateObject
@@ -134,8 +128,7 @@ export const SlideTwo: FC = () => {
                 <Text>Own university only</Text>
                 <Toggle
                     onCheck={change => {
-                        setPreference(change ? 'ALL' : 'OWN')
-                        run()
+                        run(change ? 'ALL' : 'OWN')
                     }}
                     value={settings.universityPreference === 'ALL'}
                 />
@@ -207,17 +200,28 @@ export const SlideThree: FC = () => {
                         type: 'error',
                         content: error.message,
                     })
-                else if (data && !data.CheckUsernameIsTaken) {
+                else if (data && data.CheckUsernameIsTaken) {
+                    // if taken displays error text and disables update button
                     setErrorText(prevState => {
                         const temp = [...prevState]
                         temp[0] = { active: true, content: 'Username is taken' }
                         return temp
                     })
+                    setButtonInactive(true)
+                } else {
+                    // if not taken, removes taken message and sets button to be active
+                    setErrorText(prevState => {
+                        const temp = [...prevState]
+                        temp[0] = { active: false }
+                        return temp
+                    })
+                    setButtonInactive(false)
                 }
-                setButtonInactive(false)
+                // else button active
             } else setButtonInactive(true)
         }
         if (state?.username) {
+            // only run  check if the username is not equal to the current username
             if (state.username !== user.username) run()
         }
     }, [state, user, createNotification, query])
