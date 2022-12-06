@@ -188,6 +188,10 @@ describe('user query tests', () => {
             university: 'UCL',
             username: 'tobyrushton',
             bio: '',
+            settings: {
+                darkMode: false,
+                universityPreference: 'OWN',
+            },
         })
     })
 

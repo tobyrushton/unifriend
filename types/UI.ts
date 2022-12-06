@@ -79,4 +79,5 @@ export interface DropDownProps {
 export interface ToggleProps {
     onCheck: (change: boolean) => void
     style?: styleProperties
+    value?: boolean
 }

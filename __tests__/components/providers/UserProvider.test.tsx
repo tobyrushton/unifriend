@@ -98,6 +98,10 @@ describe('User Provider tests', () => {
                             username: 'toby',
                             bio: '',
                             birthday: '2005-06-12',
+                            settings: {
+                                darkMode: false,
+                                universityPreference: 'OWN',
+                            },
                         },
                     },
                 },
