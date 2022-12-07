@@ -87,7 +87,10 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         // and iof user is defined then resets to the default.
         if (session?.user === undefined) {
             if (pathname !== '/') router.push('/')
-            if (user !== defaultUser) setUser(defaultUser)
+            if (user !== defaultUser) {
+                setUser(defaultUser)
+                setSettings(defaultSettings);
+            }
         }
         // implement get user from auth hook here once created.
         if (session?.user) if (session.user.email && user === defaultUser) run()
