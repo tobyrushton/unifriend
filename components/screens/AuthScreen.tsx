@@ -12,6 +12,7 @@ import {
     emailQuery,
     GetEmailParams,
     GetAuthFromUsernameQuery,
+    UserObjectWithID,
 } from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
 import { Input, Text, Button, Exit } from '../ui'
@@ -326,12 +327,14 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                             university: string
                         }),
                     } // combines state with the university given
-                    // await createUser(CreateUserObject) // creates the user
 
-                    const { success, error } = await mutation({
+                    const { success, error } = await mutation<
+                        UserObjectWithID,
+                        createUserObjectWithUniversity
+                    >({
                         mutation: CreateUserMutation,
                         ...CreateUserObject,
-                    })
+                    }) // creates the user
 
                     if (success) {
                         createNotification({
