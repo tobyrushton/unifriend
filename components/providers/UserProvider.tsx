@@ -89,7 +89,7 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
             if (pathname !== '/') router.push('/')
             if (user !== defaultUser) {
                 setUser(defaultUser)
-                setSettings(defaultSettings);
+                setSettings(defaultSettings)
             }
         }
         // implement get user from auth hook here once created.
