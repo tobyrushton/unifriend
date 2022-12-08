@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react'
-import { AuthError } from '@supabase/supabase-js'
 import { Text, Button, Input } from '../ui'
 import { supabase } from '../../lib/supabase'
 import { isValidEmail } from '../../lib/utils'
@@ -9,7 +8,6 @@ export const ForgottenPasswordScreen: FC = () => {
     const [accountEmail, setAccountEmail] = useState<string>('')
     const [buttonActive, setButtonActive] = useState<boolean>(false)
     const [emailSent, setEmailSent] = useState<boolean>(false)
-    const [error, setError] = useState<AuthError>()
 
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
@@ -19,7 +17,15 @@ export const ForgottenPasswordScreen: FC = () => {
         setLoading(true)
         await supabase.auth
             .resetPasswordForEmail(accountEmail) // sends to the email inputted by the user
-            .catch(e => setError(e)) // sets state on error
+            .catch(
+                (
+                    e // on error creates a notification with the error message
+                ) =>
+                    createNotification({
+                        type: 'error',
+                        content: e.message,
+                    })
+            ) // sets state on error
             .then(data => {
                 if (data) {
                     // if successful creates a success notificiation
@@ -33,15 +39,6 @@ export const ForgottenPasswordScreen: FC = () => {
                 }
             })
     }
-
-    useEffect(() => {
-        // when there is an error, creates notification
-        if (error)
-            createNotification({
-                type: 'error',
-                content: error.message,
-            })
-    }, [error, createNotification])
 
     // sets the button to be active if the email is valid
     useEffect(() => {
