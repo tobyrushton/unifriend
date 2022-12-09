@@ -41,14 +41,23 @@ export interface ButtonProps extends ChildrenProps {
 
 export type inputType = 'password' | 'text' | 'date'
 
-export interface inputProps {
-    placeholder: string
-    type: inputType
-    setValue: (update: string) => void
-    value?: string | undefined
-    style?: styleProperties
-    maxLength?: number
-}
+export type InputProps =
+    | {
+          placeholder: string
+          type: inputType
+          setValue: (update: string) => void
+          value?: string | undefined
+          style?: styleProperties
+          maxLength?: number
+      }
+    | {
+          placeholder: string
+          type: 'file'
+          setValue: (update: File) => void
+          value?: string | undefined
+          style?: styleProperties
+          maxLength?: number
+      }
 
 export interface exitProps {
     onClick: () => void
