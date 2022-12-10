@@ -1,7 +1,7 @@
 import { createContext, FC, useMemo } from 'react'
 import { ChildrenProps, NotificationContextInterface } from '../../types'
 import { useNotificationQueue } from '../../hooks/providers/useNotificationQueue'
-import { Notification } from '../ui'
+import { Notification } from '../ui/Notification'
 import styles from '../../styles/modules/UI.module.scss'
 
 export const NotificationContext =

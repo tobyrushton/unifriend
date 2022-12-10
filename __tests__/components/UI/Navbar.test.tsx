@@ -3,6 +3,14 @@ import { act } from 'react-dom/test-utils'
 import { Navbar } from '../../../components'
 import '@testing-library/jest-dom'
 
+jest.mock('../../../hooks/providers/useUser', () => ({
+    useUser: jest.fn(() => ({
+        user: {
+            id: '123',
+        },
+    })),
+}))
+
 describe('Navbar component tests', () => {
     it('navbar should render', async () => {
         const { container } = render(<Navbar />)

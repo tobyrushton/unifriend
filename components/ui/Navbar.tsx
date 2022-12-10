@@ -4,11 +4,15 @@ import Link from 'next/link'
 import { Logo } from './Logo'
 import { ProfilePicture } from './ProfilePicture'
 import { DropDown } from './DropDown'
+import { useUser } from '../../hooks/providers/useUser'
 import styles from '../../styles/modules/UI.module.scss'
 
 export const Navbar: FC = () => {
     const [displayDropDown, setDisplayDropDown] = useState<boolean>(false)
     const triangleRef = useRef<HTMLDivElement>(null)
+    const {
+        user: { id },
+    } = useUser()
 
     // function to handle everytime a click is registered.
     const handleClickOutside = useMemo(
@@ -58,7 +62,7 @@ export const Navbar: FC = () => {
                 </Link>
             </div>
             <ProfilePicture
-                image="/Profile-picture.png"
+                image={id}
                 width={75}
                 height={75}
                 style={{ marginLeft: '5%' }}

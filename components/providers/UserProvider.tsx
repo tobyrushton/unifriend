@@ -85,7 +85,7 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         }
         // if there is no session, redirects user to the landing page
         // and iof user is defined then resets to the default.
-        if (session?.user === undefined) {
+        if (session?.user === undefined && !sessionLoading) {
             if (pathname !== '/') router.push('/')
             if (user !== defaultUser) {
                 setUser(defaultUser)
@@ -94,7 +94,15 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         }
         // implement get user from auth hook here once created.
         if (session?.user) if (session.user.email && user === defaultUser) run()
-    }, [session, pathname, router, user, createNotification, query])
+    }, [
+        session,
+        pathname,
+        router,
+        user,
+        createNotification,
+        query,
+        sessionLoading,
+    ])
 
     useEffect(() => {
         if (
