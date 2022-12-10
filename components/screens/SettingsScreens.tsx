@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react'
-import { Text, Toggle, Input, Button } from '../ui'
+import { Text, Toggle, Input, Button, ProfilePicture } from '../ui'
 import {
     UpdateSettingsMutation,
     UpdateUserMutation,
@@ -23,6 +23,7 @@ import {
     useQuery,
     useMutation,
 } from '../../hooks'
+import { uploadImage } from '../../lib/utils/handleImages'
 import styles from '../../styles/modules/Settings.module.scss'
 
 // updates colour theme
@@ -147,6 +148,9 @@ export const SlideThree: FC = () => {
         { active: false },
         { active: false },
     ])
+    const [previewUrl, setPreviewUrl] = useState<string>()
+    const [profilePicture, setProfilePicture] = useState<File>()
+
     const { loading: mutationLoading, mutation } = useMutation()
     const { user } = useUser()
     const { setLoading } = useLoadingScreen()
@@ -226,12 +230,41 @@ export const SlideThree: FC = () => {
         }
     }, [state, user, createNotification, query])
 
+    useEffect(() => {
+        // if no profile picture inputted, sets the previewUrl to be undefined
+        if (!profilePicture) {
+            setPreviewUrl(undefined)
+            return undefined
+        }
+
+        // gets the preview url
+        const objectUrl = URL.createObjectURL(profilePicture)
+        setPreviewUrl(objectUrl)
+
+        // free memory when ever this component is unmounted
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [profilePicture, setPreviewUrl])
+
     // function to update the users details in the database
     const run = async (): Promise<void> => {
         const { success, error } = await mutation<
             UpdateUserReturn,
             UpdateUserParamaters
         >({ mutation: UpdateUserMutation, id: user.id, ...state })
+        if (profilePicture) {
+            const { error: imageError, success: imageSuccess } =
+                await uploadImage(profilePicture, user.id)
+            if (imageError)
+                createNotification({
+                    type: 'error',
+                    content: imageError.message,
+                })
+            if (imageSuccess)
+                createNotification({
+                    type: 'success',
+                    content: 'Profile Picture updated successfully',
+                })
+        }
         if (success)
             createNotification({
                 type: 'success',
@@ -252,7 +285,16 @@ export const SlideThree: FC = () => {
                 Update account information
             </Text>
             <div className={styles.inputContainer}>
-                <Text bold>Name</Text>
+                <Text bold>Profile Picture</Text>
+                <ProfilePicture image={previewUrl ?? user.id} />
+                <Input
+                    type="file"
+                    placeholder="Profile Picture"
+                    setValue={setProfilePicture}
+                />
+                <Text bold style={{ marginTop: '5%' }}>
+                    Name
+                </Text>
                 <Input
                     placeholder="First Name"
                     type="text"

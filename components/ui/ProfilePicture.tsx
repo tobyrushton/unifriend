@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 import Image from 'next/image'
 import styles from '../../styles/modules/UI.module.scss'
 import { ProfilePictureProps } from '../../types'
@@ -12,10 +12,14 @@ export const ProfilePicture: FC<ProfilePictureProps> = ({
 }) => {
     const [src, setSrc] = useState<string>()
 
+    useEffect(() => {
+        setSrc(undefined)
+    }, [image, setSrc])
+
     return (
         <Image
             className={styles.profilePicture}
-            src={src ?? getImage(image)}
+            src={src ?? (image.includes('/') ? image : getImage(image))}
             alt="Profile Picture"
             style={style}
             height={height ?? 150}
