@@ -1,6 +1,10 @@
 import { screen, render, fireEvent, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
-import { Navbar } from '../../../components'
+import {
+    Navbar,
+    NotificationProvider,
+    LoadingProvider,
+} from '../../../components'
 import '@testing-library/jest-dom'
 
 jest.mock('../../../hooks/providers/useUser', () => ({
@@ -13,7 +17,13 @@ jest.mock('../../../hooks/providers/useUser', () => ({
 
 describe('Navbar component tests', () => {
     it('navbar should render', async () => {
-        const { container } = render(<Navbar />)
+        const { container } = render(
+            <LoadingProvider>
+                <NotificationProvider>
+                    <Navbar />
+                </NotificationProvider>
+            </LoadingProvider>
+        )
 
         expect(container).toBeTruthy()
         expect(screen.queryByText(/UniFriend$/i)).toBeTruthy()
@@ -30,7 +40,15 @@ describe('Navbar component tests', () => {
             map[event] = cb
         })
 
-        await act(async () => render(<Navbar />))
+        await act(async () =>
+            render(
+                <LoadingProvider>
+                    <NotificationProvider>
+                        <Navbar />
+                    </NotificationProvider>
+                </LoadingProvider>
+            )
+        )
 
         fireEvent.click(screen.getByRole('button'))
 
@@ -46,7 +64,15 @@ describe('Navbar component tests', () => {
     })
 
     it('Message link has correct href', async () => {
-        await act(async () => render(<Navbar />))
+        await act(async () =>
+            render(
+                <LoadingProvider>
+                    <NotificationProvider>
+                        <Navbar />
+                    </NotificationProvider>
+                </LoadingProvider>
+            )
+        )
 
         expect(screen.getAllByRole('link').length).toBe(2)
     })
