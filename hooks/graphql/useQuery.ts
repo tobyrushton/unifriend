@@ -20,15 +20,26 @@ export const useQuery = (): ApolloQueryReturn => {
             async <Params, Return>({ query, ...vars }: Join<Query, Params>) => {
                 const variables = { ...vars } as Params
                 setLoading(true)
-                const { data, error } = await apollo.query<Return, Params>({
-                    query,
-                    variables,
-                    context: {
-                        fetchOptions: {
-                            abort: abort.signal,
-                        },
-                    },
-                })
+                let error: Error | undefined
+                let data: Return | undefined
+
+                try {
+                    const { data: queryData, error: queryError } =
+                        await apollo.query<Return, Params>({
+                            query,
+                            variables,
+                            context: {
+                                fetchOptions: {
+                                    abort: abort.signal,
+                                },
+                            },
+                        })
+                    data = queryData
+                    error = queryError
+                } catch (e) {
+                    error = e as Error
+                }
+
                 setLoading(false)
 
                 return {

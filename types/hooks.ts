@@ -1,5 +1,5 @@
 import { AuthError, Session } from '@supabase/supabase-js'
-import { DocumentNode, GraphQLError } from 'graphql'
+import { DocumentNode } from 'graphql'
 import { createNotificationType, NotificationInterface } from './providers'
 
 export interface UpdateUserParamaters {
@@ -98,7 +98,7 @@ export interface ApolloQueryReturn {
 
 export interface ApolloMutationFunctionReturn {
     success: boolean
-    error: readonly GraphQLError[] | undefined
+    error: readonly Error[] | undefined
 }
 
 /* eslint-disable-next-line */
