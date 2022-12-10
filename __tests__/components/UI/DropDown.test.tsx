@@ -1,6 +1,11 @@
 import { FC, useState, useRef, RefObject } from 'react'
 import { render, screen, act, waitFor } from '@testing-library/react'
-import { DropDown } from '../../../components'
+import {
+    DropDown,
+    LoadingProvider,
+    NotificationProvider,
+} from '../../../components'
+
 import '@testing-library/jest-dom'
 
 const TestComponent: FC = () => {
@@ -64,7 +69,13 @@ const TestComponent: FC = () => {
 describe('DropDown component tests', () => {
     it('component renders', async () => {
         const { container } = await act(async () =>
-            render(<DropDown handleClickOutside={() => ''} />)
+            render(
+                <LoadingProvider>
+                    <NotificationProvider>
+                        <DropDown handleClickOutside={jest.fn()} />
+                    </NotificationProvider>
+                </LoadingProvider>
+            )
         )
 
         expect(container).toBeTruthy()
@@ -82,7 +93,15 @@ describe('DropDown component tests', () => {
             map[event] = cb
         })
 
-        await act(async () => render(<TestComponent />))
+        await act(async () =>
+            render(
+                <LoadingProvider>
+                    <NotificationProvider>
+                        <TestComponent />
+                    </NotificationProvider>
+                </LoadingProvider>
+            )
+        )
         expect(screen.queryByText('Friend Requests')).toBeTruthy()
 
         await act(async () => map.mousedown({ pageX: 0, pageY: 0 }))
@@ -93,7 +112,13 @@ describe('DropDown component tests', () => {
     })
 
     it('links all contain correct hrefs', () => {
-        render(<DropDown handleClickOutside={jest.fn()} />)
+        render(
+            <LoadingProvider>
+                <NotificationProvider>
+                    <DropDown handleClickOutside={jest.fn()} />
+                </NotificationProvider>
+            </LoadingProvider>
+        )
 
         expect(
             screen.getByRole('link', { name: 'View Profile' })
