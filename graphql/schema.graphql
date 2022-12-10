@@ -46,7 +46,7 @@ type Query {
   getFriends(usersId: String!): Friend!
   getUserFromAuth(email: String!): User!
   user: [User]!
-  users(bio: Boolean, birthday: Boolean, course: Boolean, email: Boolean, firstName: Boolean, id: String!, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
+  users(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: Boolean, firstName: Boolean, id: String!, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
 }
 
 type Settings {

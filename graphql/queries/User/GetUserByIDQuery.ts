@@ -10,6 +10,7 @@ export const UserByIDQuery = gql`
         $birthday: Boolean
         $bio: Boolean
         $username: Boolean
+        $all: Boolean
     ) {
         users(
             id: $id
@@ -20,6 +21,7 @@ export const UserByIDQuery = gql`
             birthday: $birthday
             bio: $bio
             username: $username
+            all: $all
         ) {
             id
             firstName

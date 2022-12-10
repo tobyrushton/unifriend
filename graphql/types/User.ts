@@ -59,6 +59,7 @@ export const UserQueryByID = extendType({
                 username: booleanArg(),
                 email: booleanArg(),
                 settings: booleanArg(),
+                all: booleanArg(),
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.users.findUnique({
@@ -66,18 +67,20 @@ export const UserQueryByID = extendType({
                         // finds the unique user row in the databse with corresponding id
                         id: args.id,
                     },
-                    select: {
-                        // selects which columns from that databse to return
-                        firstName: args.firstName ?? false,
-                        lastName: args.lastName ?? false,
-                        university: args.university ?? false,
-                        birthday: args.birthday ?? false,
-                        course: args.course ?? false,
-                        bio: args.bio ?? false,
-                        username: args.username ?? false,
-                        email: args.email ?? false,
-                        settings: args.settings ?? false,
-                    },
+                    select: args.all
+                        ? undefined
+                        : {
+                              // selects which columns from that databse to return
+                              firstName: args.firstName ?? false,
+                              lastName: args.lastName ?? false,
+                              university: args.university ?? false,
+                              birthday: args.birthday ?? false,
+                              course: args.course ?? false,
+                              bio: args.bio ?? false,
+                              username: args.username ?? false,
+                              email: args.email ?? false,
+                              settings: args.settings ?? false,
+                          },
                 }) as unknown as UserObjectWithSettings
             },
         })
