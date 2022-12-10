@@ -12,8 +12,6 @@ export const uploadImage = async (
             upsert: true,
         })
 
-    if (error) console.log(error)
-
     return {
         success: !!data,
         error: error as Error | undefined,

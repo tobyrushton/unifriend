@@ -1,4 +1,3 @@
-import { StaticImageData } from 'next/image'
 import { RefObject } from 'react'
 import { ChildrenProps, NotificationInterface } from './providers'
 
@@ -76,7 +75,7 @@ export interface ProfilePictureProps {
     width?: number
     height?: number
     style?: styleProperties
-    image: StaticImageData | string
+    image: string
 }
 
 export interface DropDownProps {
