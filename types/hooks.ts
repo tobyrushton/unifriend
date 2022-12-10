@@ -22,6 +22,7 @@ export interface SelectUserByIDParameters {
     lastName?: boolean
     bio?: boolean
     username?: boolean
+    all?: boolean
 }
 
 export interface AuthenticationParams {
@@ -129,4 +130,8 @@ export interface CheckUsernameIsTaken<Return> {
 
 export interface GetAuthFromUsernameQuery<Return extends object, T> {
     getAuthFromUsername: userQueryReturnInterface<Return, T>
+}
+
+export interface GetUserByIDQuery<Return extends object, T> {
+    users: userQueryReturnInterface<Return, T>
 }
