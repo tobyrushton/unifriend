@@ -1,3 +1,5 @@
+import { UserObjectWithID } from './User'
+
 export interface Friends {
     friendID: string
     userId: string
@@ -5,9 +7,22 @@ export interface Friends {
 }
 
 export interface FriendsWithID extends Friends {
-    id: number
+    id: string
 }
 
 export type FriendID = {
-    id: number
+    id: string
+}
+
+export type FriendReturnOne = {
+    Users_Friends_friendIDToUsers: UserObjectWithID
+}
+
+export type FriendReturnTwo = { Users: UserObjectWithID | null }
+
+export type FriendReturn = FriendReturnOne | FriendReturnTwo
+
+export type FriendRequestParams = {
+    usersId: string
+    friendId: string
 }

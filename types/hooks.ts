@@ -116,12 +116,12 @@ export type emailQuery = {
     email: string
 }
 
-export type userQueryReturnInterface<Return extends object, T> = Return & {
+export type QueryReturnInterface<Return extends object, T> = Return & {
     __typename: T
 }
 
 export interface getUserFromAuthQuery<Return extends object, T> {
-    getUserFromAuth: userQueryReturnInterface<Return, T>
+    getUserFromAuth: QueryReturnInterface<Return, T>
 }
 
 export interface CheckUsernameIsTaken<Return> {
@@ -129,9 +129,17 @@ export interface CheckUsernameIsTaken<Return> {
 }
 
 export interface GetAuthFromUsernameQuery<Return extends object, T> {
-    getAuthFromUsername: userQueryReturnInterface<Return, T>
+    getAuthFromUsername: QueryReturnInterface<Return, T>
 }
 
 export interface GetUserByIDQuery<Return extends object, T> {
-    users: userQueryReturnInterface<Return, T>
+    users: QueryReturnInterface<Return, T>
+}
+
+export type IDArguement = {
+    id: string
+}
+
+export type QueryReturn<Return extends object, T, X extends string> = {
+    [K in X]: QueryReturnInterface<Return, T>
 }

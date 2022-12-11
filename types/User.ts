@@ -46,3 +46,8 @@ export interface UserObjectWithSettings extends UserObjectWithID {
 export interface tempUserObject extends UserUpdateObject {
     id?: string
 }
+
+export type UserFromFriend = {
+    id: string
+    username: string
+}

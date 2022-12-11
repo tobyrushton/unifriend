@@ -1,15 +1,21 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
-import { FriendID, FriendsWithID } from '../../types'
+import {
+    FriendID,
+    FriendReturn,
+    FriendReturnOne,
+    FriendReturnTwo,
+    FriendsWithID,
+} from '../../types'
 import { DateTime } from '../scalars/DateTime'
 
 // friend table in database
 export const Friend = objectType({
     name: 'Friend',
     definition(t) {
-        t.int('id')
+        t.string('id')
         t.string('friendID')
         t.string('usersId')
-        t.list.field('friendedAt', {
+        t.field('friendedAt', {
             type: DateTime, // uses the scalar DateTime as a type.
         })
     },
@@ -19,10 +25,10 @@ export const Friend = objectType({
 export const FriendRequest = objectType({
     name: 'friendRequest',
     definition(t) {
-        t.int('id')
+        t.string('id')
         t.string('usersId')
         t.string('friendID')
-        t.list.field('createdAt', {
+        t.field('createdAt', {
             type: DateTime, // uses the scalar DateTime as a type.
         })
     },
@@ -56,8 +62,8 @@ export const createFriend = extendType({
             type: 'Friend',
             args: {
                 // takes the users who sent and whos to ids as arguements
-                usersId: nonNull(stringArg()),
                 friendID: nonNull(stringArg()),
+                usersId: nonNull(stringArg()),
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.create({
@@ -109,16 +115,16 @@ export const DeleteFriendRequest = extendType({
 export const getFriendRequests = extendType({
     type: 'Query', // gets database from the database
     definition(t) {
-        t.nonNull.field('getFriendRequests', {
+        t.nonNull.list.field('getFriendRequests', {
             type: 'friendRequest',
             args: {
                 // takes the users Id as an arguement
                 usersId: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
-                return ctx.prisma.friendRequests.findMany({
+            resolve: async (_parent, args, ctx) => {
+                return (await ctx.prisma.friendRequests.findMany({
                     where: args, // returns all rows with the corresponding user ID
-                }) as unknown as FriendID
+                })) as FriendID[]
             },
         })
     },
@@ -127,16 +133,39 @@ export const getFriendRequests = extendType({
 export const getFriends = extendType({
     type: 'Query', // gets database from the database
     definition(t) {
-        t.nonNull.field('getFriends', {
-            type: 'Friend',
+        t.nonNull.list.field('getFriends', {
+            type: 'User',
             args: {
                 // takes the users Id as an arguement
                 usersId: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
-                return ctx.prisma.friends.findMany({
-                    where: args, // returns all rows with the corresponding user ID
-                }) as unknown as FriendsWithID
+            resolve: async (_parent, args, ctx) => {
+                const query1: FriendReturn[] =
+                    await ctx.prisma.friends.findMany({
+                        where: args, // returns all rows with the corresponding user ID
+                        select: {
+                            Users_Friends_friendIDToUsers: true,
+                        },
+                    })
+
+                const query2: FriendReturn[] =
+                    await ctx.prisma.friends.findMany({
+                        where: {
+                            friendID: args.usersId,
+                        }, // returns all rows with the corresponding user ID
+                        select: {
+                            Users: true,
+                        },
+                    })
+
+                const friends = (query1.concat(query2) as FriendReturn[]).map(
+                    item =>
+                        (item as FriendReturnOne)
+                            .Users_Friends_friendIDToUsers ??
+                        (item as FriendReturnTwo).Users
+                )
+
+                return friends
             },
         })
     },

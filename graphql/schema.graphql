@@ -11,8 +11,8 @@ type Email {
 
 type Friend {
   friendID: String
-  friendedAt: [DateTime]
-  id: Int
+  friendedAt: DateTime
+  id: String
   usersId: String
 }
 
@@ -42,8 +42,8 @@ type Mutation {
 type Query {
   CheckUsernameIsTaken(username: String!): Boolean!
   getAuthFromUsername(username: String!): Email!
-  getFriendRequests(usersId: String!): friendRequest!
-  getFriends(usersId: String!): Friend!
+  getFriendRequests(usersId: String!): [friendRequest]!
+  getFriends(usersId: String!): [User]!
   getUserFromAuth(email: String!): User!
   user: [User]!
   users(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: Boolean, firstName: Boolean, id: String!, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
@@ -74,8 +74,8 @@ type User {
 }
 
 type friendRequest {
-  createdAt: [DateTime]
+  createdAt: DateTime
   friendID: String
-  id: Int
+  id: String
   usersId: String
 }
