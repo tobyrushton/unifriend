@@ -18,9 +18,9 @@ model Users {
   bio                                           String
   username                                      String           @unique
   email                                         String           @unique
-  FriendRequests_FriendRequests_friendIDToUsers FriendRequests?  @relation("FriendRequests_friendIDToUsers")
+  FriendRequests_FriendRequests_friendIDToUsers FriendRequests[]  @relation("FriendRequests_friendIDToUsers")
   friendRequests                                FriendRequests[]
-  Friends_Friends_friendIDToUsers               Friends?         @relation("Friends_friendIDToUsers")
+  Friends_Friends_friendIDToUsers               Friends[]        @relation("Friends_friendIDToUsers")
   friends                                       Friends[]
   recievedMessages                              Messages[]       @relation("recievedMessages")
   sentMessages                                  Messages[]       @relation("sentMessages")
@@ -30,7 +30,7 @@ model Users {
 model Friends {
   id                            String   @id @unique @default(uuid())
   friendedAt                    DateTime @default(now())
-  friendID                      String   @unique
+  friendID                      String  
   usersId                       String?
   Users_Friends_friendIDToUsers Users    @relation("Friends_friendIDToUsers", fields: [friendID], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Users                         Users?   @relation(fields: [usersId], references: [id])
@@ -39,10 +39,10 @@ model Friends {
 model FriendRequests {
   id                                   String   @id @unique @default(uuid())
   createdAt                            DateTime @default(now())
-  friendID                             String   @unique
+  friendID                             String   
   status                               Boolean  @default(false)
   usersId                              String?
-  Users_FriendRequests_friendIDToUsers Users    @relation("FriendRequests_friendIDToUsers", fields: [friendID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Users_FriendRequests_friendIDToUsers Users?    @relation("FriendRequests_friendIDToUsers", fields: [friendID], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Users                                Users?   @relation(fields: [usersId], references: [id])
 }
 

@@ -3,8 +3,10 @@ import {
     FriendID,
     FriendReturn,
     FriendReturnOne,
+    FriendReturnThree,
     FriendReturnTwo,
     FriendsWithID,
+    UserFromFriend,
 } from '../../types'
 import { DateTime } from '../scalars/DateTime'
 
@@ -81,9 +83,8 @@ export const DeleteFriend = extendType({
         t.nonNull.field('deleteFriend', {
             type: 'Friend',
             args: {
-                // takes the id of the 2 users who have a friendship.
-                friendID: nonNull(stringArg()),
-                usersId: nonNull(stringArg()),
+                // takes the id of the 2friendship
+                id: nonNull(stringArg()),
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.friends.delete({
@@ -100,10 +101,9 @@ export const DeleteFriendRequest = extendType({
         t.nonNull.field('deleteFriendRequest', {
             type: 'friendRequest',
             args: {
-                friendID: nonNull(stringArg()),
-                usersId: nonNull(stringArg()),
+                id: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
+            resolve: async (_parent, args, ctx) => {
                 return ctx.prisma.friendRequests.delete({
                     where: args, // deletes a friend,
                 }) as unknown as FriendID
@@ -112,19 +112,62 @@ export const DeleteFriendRequest = extendType({
     },
 })
 
+export const GetFriend = objectType({
+    name: 'GetFriend',
+    definition(t) {
+        t.nonNull.string('id')
+        t.nonNull.string('username')
+        t.nonNull.string('rowId')
+    },
+})
+
 export const getFriendRequests = extendType({
     type: 'Query', // gets database from the database
     definition(t) {
         t.nonNull.list.field('getFriendRequests', {
-            type: 'friendRequest',
+            type: 'GetFriend',
             args: {
                 // takes the users Id as an arguement
                 usersId: nonNull(stringArg()),
             },
             resolve: async (_parent, args, ctx) => {
-                return (await ctx.prisma.friendRequests.findMany({
-                    where: args, // returns all rows with the corresponding user ID
-                })) as FriendID[]
+                const query1: FriendReturn[] =
+                    await ctx.prisma.friendRequests.findMany({
+                        where: args,
+                        select: {
+                            id: true,
+                            Users_FriendRequests_friendIDToUsers: true,
+                        },
+                    })
+
+                const query2: FriendReturn[] =
+                    await ctx.prisma.friendRequests.findMany({
+                        where: {
+                            friendID: args.usersId,
+                        },
+                        select: {
+                            id: true,
+                            Users: true,
+                        },
+                    })
+
+                const friendRequests = (
+                    query1.concat(query2) as FriendReturn[]
+                ).map(item => {
+                    const { id, ...user } = item
+                    const details =
+                        (user as FriendReturnThree)
+                            .Users_FriendRequests_friendIDToUsers ??
+                        (user as FriendReturnTwo).Users
+
+                    return {
+                        rowId: id,
+                        id: details?.id,
+                        username: details?.username,
+                    }
+                })
+
+                return friendRequests as UserFromFriend[]
             },
         })
     },
@@ -134,7 +177,7 @@ export const getFriends = extendType({
     type: 'Query', // gets database from the database
     definition(t) {
         t.nonNull.list.field('getFriends', {
-            type: 'User',
+            type: 'GetFriend',
             args: {
                 // takes the users Id as an arguement
                 usersId: nonNull(stringArg()),
@@ -144,6 +187,7 @@ export const getFriends = extendType({
                     await ctx.prisma.friends.findMany({
                         where: args, // returns all rows with the corresponding user ID
                         select: {
+                            id: true,
                             Users_Friends_friendIDToUsers: true,
                         },
                     })
@@ -154,18 +198,28 @@ export const getFriends = extendType({
                             friendID: args.usersId,
                         }, // returns all rows with the corresponding user ID
                         select: {
+                            id: true,
                             Users: true,
                         },
                     })
 
                 const friends = (query1.concat(query2) as FriendReturn[]).map(
-                    item =>
-                        (item as FriendReturnOne)
-                            .Users_Friends_friendIDToUsers ??
-                        (item as FriendReturnTwo).Users
+                    item => {
+                        const { id, ...user } = item
+                        const details =
+                            (user as FriendReturnOne)
+                                .Users_Friends_friendIDToUsers ??
+                            (user as FriendReturnTwo).Users
+
+                        return {
+                            rowId: id,
+                            id: details?.id,
+                            username: details?.username,
+                        }
+                    }
                 )
 
-                return friends
+                return friends as UserFromFriend[]
             },
         })
     },

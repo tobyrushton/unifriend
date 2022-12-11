@@ -50,4 +50,5 @@ export interface tempUserObject extends UserUpdateObject {
 export type UserFromFriend = {
     id: string
     username: string
+    rowId: string
 }

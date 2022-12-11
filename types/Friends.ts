@@ -15,12 +15,21 @@ export type FriendID = {
 }
 
 export type FriendReturnOne = {
-    Users_Friends_friendIDToUsers: UserObjectWithID
+    id: string
+    Users_Friends_friendIDToUsers: UserObjectWithID | null
 }
 
-export type FriendReturnTwo = { Users: UserObjectWithID | null }
+export type FriendReturnTwo = {
+    id: string
+    Users: UserObjectWithID | null
+}
 
-export type FriendReturn = FriendReturnOne | FriendReturnTwo
+export type FriendReturnThree = {
+    id: string
+    Users_FriendRequests_friendIDToUsers: UserObjectWithID | null
+}
+
+export type FriendReturn = FriendReturnOne | FriendReturnTwo | FriendReturnThree
 
 export type FriendRequestParams = {
     usersId: string

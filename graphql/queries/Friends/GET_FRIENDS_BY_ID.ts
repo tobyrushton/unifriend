@@ -5,6 +5,7 @@ export const GET_FRIENDS_BY_ID = gql`
         getFriends(usersId: $id) {
             id
             username
+            rowId
         }
     }
 `
