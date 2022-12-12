@@ -24,6 +24,7 @@ import {
     UserByIDQuery,
     GET_FRIENDS_BY_ID,
     CREATE_FRIEND_REQUEST,
+    DELETE_FRIEND,
 } from '../../../../graphql/queries'
 import styles from '../../../../styles/modules/Profile.module.scss'
 
@@ -100,6 +101,33 @@ const Profile: FC<{ params: { id: string } }> = ({ params }) => {
             )
     }
 
+    const handleRemoveFriend = async (): Promise<void> => {
+        if (!friends) return
+
+        const id = friends.find(friend => friend.id === user.id)?.rowId
+
+        if (!id) return
+
+        const { success, error } = await mutation<IDArguement, IDArguement>({
+            mutation: DELETE_FRIEND,
+            id,
+        })
+        if (error)
+            error.forEach(e =>
+                createNotification({
+                    type: 'error',
+                    content: e.message,
+                })
+            )
+        else if (success) {
+            createNotification({
+                type: 'success',
+                content: 'Friend removed successfully',
+            })
+            setFriends([...friends].filter(friend => friend.rowId !== id))
+        }
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.profileContainer}>
@@ -119,17 +147,25 @@ const Profile: FC<{ params: { id: string } }> = ({ params }) => {
                                 friend.id === user.id &&
                                 friend.username === user.username
                         ) ? (
-                            <Link
-                                href={`/a/messages/${params.id}`}
-                                className={styles.link}
-                            >
-                                Send message
-                            </Link>
+                            <>
+                                <Link
+                                    href={`/a/messages/${params.id}`}
+                                    className={styles.link}
+                                >
+                                    Send message
+                                </Link>
+                                <Button
+                                    onClick={handleRemoveFriend}
+                                    inactive={mutationLoading}
+                                >
+                                    Remove Friend
+                                </Button>
+                            </>
                         ) : (
                             <Button
                                 filled
                                 onClick={handleFriendRequest}
-                                inactive={queryLoading}
+                                inactive={!friends || queryLoading}
                             >
                                 Send Friend Request
                             </Button>

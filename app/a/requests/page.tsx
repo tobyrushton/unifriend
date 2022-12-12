@@ -56,10 +56,8 @@ const Requests: FC = () => {
 
     const handleDeleteRequest = async ({
         id,
-        idx,
     }: {
         id: string
-        idx: number
     }): Promise<{ success: boolean }> => {
         const { error, success } = await mutation<IDArguement, IDArguement>({
             mutation: DELETE_FRIEND_REQUEST,
@@ -73,7 +71,12 @@ const Requests: FC = () => {
                 })
             })
 
-        if (success) setRequests(requests?.splice(idx, 1))
+        if (success)
+            setRequests(
+                [...(requests as UserFromFriend[])]?.filter(
+                    request => request.rowId !== id
+                )
+            )
 
         return { success }
     }
@@ -81,15 +84,12 @@ const Requests: FC = () => {
     const handleCreateFriend = async ({
         id,
         friendId,
-        idx,
     }: {
         id: string
         friendId: string
-        idx: number
     }): Promise<void> => {
         const { success: deleteSuccess } = await handleDeleteRequest({
             id,
-            idx,
         })
         if (!deleteSuccess) return
         const { error, success } = await mutation<
@@ -128,7 +128,6 @@ const Requests: FC = () => {
                                 handleCreateFriend({
                                     id: request.rowId,
                                     friendId: request.id,
-                                    idx,
                                 })
                             }
                         >
@@ -139,7 +138,7 @@ const Requests: FC = () => {
                             small
                             color="error"
                             onClick={() =>
-                                handleDeleteRequest({ id: request.rowId, idx })
+                                handleDeleteRequest({ id: request.rowId })
                             }
                         >
                             Deny

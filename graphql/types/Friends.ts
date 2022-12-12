@@ -3,7 +3,6 @@ import {
     FriendID,
     FriendReturn,
     FriendReturnOne,
-    FriendReturnThree,
     FriendReturnTwo,
     FriendsWithID,
     UserFromFriend,
@@ -128,37 +127,21 @@ export const getFriendRequests = extendType({
             type: 'GetFriend',
             args: {
                 // takes the users Id as an arguement
-                usersId: nonNull(stringArg()),
+                friendID: nonNull(stringArg()),
             },
             resolve: async (_parent, args, ctx) => {
-                const query1: FriendReturn[] =
+                const query: FriendReturn[] =
                     await ctx.prisma.friendRequests.findMany({
                         where: args,
-                        select: {
-                            id: true,
-                            Users_FriendRequests_friendIDToUsers: true,
-                        },
-                    })
-
-                const query2: FriendReturn[] =
-                    await ctx.prisma.friendRequests.findMany({
-                        where: {
-                            friendID: args.usersId,
-                        },
                         select: {
                             id: true,
                             Users: true,
                         },
                     })
 
-                const friendRequests = (
-                    query1.concat(query2) as FriendReturn[]
-                ).map(item => {
+                const friendRequests = query.map(item => {
                     const { id, ...user } = item
-                    const details =
-                        (user as FriendReturnThree)
-                            .Users_FriendRequests_friendIDToUsers ??
-                        (user as FriendReturnTwo).Users
+                    const details = (user as FriendReturnTwo).Users
 
                     return {
                         rowId: id,

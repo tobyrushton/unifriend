@@ -5,8 +5,15 @@ import {
     LoadingProvider,
     NotificationProvider,
 } from '../../../components'
-
 import '@testing-library/jest-dom'
+
+jest.mock('../../../hooks/providers/useUser', () => ({
+    useUser: jest.fn(() => ({
+        user: {
+            id: '123',
+        },
+    })),
+}))
 
 const TestComponent: FC = () => {
     const [display, setDisplay] = useState<boolean>(true)
@@ -122,7 +129,7 @@ describe('DropDown component tests', () => {
 
         expect(
             screen.getByRole('link', { name: 'View Profile' })
-        ).toHaveAttribute('href', '/a/profile')
+        ).toHaveAttribute('href', '/a/profile/123')
         expect(screen.getByRole('link', { name: 'Settings' })).toHaveAttribute(
             'href',
             '/a/settings'

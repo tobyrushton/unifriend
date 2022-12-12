@@ -42,7 +42,7 @@ model FriendRequests {
   friendID                             String   
   status                               Boolean  @default(false)
   usersId                              String?
-  Users_FriendRequests_friendIDToUsers Users?    @relation("FriendRequests_friendIDToUsers", fields: [friendID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Users_FriendRequests_friendIDToUsers Users    @relation("FriendRequests_friendIDToUsers", fields: [friendID], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Users                                Users?   @relation(fields: [usersId], references: [id])
 }
 

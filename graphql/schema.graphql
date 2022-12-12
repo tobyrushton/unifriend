@@ -48,7 +48,7 @@ type Mutation {
 type Query {
   CheckUsernameIsTaken(username: String!): Boolean!
   getAuthFromUsername(username: String!): Email!
-  getFriendRequests(usersId: String!): [GetFriend]!
+  getFriendRequests(friendID: String!): [GetFriend]!
   getFriends(usersId: String!): [GetFriend]!
   getUserFromAuth(email: String!): User!
   user: [User]!
