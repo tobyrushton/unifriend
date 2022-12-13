@@ -14,7 +14,7 @@ import '@fontsource/orbitron'
 
 const RootLayout: FC<ChildrenProps> = ({ children }) => {
     return (
-        <html lang="en">
+        <html lang="en-gb" data-theme="light">
             <head />
             <body>
                 <ApolloProvider client={apolloClient}>

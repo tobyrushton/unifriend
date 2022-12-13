@@ -1,6 +1,13 @@
 @use '../reusables/variables' as variables;
 @use '../reusables/mixins' as mixins;
 
+.container {
+    position: absolute;
+    background-color: variables.$background_color;
+    width: 100%;
+    height: 100%;
+}
+
 .logoContainer {
     position: absolute;
     top: 50%; 
@@ -13,12 +20,13 @@
     @include mixins.center();
     border: 1px solid variables.$accent_color;
     transform:  translate(-50%, -50%) rotate(90deg);
+    background-color: variables.$accent_color;
 }
 
 .accountContainer {
     position: absolute;
     top:40%;
-    right: 10%;
+    right: 9%;
     justify-content: center;
     text-align: center;
     width: 40%;

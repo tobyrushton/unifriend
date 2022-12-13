@@ -6,6 +6,10 @@
     margin-top:100px;
     flex-direction: column;
     gap: 2rem;
+    position: absolute;
+    width: 100%;
+    height: calc( 100% - 100px);
+    background-color: variables.$background_color;
 }
 
 .profileContainer {

@@ -1,8 +1,29 @@
-$primary_color: #1976D2;
-$text_color: black;
-$secondary_color: white;
-$font_family: 'Orbitron', sans-serif;
+// light colors
+$light_primary_color: #1976D2;
+$light_secondary_color: white;
+$light_accent_color: #E6E6E6;
+$light_text_color:black;
+$light_secondary_text_color: white;
+$light_background_color: white;
+
+// dark colors
+$dark_primary_color:#1976D2;
+$dark_secondary_color: #404040;
+$dark_accent_color: #282828;
+$dark_text_color: white;
+$dark_secondary_text_color: white;
+$dark_background_color: #121212;
+
+// colors used in styles
+$primary_color: var(--primary-color);
+$text_color: var(--text-color);
+$secondary_color: var(--secondary-color);
+$text_secondary_color: var(--text-secondary-color);
+$accent_color: var(--accent-color);
+$background_color: var(--background-color);
 $inactive_color: #D9D9D9;
-$accent_color:#E6E6E6;
 $error_color: #ff3333;
 $success_color: #22C55E;
+
+// font 
+$font_family: 'Orbitron', sans-serif;

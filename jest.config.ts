@@ -128,7 +128,7 @@ export default {
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    setupFiles: process.env.RUNNER_NAME ? undefined: ['<rootDir>/__tests__/setEnvVars.ts'],
+    setupFiles: process.env.RUNNER_NAME ? ['<rootDir>/__tests__/mocks.ts']: ['<rootDir>/__tests__/setEnvVars.ts', '<rootDir>/__tests__/mocks.ts'],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     // setupFilesAfterEnv: [],
@@ -155,7 +155,7 @@ export default {
     // ],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-    testPathIgnorePatterns: ['\\\\node_modules\\\\', '__helpers__', 'setEnvVars.ts'],
+    testPathIgnorePatterns: ['\\\\node_modules\\\\', '__helpers__', 'setEnvVars.ts', 'mocks.ts'],
 
     // The regexp pattern or array of patterns that Jest uses to detect test files
     // testRegex: [],

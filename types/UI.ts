@@ -1,7 +1,23 @@
 import { RefObject } from 'react'
 import { ChildrenProps, NotificationInterface } from './providers'
 
-export type color = 'primary' | 'secondary' | 'error' | 'success'
+export type Color =
+    | 'primary'
+    | 'secondary'
+    | 'error'
+    | 'success'
+    | 'accent'
+    | 'text'
+    | 'secondaryText'
+    | 'background'
+    | 'inactive'
+
+export type Theme = 'dark' | 'light'
+
+export type ColorsWithTheme = {
+    dark: Record<Color, string>
+    light: Record<Color, string>
+}
 
 type textAlign = 'left' | 'center' | 'right'
 
@@ -11,10 +27,11 @@ type styleProperties = {
     marginLeft?: string
     marginRight?: string
     margin?: string
+    color?: string
 }
 
 export interface LogoProps {
-    color: color
+    color: Color
     style?: styleProperties
 }
 
@@ -25,7 +42,7 @@ export interface TextProps extends ChildrenProps {
     large?: boolean
     small?: boolean
     clickable?: boolean
-    color?: color
+    color?: Color
     onClick?: () => void
     textAlign?: textAlign
 }

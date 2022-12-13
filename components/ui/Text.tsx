@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { TextProps } from '../../types'
+import { TextProps, Theme } from '../../types'
 import styles from '../../styles/modules/UI.module.scss'
 import { colors } from '../../styles/reusables/colors'
 
@@ -18,7 +18,11 @@ export const Text: FC<TextProps> = ({
     const styling = color
         ? {
               ...{
-                  color: colors[color],
+                  color: colors[
+                      document.documentElement.getAttribute(
+                          'data-theme'
+                      ) as Theme
+                  ][color],
               },
               ...style,
           }

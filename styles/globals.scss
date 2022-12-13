@@ -1,4 +1,24 @@
+@use './reusables/variables';
+
 *{
     padding: 0;
     margin: 0;
 }
+
+html[data-theme="light"] {
+    --primary-color: #{variables.$light_primary_color};
+    --text-color: #{variables.$light_text_color};
+    --text-secondary-color: #{variables.$light_secondary_text_color};
+    --secondary-color: #{variables.$light_secondary_color};
+    --background-color: #{variables.$light_background_color};
+    --accent-color: #{variables.$light_accent_color};
+  }
+  
+  html[data-theme="dark"] {
+    --primary-color: #{variables.$dark_primary_color};
+    --text-color: #{variables.$dark_text_color};
+    --text-secondary-color: #{variables.$dark_secondary_text_color};
+    --secondary-color: #{variables.$dark_secondary_color};
+    --background-color: #{variables.$dark_background_color};
+    --accent-color: #{variables.$dark_accent_color};
+  }

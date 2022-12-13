@@ -14,7 +14,7 @@ const Home: FC = () => {
     }
 
     return (
-        <>
+        <div className={styles.container}>
             <div className={styles.logoContainer}>
                 <Logo color="primary" />
             </div>
@@ -65,7 +65,7 @@ const Home: FC = () => {
                     <AuthScreen changeAuth={changeAuth} signUp />
                 )
             ) : null}
-        </>
+        </div>
     )
 }
 

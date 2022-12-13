@@ -48,12 +48,13 @@
     padding: .5rem 1rem .5rem 1rem;
     cursor: pointer;
     text-align: center;
-    background-color: variables.$secondary_color ;
+    background-color: variables.$background_color;
+    color: variables.$text_color;
 }
 
 .filled {
     background-color: variables.$primary_color;
-    color: variables.$secondary_color;
+    color: variables.$text_secondary_color;
 }
 
 .inactive {
@@ -67,13 +68,14 @@
     border: 1px solid variables.$accent_color;
     width: 20rem;
     padding: .5rem 1rem .5rem 1rem;
+    background-color: variables.$secondary_color;
 }
 
 .exit {
     position: relative;
     cursor: pointer;
     padding: 1rem .5rem 1rem .5rem;
-
+    
     div{
         border: 1px solid #000000;
         background: black;
