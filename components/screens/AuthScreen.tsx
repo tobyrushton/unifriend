@@ -8,11 +8,10 @@ import {
     createUserObjectWithUniversity,
     ErrorTextState,
     CheckUsernameArgs,
-    CheckUsernameIsTaken,
     emailQuery,
     GetEmailParams,
-    GetAuthFromUsernameQuery,
     UserObjectWithID,
+    QueryReturn,
 } from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
 import { Input, Text, Button, Exit } from '../ui'
@@ -141,7 +140,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         const check = async (): Promise<void> => {
             if (isSignUpState(state)) {
                 const { data, error } = await query<
-                    CheckUsernameIsTaken<boolean>,
+                    QueryReturn<boolean, '', 'CheckUsernameIsTaken'>,
                     CheckUsernameArgs
                 >({
                     query: CheckUsernameIsTakenQuery,
@@ -267,7 +266,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
             // if the user types a valid username fetches their email to use for log in
             if (isValidUsername(email)) {
                 const { data, error } = await query<
-                    GetAuthFromUsernameQuery<emailQuery, 'Email'>,
+                    QueryReturn<emailQuery, 'Email', 'getAuthFromUsername'>,
                     GetEmailParams
                 >({ query: GetAuthFromUsername, username: email })
                 if (error) {

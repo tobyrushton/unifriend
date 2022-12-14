@@ -1,4 +1,4 @@
-import { colors } from "../styles/reusables/colors"
+import { colors } from '../styles/reusables/colors'
 
 Object.defineProperty(document, 'documentElement', {
     value: {
@@ -9,6 +9,6 @@ Object.defineProperty(document, 'documentElement', {
 
 jest.mock('../hooks/providers/useTheme', () => ({
     useTheme: jest.fn(() => ({
-        theme: colors.light
-    }))
+        theme: colors.light,
+    })),
 }))

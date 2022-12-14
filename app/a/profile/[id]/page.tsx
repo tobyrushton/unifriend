@@ -12,7 +12,6 @@ import {
 import {
     SelectUserByIDParameters,
     UserObject,
-    GetUserByIDQuery,
     QueryReturn,
     IDArguement,
     UserFromFriend,
@@ -42,7 +41,7 @@ const Profile: FC<{ params: { id: string } }> = ({ params }) => {
         /* eslint-disable-next-line */
         (async (): Promise<void> => {
             const { data, error } = await query<
-                GetUserByIDQuery<UserObject, 'users'>,
+                QueryReturn<UserObject, 'users', 'users'>,
                 SelectUserByIDParameters
             >({
                 query: UserByIDQuery,

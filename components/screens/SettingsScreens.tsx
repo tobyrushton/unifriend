@@ -14,7 +14,7 @@ import {
     UpdateUserParamaters,
     ErrorTextState,
     CheckUsernameArgs,
-    CheckUsernameIsTaken,
+    QueryReturn,
 } from '../../types'
 import {
     useNotifications,
@@ -192,7 +192,7 @@ export const SlideThree: FC = () => {
         const run = async (): Promise<void> => {
             if (state?.username) {
                 const { data, error } = await query<
-                    CheckUsernameIsTaken<boolean>,
+                    QueryReturn<boolean, '', 'CheckUsernameIsTaken'>,
                     CheckUsernameArgs
                 >({
                     query: CheckUsernameIsTakenQuery,

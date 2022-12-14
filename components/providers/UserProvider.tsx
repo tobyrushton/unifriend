@@ -5,10 +5,10 @@ import {
     ChildrenProps,
     UserObjectWithID,
     emailQuery,
-    getUserFromAuthQuery,
     Settings,
     UpdateSettingsArgs,
     UserObjectWithSettings,
+    QueryReturn,
 } from '../../types'
 import { UserByEmailQuery } from '../../graphql/queries'
 import { useQuery } from '../../hooks/graphql/useQuery'
@@ -64,7 +64,11 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         const run = async (): Promise<void> => {
             if (session?.user.email) {
                 const { data, error } = await query<
-                    getUserFromAuthQuery<UserObjectWithSettings, 'User'>,
+                    QueryReturn<
+                        UserObjectWithSettings,
+                        'User',
+                        'getUserFromAuth'
+                    >,
                     emailQuery
                 >({ query: UserByEmailQuery, email: session.user.email })
 
