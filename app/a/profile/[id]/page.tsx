@@ -20,7 +20,7 @@ import {
 } from '../../../../types'
 import { Text, ProfilePicture, Button } from '../../../../components'
 import {
-    UserByIDQuery,
+    GET_USER_BY_ID,
     GET_FRIENDS_BY_ID,
     CREATE_FRIEND_REQUEST,
     DELETE_FRIEND,
@@ -44,7 +44,7 @@ const Profile: FC<{ params: { id: string } }> = ({ params }) => {
                 QueryReturn<UserObject, 'users', 'users'>,
                 SelectUserByIDParameters
             >({
-                query: UserByIDQuery,
+                query: GET_USER_BY_ID,
                 id: params.id,
                 all: true,
             })

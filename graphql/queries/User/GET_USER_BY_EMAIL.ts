@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-micro'
 
-export const UserByEmailQuery = gql`
+export const GET_USER_BY_EMAIL = gql`
     query GetUserFromAuth($email: String!) {
         getUserFromAuth(email: $email) {
             bio

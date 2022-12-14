@@ -9,11 +9,11 @@ import { schema } from '../../../graphql/schema'
 import { resolvers } from '../../../graphql/resolvers'
 import { UserObjectWithSettings, UserObjectWithID } from '../../../types'
 import {
-    CreateUserMutation,
-    UpdateUserMutation,
-    UserByEmailQuery,
-    UserByIDQuery,
-    GetAuthFromUsername,
+    CREATE_USER,
+    UPDATE_USER,
+    GET_USER_BY_EMAIL,
+    GET_USER_BY_ID,
+    GET_AUTH_FROM_USERNAME,
 } from '../../../graphql/queries'
 
 describe('user query tests', () => {
@@ -58,7 +58,7 @@ describe('user query tests', () => {
 
     it('should fail with missing variable', async () => {
         const response = await ApolloMockServer.executeOperation({
-            query: UserByIDQuery,
+            query: GET_USER_BY_ID,
             variables: {
                 firstName: true,
                 lastName: true,
@@ -72,7 +72,7 @@ describe('user query tests', () => {
 
     it('should fail with invalid email on create user', async () => {
         const response = await ApolloMockServer.executeOperation({
-            query: CreateUserMutation,
+            query: CREATE_USER,
             variables: failedUser,
         })
 
@@ -83,7 +83,7 @@ describe('user query tests', () => {
 
     it('should fail with invalid username on update user', async () => {
         const response = await ApolloMockServer.executeOperation({
-            query: UpdateUserMutation,
+            query: UPDATE_USER,
             variables: {
                 id: failedUser.id,
                 username: 't%df',
@@ -101,7 +101,7 @@ describe('user query tests', () => {
         mockCtx.prisma.users.create.mockResolvedValue(userObject)
 
         const response = await ApolloMockServer.executeOperation({
-            query: CreateUserMutation,
+            query: CREATE_USER,
             variables: userObject,
         })
         expect(response.data?.createUser).toEqual({
@@ -130,7 +130,7 @@ describe('user query tests', () => {
         }
 
         const response = await ApolloMockServer.executeOperation({
-            query: CreateUserMutation,
+            query: CREATE_USER,
             variables: failUser,
         })
 
@@ -143,7 +143,7 @@ describe('user query tests', () => {
         mockCtx.prisma.users.update.mockResolvedValue(user)
 
         const response = await ApolloMockServer.executeOperation({
-            query: UpdateUserMutation,
+            query: UPDATE_USER,
             variables: {
                 id: user.id,
                 username: user.username,
@@ -157,7 +157,7 @@ describe('user query tests', () => {
         mockCtx.prisma.users.findUnique.mockResolvedValue(userObject)
 
         const response = await ApolloMockServer.executeOperation({
-            query: GetAuthFromUsername,
+            query: GET_AUTH_FROM_USERNAME,
             variables: {
                 username: userObject.username,
             },
@@ -172,7 +172,7 @@ describe('user query tests', () => {
         mockCtx.prisma.users.findUnique.mockResolvedValue(userObject)
 
         const response = await ApolloMockServer.executeOperation({
-            query: UserByEmailQuery,
+            query: GET_USER_BY_EMAIL,
             variables: {
                 email: userObject.email,
             },
@@ -197,11 +197,11 @@ describe('user query tests', () => {
 
     it('should not return users email', async () => {
         mockCtx.prisma.users.findUnique.mockRejectedValue(
-            '"Cannot return null for non-nullable field Query.getAuthFromUsername."'
+            '"Cannot return null for non-nullable field Query.GET_AUTH_FROM_USERNAME."'
         )
 
         const response = await ApolloMockServer.executeOperation({
-            query: GetAuthFromUsername,
+            query: GET_AUTH_FROM_USERNAME,
             variables: {
                 username: 'tobyrushton',
             },
@@ -210,7 +210,7 @@ describe('user query tests', () => {
             (response.errors as unknown as GraphQLFormattedError[])[0].message
         ).toEqual(
             /* eslint-disable-next-line */
-            'Unexpected error value: "\\"Cannot return null for non-nullable field Query.getAuthFromUsername.\\""'
+            'Unexpected error value: "\\"Cannot return null for non-nullable field Query.GET_AUTH_FROM_USERNAME.\\""'
         )
     })
 })

@@ -9,7 +9,7 @@ import {
     NotificationProvider,
     LoadingProvider,
 } from '../../../components'
-import { UserByEmailQuery } from '../../../graphql/queries'
+import { GET_USER_BY_EMAIL } from '../../../graphql/queries'
 
 const ProviderTestComponent: FC = () => {
     const { user } = useUser()
@@ -60,7 +60,7 @@ describe('User Provider tests', () => {
         mocks = [
             {
                 request: {
-                    query: UserByEmailQuery,
+                    query: GET_USER_BY_EMAIL,
                     variables: {
                         email: 'test@email.ac.uk',
                     },

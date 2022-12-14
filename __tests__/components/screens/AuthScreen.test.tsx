@@ -3,10 +3,7 @@ import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { ProviderStack } from '../../__helpers__/ProviderStack'
 import { AuthScreen } from '../../../components'
-import {
-    CheckUsernameIsTakenQuery,
-    CreateUserMutation,
-} from '../../../graphql/queries'
+import { CHECK_USERNAME_IS_TAKEN, CREATE_USER } from '../../../graphql/queries'
 
 describe('AuthScreen tests', () => {
     let exited = false
@@ -314,7 +311,7 @@ describe('AuthScreen tests', () => {
           const mocks:MockedResponse<Record<string, any>>[] = [
             {
                 request: {
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     variables: {
                         username: 'toby',
                     },
@@ -365,7 +362,7 @@ describe('AuthScreen tests', () => {
         const mocks:MockedResponse<Record<string, any>>[] = [
             {
                 request: {
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     variables: {
                         username: 'toby',
                     },
@@ -421,7 +418,7 @@ describe('AuthScreen tests', () => {
                 const mocks:MockedResponse<Record<string, any>>[] = [
             {
                 request: {
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     variables: {
                         username: 'toby',
                     },
@@ -434,7 +431,7 @@ describe('AuthScreen tests', () => {
             },
             {
                 request: {
-                    query: CreateUserMutation,
+                    query: CREATE_USER,
                     variables: {
                         firstName: 'Toby',
                         lastName: 'Rushton',

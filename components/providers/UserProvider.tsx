@@ -10,7 +10,7 @@ import {
     UserObjectWithSettings,
     QueryReturn,
 } from '../../types'
-import { UserByEmailQuery } from '../../graphql/queries'
+import { GET_USER_BY_EMAIL } from '../../graphql/queries'
 import { useQuery } from '../../hooks/graphql/useQuery'
 import { useAuthStatus } from '../../hooks/providers/useAuthStatus'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
@@ -70,7 +70,7 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
                         'getUserFromAuth'
                     >,
                     emailQuery
-                >({ query: UserByEmailQuery, email: session.user.email })
+                >({ query: GET_USER_BY_EMAIL, email: session.user.email })
 
                 if (data) {
                     const {

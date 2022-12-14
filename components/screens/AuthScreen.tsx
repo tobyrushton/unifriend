@@ -33,9 +33,9 @@ import {
 } from '../../lib/utils'
 import { ForgottenPasswordScreen } from './ForgottenPasswordScreen'
 import {
-    CheckUsernameIsTakenQuery,
-    CreateUserMutation,
-    GetAuthFromUsername,
+    CHECK_USERNAME_IS_TAKEN,
+    CREATE_USER,
+    GET_AUTH_FROM_USERNAME,
 } from '../../graphql/queries'
 
 export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
@@ -143,7 +143,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                     QueryReturn<boolean, '', 'CheckUsernameIsTaken'>,
                     CheckUsernameArgs
                 >({
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     username: state.username,
                 })
                 if (error)
@@ -268,7 +268,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                 const { data, error } = await query<
                     QueryReturn<emailQuery, 'Email', 'getAuthFromUsername'>,
                     GetEmailParams
-                >({ query: GetAuthFromUsername, username: email })
+                >({ query: GET_AUTH_FROM_USERNAME, username: email })
                 if (error) {
                     // outputs error
                     createNotification({
@@ -331,7 +331,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                         UserObjectWithID,
                         createUserObjectWithUniversity
                     >({
-                        mutation: CreateUserMutation,
+                        mutation: CREATE_USER,
                         ...CreateUserObject,
                     }) // creates the user
 

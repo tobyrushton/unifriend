@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-micro'
 
-export const UpdateUserMutation = gql`
+export const UPDATE_USER = gql`
     mutation UpdateUser(
         $id: String!
         $firstName: String

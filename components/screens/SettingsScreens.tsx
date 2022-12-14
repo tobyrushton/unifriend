@@ -1,9 +1,9 @@
 import { FC, useState, useEffect } from 'react'
 import { Text, Toggle, Input, Button, ProfilePicture } from '../ui'
 import {
-    UpdateSettingsMutation,
-    UpdateUserMutation,
-    CheckUsernameIsTakenQuery,
+    UPDATE_SETTINGS,
+    UPDATE_USER,
+    CHECK_USERNAME_IS_TAKEN,
 } from '../../graphql/queries'
 import {
     Settings,
@@ -39,7 +39,7 @@ export const SlideOne: FC = () => {
         const { success, error } = await mutation<
             Settings,
             settingsUpdateObject
-        >({ mutation: UpdateSettingsMutation, darkMode: dark, id: user.id })
+        >({ mutation: UPDATE_SETTINGS, darkMode: dark, id: user.id })
         if (success) {
             // creates success notification if successful
             createNotification({
@@ -94,7 +94,7 @@ export const SlideTwo: FC = () => {
             Settings,
             settingsUpdateObject
         >({
-            mutation: UpdateSettingsMutation,
+            mutation: UPDATE_SETTINGS,
             universityPreference: preference,
             id: user.id,
         })
@@ -195,7 +195,7 @@ export const SlideThree: FC = () => {
                     QueryReturn<boolean, '', 'CheckUsernameIsTaken'>,
                     CheckUsernameArgs
                 >({
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     username: state.username,
                 })
                 if (error)
@@ -250,7 +250,7 @@ export const SlideThree: FC = () => {
         const { success, error } = await mutation<
             UpdateUserReturn,
             UpdateUserParamaters
-        >({ mutation: UpdateUserMutation, id: user.id, ...state })
+        >({ mutation: UPDATE_USER, id: user.id, ...state })
         if (profilePicture) {
             const { error: imageError, success: imageSuccess } =
                 await uploadImage(profilePicture, user.id)

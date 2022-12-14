@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-micro'
 
-export const UserByIDQuery = gql`
+export const GET_USER_BY_ID = gql`
     query Query(
         $id: String!
         $firstName: Boolean

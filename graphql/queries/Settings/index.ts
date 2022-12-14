@@ -1,1 +1,1 @@
-export * from './UpdateSettingsMutation'
+export * from './UPDATE_SETTINGS'
