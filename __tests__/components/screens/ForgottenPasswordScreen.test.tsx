@@ -1,41 +1,17 @@
 import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { act } from 'react-dom/test-utils'
-import { useRouter } from 'next/navigation'
 import { ForgottenPasswordScreen } from '../../../components'
 import { ProviderStack } from '../../__helpers__/ProviderStack'
-
-jest.mock('next/navigation', () => ({
-    useRouter: jest.fn(() => ({
-        router: {
-            push: jest.fn(),
-        },
-    })),
-    usePathname: jest.fn(),
-}))
-
-jest.mock('../../../lib/supabase', () => ({
-    supabase: {
-        auth: {
-            getSession: jest.fn(),
-            onAuthStateChange: jest.fn(),
-            signInWithPassword: jest.fn(),
-            signUp: jest.fn(),
-            update: jest.fn(),
-            resetPasswordForEmail: jest.fn(),
-        },
-    },
-}))
 
 describe('Forgotten Password screen tests', () => {
     const supabaseAuthMock = jest.requireMock('../../../lib/supabase').supabase
         .auth
+
     supabaseAuthMock.onAuthStateChange.mockReturnValue({
         data: { subscription: { unsubscribe: jest.fn() } },
     })
-    ;(useRouter as jest.Mock).mockReturnValue({
-        push: (path: string) => window.history.pushState({}, '', path),
-    })
+
     supabaseAuthMock.resetPasswordForEmail.mockResolvedValue({
         data: undefined,
     })
