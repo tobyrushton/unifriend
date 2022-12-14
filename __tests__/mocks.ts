@@ -1,3 +1,5 @@
+import { colors } from "../styles/reusables/colors"
+
 Object.defineProperty(document, 'documentElement', {
     value: {
         getAttribute: () => 'light',
@@ -5,4 +7,8 @@ Object.defineProperty(document, 'documentElement', {
     },
 })
 
-export {}
+jest.mock('../hooks/providers/useTheme', () => ({
+    useTheme: jest.fn(() => ({
+        theme: colors.light
+    }))
+}))

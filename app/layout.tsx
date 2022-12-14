@@ -8,6 +8,7 @@ import {
     LoadingProvider,
     NotificationProvider,
     UserProvider,
+    ThemeProvider,
 } from '../components'
 import '../styles/globals.scss'
 import '@fontsource/orbitron'
@@ -20,7 +21,9 @@ const RootLayout: FC<ChildrenProps> = ({ children }) => {
                 <ApolloProvider client={apolloClient}>
                     <LoadingProvider>
                         <NotificationProvider>
-                            <UserProvider>{children}</UserProvider>
+                            <UserProvider>
+                                <ThemeProvider>{children}</ThemeProvider>
+                            </UserProvider>
                         </NotificationProvider>
                     </LoadingProvider>
                 </ApolloProvider>

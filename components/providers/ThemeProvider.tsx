@@ -1,6 +1,5 @@
 import { FC, createContext, useState, useMemo, useEffect } from 'react'
-import { ChildrenProps, ThemeContextInterface, Color } from '../../types'
-import { useUser } from '../../hooks/providers/useUser'
+import { ThemeContextInterface, Color, ChildrenProps } from '../../types'
 import { colors } from '../../styles/reusables/colors'
 
 export const ThemeContext = createContext<ThemeContextInterface | null>(null)
@@ -8,17 +7,14 @@ export const ThemeContext = createContext<ThemeContextInterface | null>(null)
 export const ThemeProvider: FC<ChildrenProps> = ({ children }) => {
     const [theme, setTheme] = useState<Record<Color, string>>(colors.light)
 
-    const { settings } = useUser()
+    const getTheme =
+        typeof window === 'undefined'
+            ? 'light'
+            : document.documentElement.getAttribute('data-theme')
 
     useEffect(() => {
-        document.documentElement.setAttribute(
-            'data-theme',
-            settings.darkMode ? 'dark' : 'light'
-        )
-
-        if (settings.darkMode) setTheme(colors.dark)
-        else setTheme(colors.light)
-    }, [settings])
+        setTheme(getTheme === 'dark' ? colors.dark : colors.light)
+    }, [getTheme])
 
     const ProviderValue: ThemeContextInterface = useMemo(
         () => ({

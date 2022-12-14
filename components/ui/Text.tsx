@@ -1,7 +1,7 @@
 import { FC } from 'react'
-import { TextProps, Theme } from '../../types'
+import { TextProps } from '../../types'
+import { useTheme } from '../../hooks/providers/useTheme'
 import styles from '../../styles/modules/UI.module.scss'
-import { colors } from '../../styles/reusables/colors'
 
 export const Text: FC<TextProps> = ({
     bold,
@@ -15,18 +15,17 @@ export const Text: FC<TextProps> = ({
     onClick,
     textAlign,
 }) => {
+    const { theme } = useTheme()
+
     const styling = color
         ? {
               ...{
-                  color: colors[
-                      document.documentElement.getAttribute(
-                          'data-theme'
-                      ) as Theme
-                  ][color],
+                  color: theme[color],
               },
               ...style,
           }
         : style
+
     return header ? (
         <h1
             className={

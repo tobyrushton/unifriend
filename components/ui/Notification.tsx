@@ -1,8 +1,9 @@
 import { FC } from 'react'
-import { Color, notificationProps, Theme } from '../../types'
+import { notificationProps } from '../../types/UI'
+import { Color } from '../../types/colors'
 import { Text } from './Text'
 import { Exit } from './Exit'
-import { colors } from '../../styles/reusables/colors'
+import { useTheme } from '../../hooks/providers/useTheme'
 import styles from '../../styles/modules/UI.module.scss'
 
 export const Notification: FC<notificationProps> = ({
@@ -10,16 +11,13 @@ export const Notification: FC<notificationProps> = ({
     content,
     onClick,
 }) => {
+    const { theme } = useTheme()
+
     return (
         <div
             className={styles.notification}
             style={{
-                backgroundColor:
-                    colors[
-                        document.documentElement.getAttribute(
-                            'data-theme'
-                        ) as Theme
-                    ][type as Color],
+                backgroundColor: theme[type as Color],
                 color:
                     type === 'error' || type === 'success' ? 'white' : 'black',
             }}
