@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { UserContext } from '../../components/providers/UserProvider'
-import { userContextInterface } from '../../types'
+import { UserContextInterface } from '../../types'
 
-export const useUser = (): userContextInterface =>
-    useContext(UserContext) as userContextInterface
+export const useUser = (): UserContextInterface =>
+    useContext(UserContext) as UserContextInterface

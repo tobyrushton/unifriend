@@ -48,7 +48,7 @@ export interface GetEmailParams {
     username: string
 }
 
-export interface authStatusReturnType {
+export interface AuthStatusReturnType {
     session: Session | null
     loading: boolean
     passwordResetRequest: boolean
@@ -112,7 +112,7 @@ export interface ApolloMutationReturn {
     mutation: ApolloMutationFunction
 }
 
-export type emailQuery = {
+export type EmailQuery = {
     email: string
 }
 

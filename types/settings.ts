@@ -1,12 +1,12 @@
 export type UniversityPreference = 'OWN' | 'ALL'
 
-export interface settingsUpdateObject {
+export interface SettingsUpdateObject {
     id: string
     universityPreference?: UniversityPreference
     darkMode?: boolean
 }
 
-export interface tempSettingsObject extends settingsUpdateObject {
+export interface TempSettingsObject extends SettingsUpdateObject {
     usersId?: string
 }
 

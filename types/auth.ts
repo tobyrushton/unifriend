@@ -1,15 +1,15 @@
 type authType = 'log in' | 'sign up'
 
-export interface authState {
+export interface AuthState {
     active: boolean
     type?: authType
 }
 
-export type authProps =
-    | { logIn: true; signUp?: never; changeAuth: (change: authState) => void }
-    | { logIn?: never; signUp: true; changeAuth: (change: authState) => void }
+export type AuthProps =
+    | { logIn: true; signUp?: never; changeAuth: (change: AuthState) => void }
+    | { logIn?: never; signUp: true; changeAuth: (change: AuthState) => void }
 
-export interface signUpState {
+export interface SignUpState {
     firstName: string
     lastName: string
     email: string
@@ -19,7 +19,7 @@ export interface signUpState {
     course: string
 }
 
-export interface logInState {
+export interface LogInState {
     email: string
     password: string
 }

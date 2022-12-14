@@ -2,9 +2,9 @@ import { RefObject } from 'react'
 import { ChildrenProps, NotificationInterface } from './providers'
 import { Color } from './colors'
 
-type textAlign = 'left' | 'center' | 'right'
+type TextAlign = 'left' | 'center' | 'right'
 
-type styleProperties = {
+type StyleProperties = {
     marginTop?: string
     marginBottom?: string
     marginLeft?: string
@@ -15,19 +15,19 @@ type styleProperties = {
 
 export interface LogoProps {
     color: Color
-    style?: styleProperties
+    style?: StyleProperties
 }
 
 export interface TextProps extends ChildrenProps {
     bold?: boolean
     header?: boolean
-    style?: styleProperties
+    style?: StyleProperties
     large?: boolean
     small?: boolean
     clickable?: boolean
     color?: Color
     onClick?: () => void
-    textAlign?: textAlign
+    textAlign?: TextAlign
 }
 
 export interface ButtonProps extends ChildrenProps {
@@ -35,18 +35,18 @@ export interface ButtonProps extends ChildrenProps {
     submit?: boolean
     filled?: boolean
     inactive?: boolean
-    style?: styleProperties
+    style?: StyleProperties
 }
 
-export type inputType = 'password' | 'text' | 'date'
+export type InputType = 'password' | 'text' | 'date'
 
 export type InputProps =
     | {
           placeholder: string
-          type: inputType
+          type: InputType
           setValue: (update: string) => void
           value?: string | undefined
-          style?: styleProperties
+          style?: StyleProperties
           maxLength?: number
       }
     | {
@@ -54,7 +54,7 @@ export type InputProps =
           type: 'file'
           setValue: (update: File) => void
           value?: string | undefined
-          style?: styleProperties
+          style?: StyleProperties
           maxLength?: number
       }
 
@@ -74,7 +74,7 @@ export interface signUpSlidesInterface {
 export interface ProfilePictureProps {
     width?: number
     height?: number
-    style?: styleProperties
+    style?: StyleProperties
     image: string
 }
 
@@ -87,6 +87,6 @@ export interface DropDownProps {
 
 export interface ToggleProps {
     onCheck: (change: boolean) => void
-    style?: styleProperties
+    style?: StyleProperties
     value?: boolean
 }

@@ -7,7 +7,7 @@ import {
 } from '../../graphql/queries'
 import {
     Settings,
-    settingsUpdateObject,
+    SettingsUpdateObject,
     UniversityPreference,
     UserUpdateObject,
     UpdateUserReturn,
@@ -38,7 +38,7 @@ export const SlideOne: FC = () => {
     const run = async (dark: boolean): Promise<void> => {
         const { success, error } = await mutation<
             Settings,
-            settingsUpdateObject
+            SettingsUpdateObject
         >({ mutation: UPDATE_SETTINGS, darkMode: dark, id: user.id })
         if (success) {
             // creates success notification if successful
@@ -92,7 +92,7 @@ export const SlideTwo: FC = () => {
     const run = async (preference: UniversityPreference): Promise<void> => {
         const { success, error } = await mutation<
             Settings,
-            settingsUpdateObject
+            SettingsUpdateObject
         >({
             mutation: UPDATE_SETTINGS,
             universityPreference: preference,

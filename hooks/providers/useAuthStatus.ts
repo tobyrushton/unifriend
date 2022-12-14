@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Session, AuthError } from '@supabase/supabase-js'
 import { supabase } from '../../lib/supabase'
-import { authStatusReturnType } from '../../types'
+import { AuthStatusReturnType } from '../../types'
 import { useNotifications } from './useNotifications'
 
-export const useAuthStatus = (): authStatusReturnType => {
+export const useAuthStatus = (): AuthStatusReturnType => {
     const [session, setSession] = useState<Session | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [passwordResetRequest, setPasswordResetRequest] =

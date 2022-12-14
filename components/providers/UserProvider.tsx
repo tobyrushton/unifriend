@@ -1,10 +1,10 @@
 import { createContext, FC, useMemo, useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import {
-    userContextInterface,
+    UserContextInterface,
     ChildrenProps,
     UserObjectWithID,
-    emailQuery,
+    EmailQuery,
     Settings,
     UpdateSettingsArgs,
     UserObjectWithSettings,
@@ -17,7 +17,7 @@ import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 import { useNotifications } from '../../hooks/providers/useNotifications'
 
 // creates context for the provider.
-export const UserContext = createContext<userContextInterface | null>(null)
+export const UserContext = createContext<UserContextInterface | null>(null)
 
 const defaultUser: UserObjectWithID = {
     id: '',
@@ -69,7 +69,7 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
                         'User',
                         'getUserFromAuth'
                     >,
-                    emailQuery
+                    EmailQuery
                 >({ query: GET_USER_BY_EMAIL, email: session.user.email })
 
                 if (data) {
@@ -145,7 +145,7 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     )
 
     // value that is passed down
-    const providerValue: userContextInterface = useMemo(
+    const providerValue: UserContextInterface = useMemo(
         // memoised
         () => ({ user, resetPassword, settings, updateSettings }),
         [user, resetPassword, settings, updateSettings]

@@ -8,15 +8,15 @@ export interface ShellUser {
     username: string
 }
 
-export interface createUserObject extends ShellUser {
+export interface CreateUserObject extends ShellUser {
     email: string
 }
 
-export interface createUserObjectWithUniversity extends createUserObject {
+export interface CreateUserObjectWithUniversity extends CreateUserObject {
     university: string
 }
 
-export interface UserObject extends createUserObjectWithUniversity {
+export interface UserObject extends CreateUserObjectWithUniversity {
     bio: string
 }
 
@@ -43,7 +43,7 @@ export interface UserObjectWithSettings extends UserObjectWithID {
     settings: Settings
 }
 
-export interface tempUserObject extends UserUpdateObject {
+export interface TempUserObject extends UserUpdateObject {
     id?: string
 }
 

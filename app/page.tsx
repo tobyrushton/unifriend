@@ -3,13 +3,13 @@
 import { FC, useState } from 'react'
 import { Logo, Text, Button, AuthScreen } from '../components'
 import styles from '../styles/modules/Home.module.scss'
-import { authState } from '../types'
+import { AuthState } from '../types'
 
 const Home: FC = () => {
-    const [auth, setAuth] = useState<authState>({ active: false })
+    const [auth, setAuth] = useState<AuthState>({ active: false })
 
     // refrencing this function instead of using the setter directly, forces a rerender.
-    const changeAuth = (change: authState): void => {
+    const changeAuth = (change: AuthState): void => {
         setAuth(change)
     }
 

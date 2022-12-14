@@ -1,14 +1,14 @@
 import { FC, useState, useEffect } from 'react'
 import {
-    authProps,
-    logInState,
-    signUpState,
+    AuthProps,
+    LogInState,
+    SignUpState,
     signUpSlidesInterface,
-    createUserObject,
-    createUserObjectWithUniversity,
+    CreateUserObject,
+    CreateUserObjectWithUniversity,
     ErrorTextState,
     CheckUsernameArgs,
-    emailQuery,
+    EmailQuery,
     GetEmailParams,
     UserObjectWithID,
     QueryReturn,
@@ -38,9 +38,9 @@ import {
     GET_AUTH_FROM_USERNAME,
 } from '../../graphql/queries'
 
-export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
+export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
     // all state defined that is used for this screen
-    const [state, setState] = useState<logInState | signUpState>(
+    const [state, setState] = useState<LogInState | SignUpState>(
         logIn
             ? {
                   email: '',
@@ -266,7 +266,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
             // if the user types a valid username fetches their email to use for log in
             if (isValidUsername(email)) {
                 const { data, error } = await query<
-                    QueryReturn<emailQuery, 'Email', 'getAuthFromUsername'>,
+                    QueryReturn<EmailQuery, 'Email', 'getAuthFromUsername'>,
                     GetEmailParams
                 >({ query: GET_AUTH_FROM_USERNAME, username: email })
                 if (error) {
@@ -317,11 +317,11 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                     })
                 else {
                     // removes the password property from state as not needed
-                    const temp: Partial<Pick<signUpState, 'password'>> &
-                        Omit<signUpState, 'password'> = state
+                    const temp: Partial<Pick<SignUpState, 'password'>> &
+                        Omit<SignUpState, 'password'> = state
                     delete temp.password
-                    const CreateUserObject: createUserObjectWithUniversity = {
-                        ...(temp as createUserObject),
+                    const CreateUser: CreateUserObjectWithUniversity = {
+                        ...(temp as CreateUserObject),
                         ...({ university } as {
                             university: string
                         }),
@@ -329,10 +329,10 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
 
                     const { success, error } = await mutation<
                         UserObjectWithID,
-                        createUserObjectWithUniversity
+                        CreateUserObjectWithUniversity
                     >({
                         mutation: CREATE_USER,
-                        ...CreateUserObject,
+                        ...CreateUser,
                     }) // creates the user
 
                     if (success) {
@@ -383,7 +383,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                             setState(prevState => {
                                                 const temp = {
                                                     ...prevState,
-                                                } as logInState
+                                                } as LogInState
                                                 temp.email = change
                                                 return temp
                                             })
@@ -397,7 +397,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                             setState(prevState => {
                                                 const temp = {
                                                     ...prevState,
-                                                } as logInState
+                                                } as LogInState
                                                 temp.password = change
                                                 return temp
                                             })
@@ -442,7 +442,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     setState(prevState => {
                                                         const temp = {
                                                             ...prevState,
-                                                        } as signUpState
+                                                        } as SignUpState
                                                         temp.firstName = change
                                                         return temp
                                                     })
@@ -452,7 +452,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                 }}
                                                 maxLength={16}
                                                 value={
-                                                    (state as signUpState)
+                                                    (state as SignUpState)
                                                         .firstName
                                                 }
                                             />
@@ -463,7 +463,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     setState(prevState => {
                                                         const temp = {
                                                             ...prevState,
-                                                        } as signUpState
+                                                        } as SignUpState
                                                         temp.lastName = change
                                                         return temp
                                                     })
@@ -473,7 +473,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                 }}
                                                 maxLength={16}
                                                 value={
-                                                    (state as signUpState)
+                                                    (state as SignUpState)
                                                         .lastName
                                                 }
                                             />
@@ -484,7 +484,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     setState(prevState => {
                                                         const temp = {
                                                             ...prevState,
-                                                        } as signUpState
+                                                        } as SignUpState
                                                         temp.email = change
                                                         return temp
                                                     })
@@ -494,7 +494,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                 }}
                                                 maxLength={32}
                                                 value={
-                                                    (state as signUpState).email
+                                                    (state as SignUpState).email
                                                 }
                                             />
                                             {displayErrorText[0].active ? (
@@ -519,7 +519,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                                     const temp =
                                                                         {
                                                                             ...prevState,
-                                                                        } as signUpState
+                                                                        } as SignUpState
                                                                     temp.username =
                                                                         change
                                                                     return temp
@@ -532,7 +532,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                         maxLength={16}
                                                         value={
                                                             (
-                                                                state as signUpState
+                                                                state as SignUpState
                                                             ).username
                                                         }
                                                     />
@@ -557,7 +557,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                                     const temp =
                                                                         {
                                                                             ...prevState,
-                                                                        } as signUpState
+                                                                        } as SignUpState
                                                                     temp.password =
                                                                         change
                                                                     return temp
@@ -570,7 +570,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                         maxLength={16}
                                                         value={
                                                             (
-                                                                state as signUpState
+                                                                state as SignUpState
                                                             ).password
                                                         }
                                                     />
@@ -601,7 +601,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                                     const temp =
                                                                         {
                                                                             ...prevState,
-                                                                        } as signUpState
+                                                                        } as SignUpState
                                                                     temp.course =
                                                                         change
                                                                     return temp
@@ -610,7 +610,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                         }}
                                                         value={
                                                             (
-                                                                state as signUpState
+                                                                state as SignUpState
                                                             ).course
                                                         }
                                                     />
@@ -626,7 +626,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                                     const temp =
                                                                         {
                                                                             ...prevState,
-                                                                        } as signUpState
+                                                                        } as SignUpState
                                                                     temp.birthday =
                                                                         change
                                                                     return temp
@@ -636,7 +636,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                         maxLength={16}
                                                         value={
                                                             (
-                                                                state as signUpState
+                                                                state as SignUpState
                                                             ).birthday
                                                         }
                                                     />

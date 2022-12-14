@@ -1,7 +1,7 @@
 import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
 import {
-    emailQuery,
-    tempUserObject,
+    EmailQuery,
+    TempUserObject,
     UserObjectWithSettings,
     UserUpdateObject,
 } from '../../types'
@@ -166,7 +166,7 @@ export const UpdateUserMutation = extendType({
                 bio: stringArg(),
             },
             resolve: (_parent, args, ctx) => {
-                const temp: tempUserObject = { ...args } as tempUserObject
+                const temp: TempUserObject = { ...args } as TempUserObject
                 delete temp.id // removes id property so that it is not passed in the updates.
                 const userUpdates: UserUpdateObject = temp
 
@@ -254,7 +254,7 @@ export const GetAuthFromUsername = extendType({
                         // returns only the email
                         email: true,
                     },
-                }) as unknown as emailQuery
+                }) as unknown as EmailQuery
             },
         })
     },

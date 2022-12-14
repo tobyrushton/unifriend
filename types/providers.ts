@@ -7,7 +7,7 @@ export interface UpdateSettingsArgs {
     darkMode?: boolean
     universityPreference?: UniversityPreference
 }
-export interface userContextInterface {
+export interface UserContextInterface {
     user: UserObjectWithID
     settings: Settings
     updateSettings: (args: UpdateSettingsArgs) => void
@@ -22,10 +22,10 @@ export interface LoadingContextInterface {
     setLoading: (change: boolean) => void
 }
 
-export type notificationType = 'error' | 'success' | 'standard'
+export type NotificationType = 'error' | 'success' | 'standard'
 
 export interface NotificationInterface {
-    type: notificationType
+    type: NotificationType
     content: string
 }
 

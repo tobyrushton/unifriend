@@ -1,5 +1,5 @@
 import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
-import { settingsUpdateObject, tempSettingsObject } from '../../types/settings'
+import { SettingsUpdateObject, TempSettingsObject } from '../../types/settings'
 
 // table settings in the database.
 export const Settings = objectType({
@@ -26,11 +26,11 @@ export const UpdateSettings = extendType({
             },
             resolve: (_, args, ctx) => {
                 // removes the usersId from the update object so that it doesn't change.
-                const temp: tempSettingsObject = {
+                const temp: TempSettingsObject = {
                     ...args,
-                } as tempSettingsObject
+                } as TempSettingsObject
                 delete temp.usersId
-                const updates = temp as settingsUpdateObject
+                const updates = temp as SettingsUpdateObject
 
                 return ctx.prisma.settings.update({
                     // updates row in the database with the matching id
