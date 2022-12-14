@@ -120,13 +120,6 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         if (passwordResetRequest) router.push('/resetPassword')
     }, [passwordResetRequest, router, pathname])
 
-    useEffect(() => {
-        document.documentElement.setAttribute(
-            'data-theme',
-            settings.darkMode ? 'dark' : 'light'
-        )
-    }, [settings])
-
     const updateSettings = useMemo(
         // memoised
         () => (args: UpdateSettingsArgs) => {

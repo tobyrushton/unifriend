@@ -1,5 +1,6 @@
 import React from 'react'
 import { Settings, UniversityPreference } from './settings'
+import { Color } from './colors'
 import { UserObjectWithID } from './User'
 
 export interface UpdateSettingsArgs {
@@ -32,4 +33,8 @@ export type createNotificationType = (args: NotificationInterface) => void
 
 export interface NotificationContextInterface {
     createNotification: createNotificationType
+}
+
+export interface ThemeContextInterface {
+    theme: Record<Color, string>
 }
