@@ -33,7 +33,7 @@ const defaultUser: UserObjectWithID = {
 
 const defaultSettings: Settings = {
     universityPreference: 'OWN',
-    darkMode: true,
+    darkMode: false,
 }
 
 export const UserProvider: FC<ChildrenProps> = ({ children }) => {
@@ -123,13 +123,6 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         // if user has created a password reset request, pushes them to the screen
         if (passwordResetRequest) router.push('/resetPassword')
     }, [passwordResetRequest, router, pathname])
-
-    useEffect(() => {
-        document.documentElement.setAttribute(
-            'data-theme',
-            settings.darkMode ? 'dark' : 'light'
-        )
-    }, [settings.darkMode])
 
     const updateSettings = useMemo(
         // memoised

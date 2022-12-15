@@ -7,6 +7,7 @@
 
 .fontTextBold {
     @include mixins.fontClass($fontWeight: 600);
+    color: variables.$secondary_color;
 }
 
 .extraLarge {
@@ -39,6 +40,7 @@
 
 .fontText {
     @include mixins.fontClass($fontWeight: 400);
+    color: variables.$secondary_color;
 }
 
 .button {

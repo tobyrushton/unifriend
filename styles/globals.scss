@@ -12,6 +12,8 @@ html[data-theme="light"] {
     --secondary-color: #{variables.$light_secondary_color};
     --background-color: #{variables.$light_background_color};
     --accent-color: #{variables.$light_accent_color};
+    --error-color: #{variables.$error_color};
+    --success-color: #{variables.$success_color};
   }
   
   html[data-theme="dark"] {
@@ -21,4 +23,6 @@ html[data-theme="light"] {
     --secondary-color: #{variables.$dark_secondary_color};
     --background-color: #{variables.$dark_background_color};
     --accent-color: #{variables.$dark_accent_color};
+    --error-color: #{variables.$error_color};
+    --success-color: #{variables.$success_color};
   }
