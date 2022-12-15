@@ -7,7 +7,7 @@
 
 .fontTextBold {
     @include mixins.fontClass($fontWeight: 600);
-    color: variables.$secondary_color;
+    color: variables.$text_color;
 }
 
 .extraLarge {
@@ -40,7 +40,7 @@
 
 .fontText {
     @include mixins.fontClass($fontWeight: 400);
-    color: variables.$secondary_color;
+    color: variables.$text_color;
 }
 
 .button {
@@ -143,7 +143,7 @@
 
 .triangle {
 	position: relative;
-	background-color: variables.$secondary_color;
+	background-color: variables.$text_color;
 	text-align: left;
     margin-left: 1.5%;
     margin-right: 5%;
