@@ -1,7 +1,8 @@
 'use client'
 
 import { FC, createContext, useState, useMemo, useEffect } from 'react'
-import { ThemeContextInterface, Color, ChildrenProps } from '../../types'
+import Cookies from 'js-cookie'
+import { ThemeContextInterface, Color, ChildrenProps, Theme } from '../../types'
 import { colors } from '../../styles/reusables/colors'
 import { useUser } from '../../hooks/providers/useUser'
 
@@ -13,12 +14,15 @@ export const ThemeProvider: FC<ChildrenProps> = ({ children }) => {
     const { settings } = useUser()
 
     useEffect(() => {
-        document.documentElement.setAttribute(
-            'data-theme',
-            settings.darkMode ? 'dark' : 'light'
-        )
+        const themeType: Theme = settings.darkMode ? 'dark' : 'light'
 
         setTheme(settings.darkMode ? colors.dark : colors.light)
+
+        Cookies.set('theme', themeType, {
+            expires: new Date().setFullYear(new Date().getFullYear() + 1),
+        })
+
+        document.documentElement.setAttribute('data-theme', themeType)
     }, [settings.darkMode])
 
     const ProviderValue: ThemeContextInterface = useMemo(

@@ -2,6 +2,7 @@
 
 import { createContext, FC, useMemo, useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import Cookies from 'js-cookie'
 import {
     UserContextInterface,
     ChildrenProps,
@@ -35,7 +36,7 @@ const defaultUser: UserObjectWithID = {
 
 const defaultSettings: Settings = {
     universityPreference: 'OWN',
-    darkMode: false,
+    darkMode: (Cookies.get('theme')?.valueOf() ?? 'light') === 'dark',
 }
 
 export const UserProvider: FC<ChildrenProps> = ({ children }) => {

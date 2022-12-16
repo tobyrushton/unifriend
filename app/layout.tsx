@@ -13,7 +13,7 @@ import '../styles/globals.scss'
 const getTheme = (): Theme => {
     const nextCookies = cookies()
 
-    return (nextCookies.get('theme') ?? 'light') as Theme
+    return (nextCookies.get('theme')?.value ?? 'light') as Theme
 }
 
 const RootLayout: FC<ChildrenProps> = ({ children }) => {

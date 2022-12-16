@@ -1,6 +1,8 @@
 import { useRouter } from 'next/navigation'
 import { colors } from '../styles/reusables/colors'
 
+global.fetch = require('jest-mock-fetch')
+
 Object.defineProperty(document, 'documentElement', {
     value: {
         getAttribute: () => 'light',
@@ -27,7 +29,9 @@ jest.mock('../lib/supabase', () => ({
     supabase: {
         auth: {
             getSession: jest.fn(),
-            onAuthStateChange: jest.fn(),
+            onAuthStateChange: jest.fn(() => ({
+                data: { subscription: { unsubscribe: jest.fn() } },
+            })),
             signInWithPassword: jest.fn(),
             signUp: jest.fn(),
             update: jest.fn(),
@@ -47,3 +51,9 @@ jest.mock('../lib/supabase', () => ({
 ;(useRouter as jest.Mock).mockReturnValue({
     push: (path: string) => window.history.pushState({}, '', path),
 })
+
+jest.mock('next/headers', () => ({
+    cookies: () => ({
+        get: jest.fn(),
+    }),
+}))
