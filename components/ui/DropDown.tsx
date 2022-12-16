@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Text } from './Text'

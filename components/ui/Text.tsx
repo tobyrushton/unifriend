@@ -1,7 +1,10 @@
+'use client'
+
 import { FC } from 'react'
 import { TextProps } from '../../types'
 import { useTheme } from '../../hooks/providers/useTheme'
 import styles from '../../styles/modules/UI.module.scss'
+import '@fontsource/orbitron'
 
 export const Text: FC<TextProps> = ({
     bold,

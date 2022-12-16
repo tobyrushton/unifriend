@@ -1,24 +1,29 @@
-'use client'
-
 import { FC } from 'react'
-import { ApolloProvider } from '@apollo/client'
-import { ChildrenProps } from '../types'
-import apolloClient from '../lib/apollo'
+import { cookies } from 'next/headers'
+import { ChildrenProps, Theme } from '../types'
 import {
     LoadingProvider,
     NotificationProvider,
     UserProvider,
     ThemeProvider,
+    ApolloProvider,
 } from '../components'
 import '../styles/globals.scss'
-import '@fontsource/orbitron'
+
+const getTheme = (): Theme => {
+    const nextCookies = cookies()
+
+    return (nextCookies.get('theme') ?? 'light') as Theme
+}
 
 const RootLayout: FC<ChildrenProps> = ({ children }) => {
+    const theme = getTheme()
+
     return (
-        <html lang="en-gb" data-theme="light">
+        <html lang="en-gb" data-theme={theme}>
             <head />
             <body>
-                <ApolloProvider client={apolloClient}>
+                <ApolloProvider>
                     <LoadingProvider>
                         <NotificationProvider>
                             <UserProvider>

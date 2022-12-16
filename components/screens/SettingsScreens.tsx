@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useState, useEffect } from 'react'
 import { Text, Toggle, Input, Button, ProfilePicture } from '../ui'
 import {

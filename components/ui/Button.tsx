@@ -1,6 +1,9 @@
+'use client'
+
 import { FC } from 'react'
 import { ButtonProps } from '../../types'
 import styles from '../../styles/modules/UI.module.scss'
+import '@fontsource/orbitron'
 
 export const Button: FC<ButtonProps> = ({
     onClick,

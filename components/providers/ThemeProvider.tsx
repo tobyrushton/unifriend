@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, createContext, useState, useMemo, useEffect } from 'react'
 import { ThemeContextInterface, Color, ChildrenProps } from '../../types'
 import { colors } from '../../styles/reusables/colors'

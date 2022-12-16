@@ -1,3 +1,5 @@
+'use client'
+
 import { FC } from 'react'
 import { notificationProps } from '../../types/UI'
 import { Exit } from './Exit'
