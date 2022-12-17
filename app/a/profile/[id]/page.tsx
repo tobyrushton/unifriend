@@ -1,131 +1,70 @@
-'use client'
-
-import { FC, useEffect, useState } from 'react'
+// import { FC, useEffect, useState } from 'react'
 import Link from 'next/link'
-import {
-    useQuery,
-    useLoadingScreen,
-    useNotifications,
-    useMutation,
-    useUser,
-} from '../../../../hooks'
+import { ReactElement } from 'react'
 import {
     SelectUserByIDParameters,
     UserObject,
     QueryReturn,
     IDArguement,
     UserFromFriend,
-    Friends,
-    FriendRequestParams,
 } from '../../../../types'
-import { Text, ProfilePicture, Button } from '../../../../components'
-import {
-    GET_USER_BY_ID,
-    GET_FRIENDS_BY_ID,
-    CREATE_FRIEND_REQUEST,
-    DELETE_FRIEND,
-} from '../../../../graphql/queries'
+import { Text, ProfilePicture } from '../../../../components'
+import { GET_USER_BY_ID, GET_FRIENDS_BY_ID } from '../../../../graphql/queries'
+import { initiateApollo } from '../../../../lib/apollo'
+import { isError } from '../../../../lib/utils'
+import { ButtonContainer } from './ButtonContainer'
 import styles from '../../../../styles/modules/Profile.module.scss'
 
-const Profile: FC<{ params: { id: string } }> = ({ params }) => {
-    const [profile, setProfile] = useState<UserObject>()
-    const [friends, setFriends] = useState<UserFromFriend[]>()
+const getData = async (
+    id: string
+): Promise<[UserObject | Error, UserFromFriend[] | Error]> => {
+    const apollo = initiateApollo()
 
-    const { loading: queryLoading, query } = useQuery()
-    const { loading: mutationLoading, mutation } = useMutation()
-    const { setLoading } = useLoadingScreen()
-    const { createNotification } = useNotifications()
-    const { user } = useUser()
-
-    useEffect(() => {
-        /* eslint-disable-next-line */
-        (async (): Promise<void> => {
-            const { data, error } = await query<
-                QueryReturn<UserObject, 'users', 'users'>,
-                SelectUserByIDParameters
-            >({
-                query: GET_USER_BY_ID,
-                id: params.id,
-                all: true,
-            })
-
-            if (data) {
-                const { __typename, ...userDetails } = data.users
-                setProfile(userDetails)
-            } else if (error) {
-                createNotification({
-                    type: 'error',
-                    content: error.message,
+    const test: [UserObject | Error, UserFromFriend[] | Error] =
+        await Promise.all([
+            (async (): Promise<UserObject | Error> => {
+                const { data, error } = await apollo.query<
+                    QueryReturn<UserObject, 'users', 'users'>,
+                    SelectUserByIDParameters
+                >({
+                    query: GET_USER_BY_ID,
+                    variables: {
+                        id,
+                        all: true,
+                    },
                 })
-            }
-        })()
-        ;(async (): Promise<void> => {
-            const { data, error } = await query<
-                QueryReturn<UserFromFriend[], 'Friends', 'getFriends'>,
-                IDArguement
-            >({ query: GET_FRIENDS_BY_ID, id: params.id })
-            if (data) {
-                setFriends(data.getFriends)
-            } else if (error)
-                createNotification({
-                    type: 'error',
-                    content: error.message,
-                })
-        })()
-    }, [params.id, createNotification, query])
 
-    useEffect(() => {
-        setLoading(queryLoading || mutationLoading)
-    }, [mutationLoading, queryLoading, setLoading])
+                if (data) {
+                    const { __typename, ...userDetails } = data.users
+                    return userDetails
+                }
+                return error as Error
+            })(),
+            (async (): Promise<UserFromFriend[] | Error> => {
+                const { data, error } = await apollo.query<
+                    QueryReturn<UserFromFriend[], 'Friends', 'getFriends'>,
+                    IDArguement
+                >({ query: GET_FRIENDS_BY_ID, variables: { id } })
+                if (data) {
+                    return data.getFriends
+                }
+                return error as Error
+            })(),
+        ])
 
-    const handleFriendRequest = async (): Promise<void> => {
-        const { success, error } = await mutation<Friends, FriendRequestParams>(
-            {
-                mutation: CREATE_FRIEND_REQUEST,
-                usersId: user.id,
-                friendId: params.id,
-            }
-        )
-        if (success)
-            createNotification({
-                type: 'success',
-                content: 'Friend request sent successfully',
-            })
-        else if (error)
-            error.forEach(e =>
-                createNotification({
-                    type: 'error',
-                    content: e.message,
-                })
-            )
-    }
+    return test
+}
 
-    const handleRemoveFriend = async (): Promise<void> => {
-        if (!friends) return
+const Profile = async ({
+    params,
+}: {
+    params: { id: string }
+}): Promise<ReactElement> => {
+    const [profile, friends] = await getData(params.id)
 
-        const id = friends.find(friend => friend.id === user.id)?.rowId
-
-        if (!id) return
-
-        const { success, error } = await mutation<IDArguement, IDArguement>({
-            mutation: DELETE_FRIEND,
-            id,
-        })
-        if (error)
-            error.forEach(e =>
-                createNotification({
-                    type: 'error',
-                    content: e.message,
-                })
-            )
-        else if (success) {
-            createNotification({
-                type: 'success',
-                content: 'Friend removed successfully',
-            })
-            setFriends([...friends].filter(friend => friend.rowId !== id))
-        }
-    }
+    // errors screen to be created later.
+    if (isError(profile)) return <div />
+    if (isError(friends)) return <div />
 
     return (
         <div className={styles.container}>
@@ -140,39 +79,11 @@ const Profile: FC<{ params: { id: string } }> = ({ params }) => {
                     <Text>{profile?.course}</Text>
                 </div>
                 <div className={styles.buttonContainer}>
-                    {params.id !== user.id ? (
-                        friends?.some(
-                            friend =>
-                                friend.id === user.id &&
-                                friend.username === user.username
-                        ) ? (
-                            <>
-                                <Link
-                                    href={`/a/messages/${params.id}`}
-                                    className={styles.link}
-                                >
-                                    Send message
-                                </Link>
-                                <Button
-                                    onClick={handleRemoveFriend}
-                                    inactive={mutationLoading}
-                                >
-                                    Remove Friend
-                                </Button>
-                            </>
-                        ) : (
-                            <Button
-                                filled
-                                onClick={handleFriendRequest}
-                                inactive={!friends || queryLoading}
-                            >
-                                Send Friend Request
-                            </Button>
-                        )
-                    ) : null}
+                    <ButtonContainer profileId={params.id} friends={friends} />
                 </div>
             </div>
-            <div className={styles.item}>
+            <div className={styles.item} style={{ flexDirection: 'column' }}>
+                <Text bold>Bio</Text>
                 <Text>{profile?.bio}</Text>
             </div>
             <div className={styles.item}>

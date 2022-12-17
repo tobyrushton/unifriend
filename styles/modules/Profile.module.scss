@@ -74,13 +74,18 @@
 }
 
 .link {
-    @include mixins.fontClass();
     text-decoration: none;
     background-color: variables.$primary_color;
     color: variables.$secondary_color;
     border: 1px solid variables.$accent_color;
     border-radius: 50px;
-    width: 18rem;
     padding: .5rem 1rem .5rem 1rem;
     text-align: center;
+    @include mixins.fontClass();
+}
+
+@media screen and (max-width: 1200px) {
+    .friend {
+        width: calc( 33.33% - 2rem - 2px);
+    }
 }

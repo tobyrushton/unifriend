@@ -13,3 +13,11 @@ export const isSignUpState = (
     }
     return false
 }
+
+export const isError = (
+    toBeDetermind: object | Error
+): toBeDetermind is Error => {
+    if (toBeDetermind)
+        if ((toBeDetermind as Error).message !== undefined) return true
+    return false
+}
