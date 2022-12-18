@@ -52,3 +52,8 @@ export type UserFromFriend = {
     username: string
     rowId: string
 }
+
+export type UserFromConversation = {
+    id: string
+    username: string
+}

@@ -11,6 +11,8 @@ type StyleProperties = {
     marginRight?: string
     margin?: string
     color?: string
+    width?: string
+    height?: string
 }
 
 export interface LogoProps {

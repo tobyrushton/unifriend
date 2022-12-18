@@ -1,3 +1,5 @@
+import { UserFromConversation } from './User'
+
 export interface Message {
     message: string
     senderID: string
@@ -12,4 +14,11 @@ export interface MessageWithId extends Message {
 
 export type MessageId = {
     id: string
+}
+
+export type Conversation = {
+    id: string
+    user: UserFromConversation
+    lastMessage: Date
+    unreadMessages: number
 }

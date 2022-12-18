@@ -24,3 +24,8 @@
     font-size: $fontSize;
     color: variables.$text_color;
 }
+
+@mixin link($fontWeight: 100, $fontSize: 1.5rem) {
+    @include fontClass($fontWeight, $fontSize);
+    text-decoration: none;
+}
