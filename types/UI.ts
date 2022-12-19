@@ -1,4 +1,5 @@
 import { RefObject } from 'react'
+import { DocumentNode } from 'graphql'
 import { ChildrenProps, NotificationInterface } from './providers'
 import { Color } from './colors'
 
@@ -92,3 +93,10 @@ export interface ToggleProps {
     style?: StyleProperties
     value?: boolean
 }
+
+export type MutationButtonProps<_Return, Params> = ChildrenProps &
+    ButtonProps & {
+        args: Params
+        mutation: DocumentNode
+        successMessage: string
+    }
