@@ -18,6 +18,11 @@ export type ChildrenProps = {
     children: React.ReactNode
 }
 
+export type UserProviderProps = ChildrenProps & {
+    fetchedUser?: UserObjectWithID
+    fetchedSettings?: Settings
+}
+
 export interface LoadingContextInterface {
     setLoading: (change: boolean) => void
 }

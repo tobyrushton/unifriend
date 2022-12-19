@@ -5,13 +5,13 @@ import { useRouter, usePathname } from 'next/navigation'
 import Cookies from 'js-cookie'
 import {
     UserContextInterface,
-    ChildrenProps,
     UserObjectWithID,
     EmailQuery,
     Settings,
     UpdateSettingsArgs,
     UserObjectWithSettings,
     QueryReturn,
+    UserProviderProps,
 } from '../../types'
 import { GET_USER_BY_EMAIL } from '../../graphql/queries'
 import { useQuery } from '../../hooks/graphql/useQuery'
@@ -39,10 +39,18 @@ const defaultSettings: Settings = {
     darkMode: (Cookies.get('theme')?.valueOf() ?? 'light') === 'dark',
 }
 
-export const UserProvider: FC<ChildrenProps> = ({ children }) => {
+export const UserProvider: FC<UserProviderProps> = ({
+    children,
+    fetchedUser,
+    fetchedSettings,
+}) => {
     // creates state to store the users details
-    const [user, setUser] = useState<UserObjectWithID>(defaultUser)
-    const [settings, setSettings] = useState<Settings>(defaultSettings)
+    const [user, setUser] = useState<UserObjectWithID>(
+        fetchedUser ?? defaultUser
+    )
+    const [settings, setSettings] = useState<Settings>(
+        fetchedSettings ?? defaultSettings
+    )
 
     // all hooks used
     const {

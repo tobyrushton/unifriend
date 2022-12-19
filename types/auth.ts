@@ -1,3 +1,7 @@
+import { Session } from '@supabase/supabase-js'
+import { Settings } from './settings'
+import { UserObjectWithID } from './User'
+
 type authType = 'log in' | 'sign up'
 
 export interface AuthState {
@@ -32,3 +36,9 @@ export type ErrorTextState =
           active: true
           content: string
       }
+
+export type GetSessionReturn = {
+    session: Session
+    user: UserObjectWithID
+    settings: Settings
+}
