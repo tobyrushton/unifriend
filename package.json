@@ -17,7 +17,7 @@
     "@fontsource/orbitron": "^4.5.10",
     "@prisma/client": "^4.7.1",
     "@supabase/auth-helpers-nextjs": "^0.5.2",
-    "@supabase/supabase-js": "^2.2.0",
+    "@supabase/supabase-js": "^2.2.1",
     "apollo-server-micro": "^3.11.1",
     "encoding": "^0.1.13",
     "graphql": "^16.6.0",
