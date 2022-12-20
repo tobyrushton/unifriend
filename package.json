@@ -13,7 +13,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.2",
+    "@apollo/client": "^3.7.3",
     "@fontsource/orbitron": "^4.5.10",
     "@prisma/client": "^4.7.1",
     "@supabase/auth-helpers-nextjs": "^0.5.2",
