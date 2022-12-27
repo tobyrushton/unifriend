@@ -228,6 +228,52 @@ export const GetUserFromAuth = extendType({
     },
 })
 
+// fetches user by ID
+export const UserQueryByEmail = extendType({
+    type: 'Query', // query refers to returning data from the database
+    definition(t) {
+        t.nullable.field('UserQueryByEmail', {
+            type: 'User', // uses type user defined earlier.
+            args: {
+                // all arguements that can be taken by the Query.
+                email: nonNull(stringArg()),
+                firstName: booleanArg(),
+                lastName: booleanArg(),
+                university: booleanArg(),
+                course: booleanArg(),
+                birthday: booleanArg(),
+                bio: booleanArg(),
+                username: booleanArg(),
+                settings: booleanArg(),
+                id: booleanArg(),
+                all: booleanArg(),
+            },
+            resolve: (_parent, args, ctx) => {
+                return ctx.prisma.users.findUnique({
+                    where: {
+                        // finds the unique user row in the databse with corresponding id
+                        email: args.email,
+                    },
+                    select: args.all
+                        ? undefined
+                        : {
+                              // selects which columns from that databse to return
+                              firstName: args.firstName ?? false,
+                              lastName: args.lastName ?? false,
+                              university: args.university ?? false,
+                              birthday: args.birthday ?? false,
+                              course: args.course ?? false,
+                              bio: args.bio ?? false,
+                              username: args.username ?? false,
+                              settings: args.settings ?? false,
+                              id: args.id ?? false,
+                          },
+                }) as unknown as UserObjectWithSettings
+            },
+        })
+    },
+})
+
 export const Email = objectType({
     name: 'Email',
     definition(t) {

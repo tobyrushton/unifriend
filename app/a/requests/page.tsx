@@ -1,153 +1,75 @@
-'use client'
+import 'server-only'
 
-import { FC, useState, useEffect } from 'react'
-import {
-    useNotifications,
-    useQuery,
-    useMutation,
-    useLoadingScreen,
-    useUser,
-} from '../../../hooks'
+import { ReactElement } from 'react'
 import {
     UserFromFriend,
     QueryReturn,
     IDArguement,
-    FriendRequestParams,
+    EmailQuery,
+    Join,
+    UserByEmailOptions,
+    UserFromFriendQuery,
 } from '../../../types'
 import {
     GET_FRIEND_REQUESTS_BY_ID,
-    DELETE_FRIEND_REQUEST,
-    CREATE_FRIEND,
+    GET_USER_BY_EMAIL_OPTIONAL,
 } from '../../../graphql/queries'
-import { Text, ProfilePicture } from '../../../components'
-import styles from '../../../styles/modules/Requests.module.scss'
+import { isError } from '../../../lib/utils'
+import { initiateApollo } from '../../../lib/apollo'
+import { getServerSideSupabase } from '../../../lib/supabase'
+import { DisplayRequests } from './DisplayRequests'
 
-const Requests: FC = () => {
-    const [requests, setRequests] = useState<UserFromFriend[]>()
+const getData = async (): Promise<
+    [IDArguement | Error, UserFromFriend[] | Error]
+> => {
+    const supabase = getServerSideSupabase()
 
-    const { user } = useUser()
-    const { loading: queryLoading, query } = useQuery()
-    const { loading: mutationLoading, mutation } = useMutation()
-    const { setLoading } = useLoadingScreen()
-    const { createNotification } = useNotifications()
+    const {
+        data: { session },
+    } = await supabase.auth.getSession()
 
-    useEffect(() => {
-        setLoading(queryLoading || mutationLoading)
-    }, [queryLoading, mutationLoading, setLoading])
+    if (session === null) return [new Error(), new Error()]
 
-    useEffect(() => {
-        /* eslint-disable-next-line */
-        (async (): Promise<void> => {
-            const { error, data } = await query<
-                QueryReturn<UserFromFriend[], 'User', 'getFriendRequests'>,
-                IDArguement
-            >({
-                query: GET_FRIEND_REQUESTS_BY_ID,
-                id: user.id,
-            })
-            if (error)
-                createNotification({
-                    type: 'error',
-                    content: error.message,
-                })
-            else if (data) setRequests(data.getFriendRequests)
-        })()
-    }, [query, user, createNotification, setRequests])
+    const apollo = initiateApollo()
 
-    const handleDeleteRequest = async ({
-        id,
-    }: {
-        id: string
-    }): Promise<{ success: boolean }> => {
-        const { error, success } = await mutation<IDArguement, IDArguement>({
-            mutation: DELETE_FRIEND_REQUEST,
-            id,
-        })
-        if (error)
-            error.forEach(e => {
-                createNotification({
-                    type: 'error',
-                    content: e.message,
-                })
-            })
+    const {
+        data: {
+            UserQueryByEmail: { id },
+        },
+        error: userError,
+    } = await apollo.query<
+        QueryReturn<IDArguement, 'User', 'UserQueryByEmail'>,
+        Join<EmailQuery, UserByEmailOptions>
+    >({
+        query: GET_USER_BY_EMAIL_OPTIONAL,
+        variables: { email: session.user.email as string, id: true },
+    })
+    if (userError) return [userError, new Error()]
 
-        if (success)
-            setRequests(
-                [...(requests as UserFromFriend[])]?.filter(
-                    request => request.rowId !== id
-                )
-            )
+    const {
+        error,
+        data: { getFriendRequests: friends },
+    } = await apollo.query<
+        QueryReturn<UserFromFriendQuery[], 'User', 'getFriendRequests'>,
+        IDArguement
+    >({
+        query: GET_FRIEND_REQUESTS_BY_ID,
+        variables: { id },
+    })
 
-        return { success }
-    }
+    if (error) return [{ id }, error]
+    /* eslint-disable-next-line */
+    return [{ id }, friends.map(({ __typename, ...friend }) => friend)]
+}
 
-    const handleCreateFriend = async ({
-        id,
-        friendId,
-    }: {
-        id: string
-        friendId: string
-    }): Promise<void> => {
-        const { success: deleteSuccess } = await handleDeleteRequest({
-            id,
-        })
-        if (!deleteSuccess) return
-        const { error, success } = await mutation<
-            IDArguement,
-            FriendRequestParams
-        >({ mutation: CREATE_FRIEND, usersId: user.id, friendId })
-        if (error)
-            error.forEach(e => {
-                createNotification({
-                    type: 'error',
-                    content: e.message,
-                })
-            })
-        else if (success)
-            createNotification({
-                type: 'success',
-                content: 'Friend request accepted successfully',
-            })
-    }
+const Requests = async (): Promise<ReactElement> => {
+    const [user, requests] = await getData()
 
-    return (
-        <div className={styles.requestContainer}>
-            {requests?.map((request, idx) => (
-                <div
-                    className={styles.request}
-                    key={'request'.concat(idx.toString())}
-                >
-                    <ProfilePicture image={request.id} width={75} height={75} />
-                    <Text>{request.username}</Text>
-                    <div className={styles.buttons}>
-                        <Text
-                            clickable
-                            small
-                            color="success"
-                            onClick={() =>
-                                handleCreateFriend({
-                                    id: request.rowId,
-                                    friendId: request.id,
-                                })
-                            }
-                        >
-                            Accept
-                        </Text>
-                        <Text
-                            clickable
-                            small
-                            color="error"
-                            onClick={() =>
-                                handleDeleteRequest({ id: request.rowId })
-                            }
-                        >
-                            Deny
-                        </Text>
-                    </div>
-                </div>
-            ))}
-        </div>
-    )
+    // error logic here
+    if (isError(user)) return <div />
+    if (isError(requests)) return <div />
+
+    return <DisplayRequests fetchedRequests={requests} />
 }
 
 export default Requests

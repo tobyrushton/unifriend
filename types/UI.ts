@@ -94,9 +94,11 @@ export interface ToggleProps {
     value?: boolean
 }
 
-export type MutationButtonProps<_Return, Params> = ChildrenProps &
-    ButtonProps & {
-        args: Params
-        mutation: DocumentNode
-        successMessage: string
-    }
+export type MutationButtonProps<_Return, Params> = ChildrenProps & {
+    args: Params
+    mutation: DocumentNode
+    successMessage: string
+    style?: StyleProperties
+    filled?: boolean
+    inactive?: boolean
+}

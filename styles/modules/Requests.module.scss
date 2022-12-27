@@ -2,7 +2,8 @@
 
 .requestContainer {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     position: absolute;
     width: 100%;
     height: calc( 100% - 100px);

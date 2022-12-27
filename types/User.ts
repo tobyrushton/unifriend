@@ -53,7 +53,23 @@ export type UserFromFriend = {
     rowId: string
 }
 
+export type UserFromFriendQuery = UserFromFriend & {
+    __typename: 'GetFriend'
+}
+
 export type UserFromConversation = {
     id: string
     username: string
+}
+
+export type UserByEmailOptions = {
+    birthday?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    university?: boolean
+    course?: boolean
+    username?: boolean
+    bio?: boolean
+    id?: boolean
+    all?: boolean
 }
