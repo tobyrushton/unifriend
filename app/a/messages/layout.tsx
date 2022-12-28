@@ -1,40 +1,63 @@
-'use client'
+import 'server-only'
 
-import { FC, useState, useEffect } from 'react'
+import { ReactElement } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useQuery, useNotifications, useLoadingScreen } from '../../../hooks'
-import { ChildrenProps, Conversation } from '../../../types'
+import {
+    ChildrenProps,
+    QueryReturn,
+    IDArguement,
+    Join,
+    EmailQuery,
+    UserByEmailOptions,
+    ConversationReturn,
+} from '../../../types'
 import { ProfilePicture } from '../../../components'
+import { getServerSideSupabase } from '../../../lib/supabase'
+import { initiateApollo } from '../../../lib/apollo'
+import {
+    GET_USER_BY_EMAIL_OPTIONAL,
+    GET_CONVERSATION,
+} from '../../../graphql/queries'
 import styles from '../../../styles/modules/Messages.module.scss'
 
-const MessagesLayout: FC<ChildrenProps> = ({ children }) => {
-    const [conversations, setConversations] = useState<Conversation[]>(() =>
-        new Array<Conversation>(20).fill({
-            id: '1234',
-            user: {
-                id: '1234',
-                username: 'testUser',
-            },
-            lastMessage: new Date(),
-            unreadMessages: 0,
-        })
-    )
+const getData = async (): Promise<ConversationReturn[]> => {
+    const supabase = getServerSideSupabase()
+    const {
+        data: { session },
+    } = await supabase.auth.getSession()
 
-    const { loading, query } = useQuery()
-    const { createNotification } = useNotifications()
-    const { setLoading } = useLoadingScreen()
+    if (session === null) throw new Error('invalid session')
 
-    useEffect(() => {
-        setLoading(loading)
-    }, [loading, setLoading])
+    const apollo = initiateApollo()
 
-    useEffect(() => {
-        // logic to fetch conversations here.
-        // changes to db will have to be made for new 'conversations' table.
-        // sorted by date.
-        // redifine messages table to have conversationId and the user who sent it, content and time.
-    }, [query, createNotification, setConversations])
+    const {
+        data: {
+            UserQueryByEmail: { id },
+        },
+        error: userError,
+    } = await apollo.query<
+        QueryReturn<IDArguement, 'User', 'UserQueryByEmail'>,
+        Join<EmailQuery, UserByEmailOptions>
+    >({
+        query: GET_USER_BY_EMAIL_OPTIONAL,
+        variables: { email: session.user.email as string, id: true },
+    })
+
+    if (userError) throw userError
+
+    const { data } = await apollo.query<
+        QueryReturn<ConversationReturn[], 'test', 'getConversations'>,
+        IDArguement
+    >({ query: GET_CONVERSATION, variables: { id } })
+
+    return data.getConversations
+}
+
+const MessagesLayout = async ({
+    children,
+}: ChildrenProps): Promise<ReactElement> => {
+    const conversations = await getData()
 
     return (
         <>
@@ -63,16 +86,15 @@ const MessagesLayout: FC<ChildrenProps> = ({ children }) => {
                         key={'conversation'.concat(idx.toString())}
                     >
                         <ProfilePicture
-                            image={conversation.user.id}
+                            image={conversation.usersId}
                             width={75}
                             height={75}
                         />
                         <Link
-                            href={`/a/messages/${conversation.user.id}`}
+                            href={`/a/messages/${conversation.id}`}
                             className={styles.link}
                         >
-                            {' '}
-                            {conversation.user.username}{' '}
+                            {conversation.username}
                         </Link>
                     </div>
                 ))}

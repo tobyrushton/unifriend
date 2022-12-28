@@ -9,6 +9,12 @@ type Conversation {
   userTwoId: String
 }
 
+type ConversationReturn {
+  id: String
+  username: String
+  usersId: String
+}
+
 """DateTime custom scalar type."""
 scalar DateTime
 
@@ -57,7 +63,7 @@ type Query {
   CheckUsernameIsTaken(username: String!): Boolean!
   UserQueryByEmail(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: String!, firstName: Boolean, id: Boolean, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
   getAuthFromUsername(username: String!): Email!
-  getConversations(id: String!): Conversation!
+  getConversations(id: String!): [ConversationReturn]!
   getFriendRequests(friendID: String!): [GetFriend]!
   getFriends(usersId: String!): [GetFriend]!
   getUserFromAuth(email: String!): User!

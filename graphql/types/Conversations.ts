@@ -1,5 +1,5 @@
 import { objectType, nonNull, stringArg, extendType } from 'nexus'
-import { Conversation as ConversationType } from '../../types'
+import { ConversationReturn as ConversationReturnType } from '../../types'
 import { Message } from './Messages'
 
 export const Conversation = objectType({
@@ -30,19 +30,53 @@ export const CreateConversations = extendType({
     },
 })
 
+export const ConversationReturn = objectType({
+    name: 'ConversationReturn',
+    definition(t) {
+        t.string('id')
+        t.string('usersId')
+        t.string('username')
+    },
+})
+
 export const GetConversations = extendType({
     type: 'Query',
     definition(t) {
-        t.nonNull.field('getConversations', {
-            type: Conversation,
+        t.nonNull.list.field('getConversations', {
+            type: ConversationReturn,
             args: {
                 id: nonNull(stringArg()),
             },
-            resolve: (_, args, ctx) => {
-                return ctx.prisma.conversations.findUnique({
-                    where: args,
-                    select: { messages: true },
-                }) as unknown as ConversationType
+            resolve: async (_, args, ctx) => {
+                const query1: ConversationReturnType[] = (
+                    await ctx.prisma.conversations.findMany({
+                        where: { userOneId: args.id },
+                        select: {
+                            id: true,
+                            userTwo: true,
+                        },
+                    })
+                ).map(item => ({
+                    id: item.id,
+                    usersId: item.userTwo.id,
+                    username: item.userTwo.username,
+                }))
+
+                const query2: ConversationReturnType[] = (
+                    await ctx.prisma.conversations.findMany({
+                        where: { userTwoId: args.id },
+                        select: {
+                            id: true,
+                            userOne: true,
+                        },
+                    })
+                ).map(item => ({
+                    id: item.id,
+                    usersId: item.userOne.id,
+                    username: item.userOne.username,
+                }))
+
+                return query1.concat(query2)
             },
         })
     },
