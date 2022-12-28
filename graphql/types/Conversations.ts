@@ -1,5 +1,9 @@
 import { objectType, nonNull, stringArg, extendType } from 'nexus'
-import { ConversationReturn as ConversationReturnType } from '../../types'
+import {
+    ConversationFetchOne,
+    ConversationFetchTwo,
+    ConversationReturn as ConversationReturnType,
+} from '../../types'
 import { Message } from './Messages'
 
 export const Conversation = objectType({
@@ -56,7 +60,7 @@ export const GetConversations = extendType({
                             userTwo: true,
                         },
                     })
-                ).map(item => ({
+                ).map((item: ConversationFetchTwo) => ({
                     id: item.id,
                     usersId: item.userTwo.id,
                     username: item.userTwo.username,
@@ -70,7 +74,7 @@ export const GetConversations = extendType({
                             userOne: true,
                         },
                     })
-                ).map(item => ({
+                ).map((item: ConversationFetchOne) => ({
                     id: item.id,
                     usersId: item.userOne.id,
                     username: item.userOne.username,
