@@ -18,19 +18,20 @@ model Users {
   bio                                           String
   username                                      String           @unique
   email                                         String           @unique
-  FriendRequests_FriendRequests_friendIDToUsers FriendRequests[]  @relation("FriendRequests_friendIDToUsers")
+  FriendRequests_FriendRequests_friendIDToUsers FriendRequests[] @relation("FriendRequests_friendIDToUsers")
   friendRequests                                FriendRequests[]
   Friends_Friends_friendIDToUsers               Friends[]        @relation("Friends_friendIDToUsers")
   friends                                       Friends[]
-  recievedMessages                              Messages[]       @relation("recievedMessages")
   sentMessages                                  Messages[]       @relation("sentMessages")
   settings                                      Settings?        @relation("settings")
+  conversationsAsUserOne                        Conversations[]  @relation("conversations1")
+  conversationsAsUserTwo                        Conversations[]  @relation("conversations2")
 }
 
 model Friends {
   id                            String   @id @unique @default(uuid())
   friendedAt                    DateTime @default(now())
-  friendID                      String  
+  friendID                      String
   usersId                       String?
   Users_Friends_friendIDToUsers Users    @relation("Friends_friendIDToUsers", fields: [friendID], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Users                         Users?   @relation(fields: [usersId], references: [id])
@@ -39,7 +40,7 @@ model Friends {
 model FriendRequests {
   id                                   String   @id @unique @default(uuid())
   createdAt                            DateTime @default(now())
-  friendID                             String   
+  friendID                             String
   status                               Boolean  @default(false)
   usersId                              String?
   Users_FriendRequests_friendIDToUsers Users    @relation("FriendRequests_friendIDToUsers", fields: [friendID], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -47,14 +48,14 @@ model FriendRequests {
 }
 
 model Messages {
-  id          String   @id @unique @default(uuid())
-  sentAt      DateTime @default(now())
-  seen        Boolean  @default(false)
-  senderID    String
-  recipientID String
-  message     String
-  recipient   Users    @relation("recievedMessages", fields: [recipientID], references: [id])
-  sender      Users    @relation("sentMessages", fields: [senderID], references: [id])
+  id             String        @id @unique @default(uuid())
+  sentAt         DateTime      @default(now())
+  seen           Boolean       @default(false)
+  conversationId String
+  senderId       String
+  message        String
+  sender         Users         @relation("sentMessages", fields: [senderId], references: [id])
+  conversation   Conversations @relation("messages", fields: [conversationId], references: [id])
 }
 
 model Settings {
@@ -63,4 +64,13 @@ model Settings {
   universityPreference String  @default("OWN")
   usersId              String  @unique
   User                 Users   @relation("settings", fields: [usersId], references: [id])
+}
+
+model Conversations {
+  id        String     @id @unique @default(uuid())
+  userOneId String
+  userOne   Users      @relation("conversations1", fields: [userOneId], references: [id])
+  userTwoId String
+  userTwo   Users      @relation("conversations2", fields: [userTwoId], references: [id])
+  messages  Messages[] @relation("messages")
 }

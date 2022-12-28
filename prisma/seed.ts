@@ -36,6 +36,36 @@ async function main(): Promise<void> {
             },
         },
     })
+    await prisma.users.create({
+        data: {
+            firstName: 'Toby',
+            lastName: 'Rushton',
+            university: 'UCL',
+            course: 'Computer Science',
+            username: 'toby',
+            birthday: '2005-06-12',
+            bio: '',
+            email: 'txbyplayz@gmail.com',
+            settings: {
+                create: {},
+            },
+        },
+    })
+    await prisma.users.create({
+        data: {
+            firstName: 'Olivia',
+            lastName: 'Rushton',
+            university: 'Sheffield University',
+            course: 'Financial Mathematics',
+            username: 'orushton1',
+            birthday: '2002-07-27',
+            bio: '',
+            email: 'Orushton1@sheffield.ac.uk',
+            settings: {
+                create: {},
+            },
+        },
+    })
 }
 
 main()

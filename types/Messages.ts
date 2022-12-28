@@ -1,9 +1,7 @@
-import { UserFromConversation } from './User'
-
 export interface Message {
     message: string
-    senderID: string
-    recipientID: string
+    senderId: string
+    conversationId: string
     seen: boolean
     sentAt: any[] // temp data type
 }
@@ -14,11 +12,4 @@ export interface MessageWithId extends Message {
 
 export type MessageId = {
     id: string
-}
-
-export type Conversation = {
-    id: string
-    user: UserFromConversation
-    lastMessage: Date
-    unreadMessages: number
 }

@@ -7,7 +7,7 @@ export const Message = objectType({
     name: 'Message',
     definition(t) {
         t.string('id')
-        t.string('senderID')
+        t.string('conversationId')
         t.string('recipientID')
         t.boolean('seen')
         t.list.field('sentAt', {
@@ -26,8 +26,8 @@ export const CreateMessage = extendType({
             args: {
                 // takes the message content, sender and recipients id as arguements
                 message: nonNull(stringArg()),
-                senderID: nonNull(stringArg()),
-                recipientID: nonNull(stringArg()),
+                senderId: nonNull(stringArg()),
+                conversationId: nonNull(stringArg()),
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.messages.create({
