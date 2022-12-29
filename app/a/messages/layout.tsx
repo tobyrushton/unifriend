@@ -60,8 +60,8 @@ const MessagesLayout = async ({
     const conversations = await getData()
 
     return (
-        <>
-            <div className={`${styles.marginTop} ${styles.sidebar}`}>
+        <div className={styles.marginTop}>
+            <div className={`${styles.sidebar}`}>
                 <div className={styles.sidebarItem}>
                     <div className={styles.input}>
                         <Image
@@ -99,10 +99,8 @@ const MessagesLayout = async ({
                     </div>
                 ))}
             </div>
-            <div className={`${styles.marginTop} ${styles.messagesContainer}`}>
-                {children}
-            </div>
-        </>
+            <div className={`${styles.messagesContainer}`}>{children}</div>
+        </div>
     )
 }
 

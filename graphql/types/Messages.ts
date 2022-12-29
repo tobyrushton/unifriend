@@ -1,4 +1,5 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
+import { MaybePromise } from 'nexus/dist/core'
 import { MessageId, MessageWithId } from '../../types'
 import { DateTime } from '../scalars/DateTime'
 
@@ -8,9 +9,9 @@ export const Message = objectType({
     definition(t) {
         t.string('id')
         t.string('conversationId')
-        t.string('recipientID')
+        t.string('senderId')
         t.boolean('seen')
-        t.list.field('sentAt', {
+        t.field('sentAt', {
             type: DateTime, // uses the scalar DateTime as a type.
         })
         t.string('message')
@@ -97,20 +98,50 @@ export const DeleteMessage = extendType({
     },
 })
 
-export const GetMessages = extendType({
-    type: 'Subscription',
+export const GetInitialMessages = extendType({
+    type: 'Query',
     definition(t) {
         t.nonNull.list.field('GetMessages', {
             type: Message,
             args: {
                 id: nonNull(stringArg()),
             },
-            onConnect: () => {
-                console.log('test')
+            resolve: async (_, args, ctx) => {
+                // console.log(ctx.prisma)
+                const res = await ctx.prisma.messages.findMany({
+                    where: {
+                        conversationId: args.id,
+                    },
+                    take: 20, // gets initial 20 messages
+                })
+
+                return res as MessageWithId[]
+            },
+        })
+    },
+})
+
+export const GetMessagesSubscription = extendType({
+    type: 'Subscription',
+    definition(t) {
+        t.nonNull.list.field('GetMessageUpdates', {
+            type: Message,
+            args: {
+                id: nonNull(stringArg()),
             },
             subscribe: (_, _args, ctx) =>
                 ctx.pubsub.asyncIterator(['MESSAGE_SENT', 'MESSAGE_DELETED']),
-            resolve: payload => payload,
+            resolve: payload =>
+                payload as MaybePromise<
+                    ({
+                        conversationId?: string | null | undefined
+                        id?: string | null | undefined
+                        message?: string | null | undefined
+                        recipientID?: string | null | undefined
+                        seen?: boolean | null | undefined
+                        sentAt?: any
+                    } | null)[]
+                >,
         })
     },
 })

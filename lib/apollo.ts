@@ -2,11 +2,11 @@ import {
     ApolloClient,
     InMemoryCache,
     createHttpLink,
-    split,
+    // split,
 } from '@apollo/client'
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
-import { getMainDefinition } from '@apollo/client/utilities'
-import { createClient } from 'graphql-ws'
+// import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+// import { getMainDefinition } from '@apollo/client/utilities'
+// import { createClient } from 'graphql-ws'
 
 const httpLink = createHttpLink({
     uri:
@@ -15,25 +15,25 @@ const httpLink = createHttpLink({
             : 'http://localhost:3000/api/graphql',
 })
 
-const wsLink = new GraphQLWsLink(
-    createClient({ url: 'ws://localhost:3000/api/graphql' })
-)
+// const wsLink = new GraphQLWsLink(
+//     createClient({ url: 'ws://localhost:3000/api/graphql' })
+// )
 
-const splitLink = split(
-    ({ query }) => {
-        const definition = getMainDefinition(query)
-        return (
-            definition.kind === 'OperationDefinition' &&
-            definition.operation === 'subscription'
-        )
-    },
-    wsLink,
-    httpLink
-)
+// const splitLink = split(
+//     ({ query }) => {
+//         const definition = getMainDefinition(query)
+//         return (
+//             definition.kind === 'OperationDefinition' &&
+//             definition.operation === 'subscription'
+//         )
+//     },
+//     wsLink,
+//     httpLink
+// )
 
 export const initiateApollo = (): ApolloClient<object> => {
     return new ApolloClient({
-        link: splitLink,
+        link: httpLink,
         cache: new InMemoryCache(),
         ssrMode: typeof window === 'undefined',
     })

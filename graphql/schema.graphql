@@ -39,9 +39,9 @@ type Message {
   conversationId: String
   id: String
   message: String
-  recipientID: String
   seen: Boolean
-  sentAt: [DateTime]
+  senderId: String
+  sentAt: DateTime
 }
 
 type Mutation {
@@ -61,6 +61,7 @@ type Mutation {
 
 type Query {
   CheckUsernameIsTaken(username: String!): Boolean!
+  GetMessages(id: String!): [Message]!
   UserQueryByEmail(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: String!, firstName: Boolean, id: Boolean, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
   getAuthFromUsername(username: String!): Email!
   getConversations(id: String!): [ConversationReturn]!
@@ -79,7 +80,7 @@ type Settings {
 }
 
 type Subscription {
-  GetMessages(id: String!): [Message]!
+  GetMessageUpdates(id: String!): [Message]!
 }
 
 type User {

@@ -84,6 +84,13 @@
     border-width: 2px;
 }
 
+.messageContainer {
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+    height: 35rem;
+}
+
 .header {
     display: flex;
     align-items: center;
@@ -91,6 +98,7 @@
     gap: 3rem;
     padding: 1rem 0rem;
     box-shadow: (0px 4px 4px rgba(0, 0, 0, 0.25));
+    background-color: variables.$secondary_color;
 }
 
 .messageBar {
@@ -103,6 +111,7 @@
     border-width: 1px;
     bottom: 0;
     position: absolute;
+    background-color: variables.$secondary_color;
     width: calc(100% - 4rem);
 
     input {
