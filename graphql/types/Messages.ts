@@ -29,10 +29,23 @@ export const CreateMessage = extendType({
                 senderId: nonNull(stringArg()),
                 conversationId: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
-                return ctx.prisma.messages.create({
-                    data: args, // creates new row in the database.
-                }) as unknown as MessageWithId
+            resolve: async (_parent, args, ctx) => {
+                const message = await ctx.prisma.conversations.update({
+                    where: { id: args.conversationId },
+                    data: {
+                        messages: {
+                            create: {
+                                senderId: args.senderId,
+                                message: args.message,
+                            },
+                        },
+                    }, // creates new row in the database.
+                    include: { messages: true },
+                })
+                ctx.pubsub.publish('MESSAGE_SENT', {
+                    messageSent: message.messages.at(-1),
+                })
+                return message as unknown as MessageWithId
             },
         })
     },
@@ -70,65 +83,34 @@ export const DeleteMessage = extendType({
                 // takes the id of the message as a parameter
                 id: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
-                return ctx.prisma.messages.delete({
+            resolve: async (_parent, args, ctx) => {
+                const message = (await ctx.prisma.messages.delete({
                     where: { id: args.id }, // deletes row in the database
-                }) as unknown as MessageId
+                })) as unknown as MessageId
+
+                ctx.pubsub.publish('MESSAGE_DELETED', {
+                    messageDeleted: message,
+                })
+                return message
             },
         })
     },
 })
 
-// functions to be fixed during iteration 3
-
-// // gets messages by the id of the sender
-// export const GetMessageBySenderID = extendType({
-//     type: 'Subscription', // creates a realtime subscription to data in the database.
-//     definition(t) {
-//         t.nonNull.field('getMessageBySenderID', {
-//             type: Message, // users the type Message defined previously.
-//             args: {
-//                 // takes sender id as a parameter
-//                 id: nonNull(stringArg()),
-//             },
-//             subscribe: (_parent, args, ctx) => {
-//                 return ctx.prisma.$subscribe.messages({
-//                     // creates a subscription to watch for new or updated messages
-//                     mutation_in: ['CREATED', 'UPDATED'],
-//                     node: {
-//                         senderID_contains: args.id,
-//                     },
-//                 })
-//             }, // returns the messages
-//             resolve: payload => {
-//                 return payload
-//             },
-//         })
-//     },
-// })
-
-// // gets messages by the id of the recipient
-// export const GetMessagesByRecipientID = extendType({
-//     type: 'Subscription', // creates a realtime subscription to data in the database.
-//     definition(t) {
-//         t.nonNull.field('getMessagesByRecipientID', {
-//             type: Message, // users the type Message defined previously.
-//             args: {
-//                 // takes recipient id as an arguement
-//                 id: nonNull(stringArg()),
-//             },
-//             subscribe: (_parent, args, ctx) => {
-//                 return ctx.prisma.$subscribe.messages({
-//                     // creates a subscription to watch for new or updated messages
-//                     mutation_in: ['CREATED', 'UPDATED'],
-//                     node: {
-//                         recipientID_contains: args.id,
-//                     },
-//                 })
-//             }, // returns the messages
-//             resolve: payload => {
-//                 return payload
-//             },
-//         })
-//     },
-// })
+export const GetMessages = extendType({
+    type: 'Subscription',
+    definition(t) {
+        t.nonNull.list.field('GetMessages', {
+            type: Message,
+            args: {
+                id: nonNull(stringArg()),
+            },
+            onConnect: () => {
+                console.log('test')
+            },
+            subscribe: (_, _args, ctx) =>
+                ctx.pubsub.asyncIterator(['MESSAGE_SENT', 'MESSAGE_DELETED']),
+            resolve: payload => payload,
+        })
+    },
+})

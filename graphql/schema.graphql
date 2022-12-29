@@ -78,6 +78,10 @@ type Settings {
   usersId: String
 }
 
+type Subscription {
+  GetMessages(id: String!): [Message]!
+}
+
 type User {
   bio: String
   birthday: String

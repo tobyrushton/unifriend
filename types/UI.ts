@@ -102,3 +102,7 @@ export type MutationButtonProps<_Return, Params> = ChildrenProps & {
     filled?: boolean
     inactive?: boolean
 }
+
+export type MessageProps = ChildrenProps & {
+    sent?: boolean // will default as recieved message
+}
