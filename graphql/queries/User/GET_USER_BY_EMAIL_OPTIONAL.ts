@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-micro'
+import { gql } from '@apollo/client'
 
 export const GET_USER_BY_EMAIL_OPTIONAL = gql`
     query UserQueryByEmail(
