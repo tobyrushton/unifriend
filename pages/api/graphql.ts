@@ -1,68 +1,31 @@
-import { ApolloServer } from '@apollo/server'
-// import Cors from 'micro-cors'
-// import { createServer } from 'http'
-// import { WebSocketServer } from 'ws'
-// import { useServer } from 'graphql-ws/lib/use/ws'
-import { startServerAndCreateNextHandler } from '@as-integrations/next'
-// import { NextApiRequest, NextApiResponse } from 'next'
+import Cors from 'micro-cors'
+import { createYoga } from 'graphql-yoga'
 import { schema } from '../../graphql/schema'
-// import { resolvers } from '../../graphql/resolvers'
 import { createContext } from '../../graphql/context'
 
-// const cors = Cors()
+// creates instance of cors
+const cors = Cors()
 
-// create http server to handle subscriptions
-// const httpServer = createServer()
+// exports api endpoint
+export default cors(async (req, res) => {
+    // if req methods options, ends the connection
+    if (req.method === 'OPTIONS') {
+        res.end()
+        return false
+    }
 
-// creates websocket server
-// const wsServer = new WebSocketServer({
-//     server: httpServer,
-//     path: '/api/graphql',
-// })
+    console.log('running server')
 
-// Save the returned server's info so we can shutdown this server later
-/* eslint-disable-next-line */
-// const serverCleanup = useServer({ schema }, wsServer)
-
-// creates a new apolloServer
-const apolloServer = new ApolloServer({
-    schema,
-    // plugins: [
-    //     {
-    //         async serverWillStart() {
-    //             return {
-    //                 async drainServer() {
-    //                     await serverCleanup.dispose()
-    //                 },
-    //             }
-    //         },
-    //     },
-    // ],
+    // returns the graphql-yoga server.
+    return createYoga({
+        graphqlEndpoint: '/api/graphql',
+        schema,
+        context: createContext,
+    })(req, res)
 })
 
-// const startServer = apolloServer.start() // starts the server
-
-// export default cors(async (req, res) => {
-//     if (req.method === 'OPTIONS') {
-//         res.end()
-//         return false
-//     }
-//     // await startServer
-
-//     //creates instance and handle for the server.
-//     const serverFunc = startServerAndCreateNextHandler(apolloServer, {
-//         context: () => createContext(),
-//     })
-
-//     return serverFunc(req as NextApiRequest, res as NextApiResponse)
-// })
-
-export default startServerAndCreateNextHandler(apolloServer, {
-    context: createContext,
-})
-
-// export const config = {
-//     api: {
-//         bodyParser: false,
-//     },
-// }
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+}
