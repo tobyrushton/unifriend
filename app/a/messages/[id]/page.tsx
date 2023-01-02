@@ -1,12 +1,13 @@
 import 'server-only'
 
 import { ReactElement } from 'react'
-import { ProfilePicture, Text, Message } from '../../../../components'
+import { ProfilePicture, Text } from '../../../../components'
 import { IDArguement, MessageWithId, QueryReturn } from '../../../../types'
 import { initiateApollo } from '../../../../lib/apollo'
 import { GET_MESSAGES } from '../../../../graphql/queries'
 import { isError } from '../../../../lib/utils'
 import { MessageInput } from './input'
+import { Messages } from './messages'
 import styles from '../../../../styles/modules/Messages.module.scss'
 
 const getData = async (id: string): Promise<MessageWithId[] | Error> => {
@@ -35,16 +36,7 @@ const Page = async ({
                 <ProfilePicture image="" width={100} height={100} />
                 <Text header> users name </Text>
             </div>
-            <div className={styles.messageContainer}>
-                {messages.map((message, idx) => (
-                    <Message
-                        recieved={idx % 2 === 0}
-                        key={'message'.concat(idx.toString())}
-                    >
-                        {message.message}
-                    </Message>
-                ))}
-            </div>
+            <Messages messages={messages} />
             <MessageInput id={params.id} />
         </>
     )
