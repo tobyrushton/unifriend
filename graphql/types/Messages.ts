@@ -106,16 +106,13 @@ export const GetInitialMessages = extendType({
             args: {
                 id: nonNull(stringArg()),
             },
-            resolve: async (_, args, ctx) => {
-                // console.log(ctx.prisma)
-                const res = await ctx.prisma.messages.findMany({
+            resolve: (_, args, ctx) => {
+                return ctx.prisma.messages.findMany({
                     where: {
                         conversationId: args.id,
                     },
                     take: 20, // gets initial 20 messages
                 })
-
-                return res as MessageWithId[]
             },
         })
     },

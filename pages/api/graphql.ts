@@ -1,5 +1,6 @@
 import Cors from 'micro-cors'
 import { createYoga } from 'graphql-yoga'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { schema } from '../../graphql/schema'
 import { createContext } from '../../graphql/context'
 
@@ -14,10 +15,11 @@ export default cors(async (req, res) => {
         return false
     }
 
-    console.log('running server')
-
     // returns the graphql-yoga server.
-    return createYoga({
+    return createYoga<{
+        req: NextApiRequest
+        res: NextApiResponse
+    }>({
         graphqlEndpoint: '/api/graphql',
         schema,
         context: createContext,
