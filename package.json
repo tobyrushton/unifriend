@@ -21,7 +21,7 @@
     "@supabase/supabase-js": "^2.2.3",
     "encoding": "^0.1.13",
     "graphql": "^16.6.0",
-    "graphql-yoga": "^3.1.2",
+    "graphql-yoga": "^3.2.1",
     "js-cookie": "^3.0.1",
     "micro": "^9.4.1",
     "micro-cors": "^0.1.1",
