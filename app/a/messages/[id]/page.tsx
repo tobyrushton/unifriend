@@ -1,7 +1,6 @@
 import 'server-only'
 
 import { ReactElement } from 'react'
-import Image from 'next/image'
 import { ProfilePicture, Text, Message } from '../../../../components'
 import { IDArguement, MessageWithId, QueryReturn } from '../../../../types'
 import { initiateApollo } from '../../../../lib/apollo'
@@ -46,15 +45,7 @@ const Page = async ({
                     </Message>
                 ))}
             </div>
-            <div className={styles.messageBar}>
-                <MessageInput />
-                <Image
-                    src="/send-arrow.png"
-                    alt="send icon"
-                    width={50}
-                    height={50}
-                />
-            </div>
+            <MessageInput id={params.id} />
         </>
     )
 }

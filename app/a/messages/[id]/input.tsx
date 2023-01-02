@@ -1,10 +1,51 @@
 'use client'
 
-import { FC } from 'react'
+import { FC, useState } from 'react'
+import Image from 'next/image'
 import { Input } from '../../../../components'
+import { useMutation, useNotifications, useUser } from '../../../../hooks'
+import { CREATE_MESSAGE } from '../../../../graphql/queries'
+import { MessageWithId, SendMessageArgs } from '../../../../types'
+import styles from '../../../../styles/modules/Messages.module.scss'
 
-export const MessageInput: FC = () => {
+export const MessageInput: FC<{ id: string }> = ({ id }) => {
+    const [message, setMessage] = useState<string>()
+    const { mutation } = useMutation()
+    const { createNotification } = useNotifications()
+    const { user } = useUser()
+
+    const handleSendMessage = async (): Promise<void> => {
+        if (!message) return
+
+        const { error } = await mutation<MessageWithId, SendMessageArgs>({
+            mutation: CREATE_MESSAGE,
+            id,
+            senderId: user.id,
+            message,
+        })
+
+        if (error)
+            error.forEach(e =>
+                createNotification({ type: 'error', content: e.message })
+            )
+        setMessage('')
+    }
+
     return (
-        <Input placeholder="send new message" type="text" setValue={() => ''} />
+        <div className={styles.messageBar}>
+            <Input
+                placeholder="send new message"
+                type="text"
+                setValue={setMessage}
+                value={message}
+            />
+            <Image
+                src="/send-arrow.png"
+                alt="send icon"
+                width={50}
+                height={50}
+                onClick={handleSendMessage}
+            />
+        </div>
     )
 }

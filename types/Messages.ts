@@ -13,3 +13,9 @@ export interface MessageWithId extends Message {
 export type MessageId = {
     id: string
 }
+
+export type SendMessageArgs = {
+    id: string
+    senderId: string
+    message: string
+}
