@@ -17,6 +17,7 @@ const getData = async (id: string): Promise<MessageWithId[] | Error> => {
         QueryReturn<MessageWithId[], 'Message', 'GetMessages'>,
         IDArguement
     >({ query: GET_MESSAGES, variables: { id } })
+
     if (error) return error
     return data.GetMessages
 }

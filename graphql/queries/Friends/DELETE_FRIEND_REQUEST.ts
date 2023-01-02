@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-micro'
+import { gql } from '@apollo/client'
 
 export const DELETE_FRIEND_REQUEST = gql`
     mutation Mutation($id: String!) {

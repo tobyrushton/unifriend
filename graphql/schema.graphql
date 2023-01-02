@@ -80,7 +80,7 @@ type Settings {
 }
 
 type Subscription {
-  GetMessageUpdates(id: String!): [Message]!
+  GetMessageUpdates(id: String!): Message!
 }
 
 type User {
