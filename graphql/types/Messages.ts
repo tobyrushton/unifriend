@@ -1,5 +1,4 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
-import { MaybePromise } from 'nexus/dist/core'
 import { MessageId, MessageWithId } from '../../types'
 import { DateTime } from '../scalars/DateTime'
 
@@ -31,7 +30,7 @@ export const CreateMessage = extendType({
                 conversationId: nonNull(stringArg()),
             },
             resolve: async (_parent, args, ctx) => {
-                const message = await ctx.prisma.conversations.update({
+                const messages = await ctx.prisma.conversations.update({
                     where: { id: args.conversationId },
                     data: {
                         messages: {
@@ -43,10 +42,14 @@ export const CreateMessage = extendType({
                     }, // creates new row in the database.
                     include: { messages: true },
                 })
-                ctx.pubsub.publish('MESSAGE_SENT', {
-                    messageSent: message.messages.at(-1),
-                })
-                return message as unknown as MessageWithId
+
+                const message: MessageWithId = messages.messages.at(
+                    -1
+                ) as MessageWithId
+
+                ctx.pubsub.publish('newMessage', args.conversationId, message)
+
+                return message
             },
         })
     },
@@ -89,9 +92,6 @@ export const DeleteMessage = extendType({
                     where: { id: args.id }, // deletes row in the database
                 })) as unknown as MessageId
 
-                ctx.pubsub.publish('MESSAGE_DELETED', {
-                    messageDeleted: message,
-                })
                 return message
             },
         })
@@ -121,24 +121,14 @@ export const GetInitialMessages = extendType({
 export const GetMessagesSubscription = extendType({
     type: 'Subscription',
     definition(t) {
-        t.nonNull.list.field('GetMessageUpdates', {
+        t.nonNull.field('GetMessageUpdates', {
             type: Message,
             args: {
                 id: nonNull(stringArg()),
             },
-            subscribe: (_, _args, ctx) =>
-                ctx.pubsub.asyncIterator(['MESSAGE_SENT', 'MESSAGE_DELETED']),
-            resolve: payload =>
-                payload as MaybePromise<
-                    ({
-                        conversationId?: string | null | undefined
-                        id?: string | null | undefined
-                        message?: string | null | undefined
-                        recipientID?: string | null | undefined
-                        seen?: boolean | null | undefined
-                        sentAt?: any
-                    } | null)[]
-                >,
+            subscribe: (_, args, ctx) =>
+                ctx.pubsub.subscribe('newMessage', args.id),
+            resolve: payload => payload,
         })
     },
 })
