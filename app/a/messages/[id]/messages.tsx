@@ -1,13 +1,13 @@
 'use client'
 
 import { FC } from 'react'
-import { MessageWithId } from '../../../../types'
 import { Message } from '../../../../components'
-import { useUser } from '../../../../hooks'
+import { useUser, useMessages } from '../../../../hooks'
 import styles from '../../../../styles/modules/Messages.module.scss'
 
-export const Messages: FC<{ messages: MessageWithId[] }> = ({ messages }) => {
+export const Messages: FC = () => {
     const { user } = useUser()
+    const { messages } = useMessages()
 
     return (
         <div className={styles.messageContainer}>

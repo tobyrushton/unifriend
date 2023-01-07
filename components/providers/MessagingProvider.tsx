@@ -7,7 +7,9 @@ import {
     MessagingProviderProps,
 } from '../../types'
 
-const MessagingContext = createContext<MessageContextInterface | null>(null)
+export const MessagingContext = createContext<MessageContextInterface | null>(
+    null
+)
 
 export const MessagingProvider: FC<MessagingProviderProps> = ({
     children,

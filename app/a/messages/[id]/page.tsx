@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { ReactElement } from 'react'
-import { ProfilePicture, Text } from '../../../../components'
+import { ProfilePicture, Text, MessagingProvider } from '../../../../components'
 import { IDArguement, MessageWithId, QueryReturn } from '../../../../types'
 import { initiateApollo } from '../../../../lib/apollo'
 import { GET_MESSAGES } from '../../../../graphql/queries'
@@ -36,8 +36,14 @@ const Page = async ({
                 <ProfilePicture image="" width={100} height={100} />
                 <Text header> users name </Text>
             </div>
-            <Messages messages={messages} />
-            <MessageInput id={params.id} />
+            <MessagingProvider
+                fetchedMessages={messages}
+                conversationId={params.id}
+                userId=""
+            >
+                <Messages />
+                <MessageInput />
+            </MessagingProvider>
         </>
     )
 }
