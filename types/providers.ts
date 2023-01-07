@@ -2,6 +2,7 @@ import React from 'react'
 import { Settings, UniversityPreference } from './settings'
 import { Color } from './colors'
 import { UserObjectWithID } from './User'
+import { MessageWithId } from './Messages'
 
 export interface UpdateSettingsArgs {
     darkMode?: boolean
@@ -42,4 +43,16 @@ export interface NotificationContextInterface {
 
 export interface ThemeContextInterface {
     theme: Record<Color, string>
+}
+
+export interface MessageContextInterface {
+    messages: MessageWithId[]
+    conversationId: string
+    addMessage: (newMessage: MessageWithId) => void
+}
+
+export interface MessagingProviderProps extends ChildrenProps {
+    userId: string
+    conversationId: string
+    fetchedMessages: MessageWithId[]
 }
