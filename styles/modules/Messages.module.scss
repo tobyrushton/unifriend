@@ -86,9 +86,9 @@
 
 .messageContainer {
     display: flex;
+    flex: 1;
     flex-direction: column-reverse;
     overflow-y: auto;
-    height: 81vh
 }
 
 .header {
@@ -110,8 +110,7 @@
     border-top: solid;
     border-color: variables.$accent_color;
     border-width: 1px;
-    bottom: 0;
-    position: absolute;
+    margin-top: auto;
     background-color: variables.$secondary_color;
     width: calc(100% - 4rem);
     height: 3vh;
