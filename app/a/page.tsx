@@ -1,16 +1,10 @@
-'use client'
+import 'server-only'
 
 import { FC } from 'react'
-import { useSignOut } from '../../hooks'
-import { Button } from '../../components'
+import styles from '../../styles/modules/Home.module.scss'
 
 const A: FC = () => {
-    const { response } = useSignOut()
-    return (
-        <div>
-            <Button onClick={() => response()}>Sign Out</Button>
-        </div>
-    )
+    return <div className={styles.wrapper} />
 }
 
 export default A

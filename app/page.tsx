@@ -3,7 +3,7 @@
 import { FC, useState } from 'react'
 import { Text, Button, AuthScreen } from '../components'
 import { Logo } from '../components/ui/Logo'
-import styles from '../styles/modules/Home.module.scss'
+import styles from '../styles/modules/Landing.module.scss'
 import { AuthState } from '../types'
 
 const Home: FC = () => {
