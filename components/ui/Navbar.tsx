@@ -43,7 +43,7 @@ export const Navbar: FC = () => {
     )
 
     return (
-        <div className={styles.navbar}>
+        <nav className={styles.navbar}>
             <Link href="/a" passHref legacyBehavior>
                 {/* eslint-disable-next-line */}
                 <a style={{ textDecoration: 'none'}}>
@@ -84,6 +84,6 @@ export const Navbar: FC = () => {
             {displayDropDown ? (
                 <DropDown handleClickOutside={handleClickOutside} />
             ) : null}
-        </div>
+        </nav>
     )
 }
