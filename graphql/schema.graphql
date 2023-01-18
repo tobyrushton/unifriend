@@ -62,6 +62,7 @@ type Mutation {
 type Query {
   CheckUsernameIsTaken(username: String!): Boolean!
   GetMessages(id: String!): [Message]!
+  GetUserIdFromConversationId(conversationId: String!, email: String!): UserFromConversationReturn!
   UserQueryByEmail(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: String!, firstName: Boolean, id: Boolean, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
   getAuthFromUsername(username: String!): Email!
   getConversations(id: String!): [ConversationReturn]!
@@ -98,6 +99,12 @@ type User {
   settings: Settings
   university: String
   username: String
+}
+
+type UserFromConversationReturn {
+  firstName: String
+  id: String
+  lastName: String
 }
 
 type friendRequest {

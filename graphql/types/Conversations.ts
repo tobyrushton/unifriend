@@ -16,6 +16,15 @@ export const Conversation = objectType({
     },
 })
 
+export const UserFromConversationReturn = objectType({
+    name: 'UserFromConversationReturn',
+    definition(t) {
+        t.string('id')
+        t.string('firstName')
+        t.string('lastName')
+    },
+})
+
 export const CreateConversations = extendType({
     type: 'Mutation',
     definition(t) {
@@ -81,6 +90,49 @@ export const GetConversations = extendType({
                 }))
 
                 return query1.concat(query2)
+            },
+        })
+    },
+})
+
+export const GetUserIdFromConversationId = extendType({
+    type: 'Query',
+    definition(t) {
+        t.nonNull.field('GetUserIdFromConversationId', {
+            type: 'UserFromConversationReturn',
+            args: {
+                conversationId: nonNull(stringArg()),
+                email: nonNull(stringArg()),
+            },
+            resolve: async (_, args, ctx) => {
+                const user = await ctx.prisma.users.findUnique({
+                    where: { email: args.email },
+                    select: { id: true },
+                })
+                if (!user) throw new Error('No account exists')
+                const { id } = user
+
+                const conversation = await ctx.prisma.conversations.findUnique({
+                    where: { id: args.conversationId },
+                })
+                if (!conversation) throw new Error('No conversation exists')
+
+                const userId =
+                    conversation.userOneId === id
+                        ? conversation.userTwoId
+                        : conversation.userOneId
+
+                const foundUser = await ctx.prisma.users.findUnique({
+                    where: { id: userId },
+                    select: { firstName: true, lastName: true },
+                })
+                if (!foundUser) throw new Error('No user found')
+
+                return {
+                    id: userId,
+                    firstName: foundUser.firstName,
+                    lastName: foundUser.lastName,
+                }
             },
         })
     },

@@ -28,3 +28,14 @@ export type ConversationReturn = {
     usersId: string
     username: string
 }
+
+export type GetUserIdFromConversationArgs = {
+    conversationId: string
+    email: string
+}
+
+export type GetUserFromConversationReturn = {
+    id: string
+    firstName: string
+    lastName: string
+}
