@@ -126,3 +126,13 @@
         cursor: pointer;
     }
 }
+
+.inputForm {
+    display: flex;
+    flex: 1;
+}
+
+.inputButton {
+    background-color: transparent;
+    border-style: none;
+}

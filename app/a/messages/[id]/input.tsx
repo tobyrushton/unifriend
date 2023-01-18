@@ -39,19 +39,29 @@ export const MessageInput: FC = () => {
 
     return (
         <div className={styles.messageBar}>
-            <Input
-                placeholder="send new message"
-                type="text"
-                setValue={setMessage}
-                value={message}
-            />
-            <Image
-                src="/send-arrow.png"
-                alt="send icon"
-                width={50}
-                height={50}
-                onClick={handleSendMessage}
-            />
+            <form
+                className={styles.inputForm}
+                onSubmit={e => e.preventDefault()}
+            >
+                <Input
+                    placeholder="send new message"
+                    type="text"
+                    setValue={setMessage}
+                    value={message}
+                />
+                <button
+                    className={styles.inputButton}
+                    onClick={handleSendMessage}
+                    type="submit"
+                >
+                    <Image
+                        src="/send-arrow.png"
+                        alt="send icon"
+                        width={50}
+                        height={50}
+                    />
+                </button>
+            </form>
         </div>
     )
 }
