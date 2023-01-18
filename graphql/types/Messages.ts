@@ -111,6 +111,7 @@ export const GetInitialMessages = extendType({
                     where: {
                         conversationId: args.id,
                     },
+                    orderBy: { sentAt: 'desc' },
                     take: 20, // gets initial 20 messages
                 })
             },
@@ -128,7 +129,9 @@ export const GetMessagesSubscription = extendType({
             },
             subscribe: (_, args, ctx) =>
                 ctx.pubsub.subscribe('newMessage', args.id),
-            resolve: payload => payload,
+            resolve: payload => {
+                return payload
+            },
         })
     },
 })

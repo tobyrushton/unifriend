@@ -14,7 +14,7 @@ import { MessageWithId, SendMessageArgs } from '../../../../types'
 import styles from '../../../../styles/modules/Messages.module.scss'
 
 export const MessageInput: FC = () => {
-    const [message, setMessage] = useState<string>()
+    const [message, setMessage] = useState<string>('')
     const { mutation } = useMutation()
     const { createNotification } = useNotifications()
     const { user } = useUser()

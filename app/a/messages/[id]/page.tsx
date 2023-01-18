@@ -78,8 +78,6 @@ const Page = async ({
     if (isError(messages)) throw messages // throws on error
     if (isError(user)) throw user
 
-    console.log(user)
-
     return (
         <>
             <div className={styles.header}>

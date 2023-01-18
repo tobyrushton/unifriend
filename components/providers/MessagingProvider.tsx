@@ -1,7 +1,10 @@
 'use client'
 
 import { FC, createContext, useState, useMemo } from 'react'
+import { useSubscription } from '@apollo/client'
+import { SUBSCRIBE_TO_MESSAGES } from '../../graphql/queries'
 import {
+    IDArguement,
     MessageContextInterface,
     MessageWithId,
     MessagingProviderProps,
@@ -24,6 +27,13 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
             return prevState
         })
     }
+
+    useSubscription<MessageWithId, IDArguement>(SUBSCRIBE_TO_MESSAGES, {
+        variables: { id: conversationId },
+        onData: ({ data: { data } }) => {
+            if (data) addMessage(data)
+        },
+    })
 
     const value: MessageContextInterface = useMemo(
         () => ({
