@@ -20,7 +20,9 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
     conversationId,
     fetchedMessages,
 }) => {
-    const [messages, setMessages] = useState<MessageWithId[]>(fetchedMessages)
+    const [messages, setMessages] = useState<MessageWithId[]>(
+        structuredClone(fetchedMessages.reverse())
+    )
 
     const addMessage = (newMessage: MessageWithId): void => {
         setMessages(prevState => {

@@ -5,11 +5,7 @@ import styles from '../../styles/modules/UI.module.scss'
 
 export const Message: FC<MessageProps> = ({ recieved, children }) => {
     return (
-        <div
-            className={`${styles.message} ${
-                recieved ? styles.recieved : undefined
-            }`}
-        >
+        <div className={`${styles.message} ${recieved ? styles.recieved : ''}`}>
             <Text>{children}</Text>
         </div>
     )

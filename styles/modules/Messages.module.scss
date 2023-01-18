@@ -89,6 +89,11 @@
     flex-direction: column;
     flex: 1;
     overflow-y:auto; 
+    gap: .2rem;
+
+    div:last-child {
+        margin-bottom: 5px;
+    }
 }
 
 .header {
