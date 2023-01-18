@@ -129,9 +129,7 @@ export const GetMessagesSubscription = extendType({
             },
             subscribe: (_, args, ctx) =>
                 ctx.pubsub.subscribe('newMessage', args.id),
-            resolve: payload => {
-                return payload
-            },
+            resolve: payload => payload,
         })
     },
 })

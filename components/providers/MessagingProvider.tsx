@@ -8,6 +8,7 @@ import {
     MessageContextInterface,
     MessageWithId,
     MessagingProviderProps,
+    QueryReturn,
 } from '../../types'
 
 export const MessagingContext = createContext<MessageContextInterface | null>(
@@ -23,15 +24,22 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
 
     const addMessage = (newMessage: MessageWithId): void => {
         setMessages(prevState => {
-            prevState.push(newMessage)
-            return prevState
+            const temp = structuredClone(prevState)
+            temp.push(newMessage)
+            return temp
         })
     }
 
-    useSubscription<MessageWithId, IDArguement>(SUBSCRIBE_TO_MESSAGES, {
+    useSubscription<
+        QueryReturn<MessageWithId, 'Message', 'GetMessageUpdates'>,
+        IDArguement
+    >(SUBSCRIBE_TO_MESSAGES, {
         variables: { id: conversationId },
         onData: ({ data: { data } }) => {
-            if (data) addMessage(data)
+            if (data?.GetMessageUpdates) {
+                const { __typename, ...newMessage } = data.GetMessageUpdates
+                addMessage(newMessage)
+            }
         },
     })
 
