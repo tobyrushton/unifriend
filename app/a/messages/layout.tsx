@@ -1,8 +1,6 @@
 import 'server-only'
 
 import { ReactElement } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
 import {
     ChildrenProps,
     QueryReturn,
@@ -12,7 +10,6 @@ import {
     UserByEmailOptions,
     ConversationReturn,
 } from '../../../types'
-import { ProfilePicture } from '../../../components'
 import { getServerSideSupabase } from '../../../lib/supabase'
 import { initiateApollo } from '../../../lib/apollo'
 import {
@@ -20,6 +17,7 @@ import {
     GET_CONVERSATION,
 } from '../../../graphql/queries'
 import styles from '../../../styles/modules/Messages.module.scss'
+import { Sidebar } from './sidebar'
 
 const getData = async (): Promise<ConversationReturn[]> => {
     const supabase = getServerSideSupabase()
@@ -62,42 +60,7 @@ const MessagesLayout = async ({
     return (
         <div className={styles.marginTop}>
             <div className={`${styles.sidebar}`}>
-                <div className={styles.sidebarItem}>
-                    <div className={styles.input}>
-                        <Image
-                            src="/search-icon.png"
-                            width={15}
-                            height={15}
-                            alt="search icon"
-                        />
-                        <input type="text" placeholder="Search messages" />
-                    </div>
-                    <Image
-                        src="/New-message-icon.png"
-                        alt="New message icon"
-                        className={styles.newMessage}
-                        width={20}
-                        height={20}
-                    />
-                </div>
-                {conversations?.map((conversation, idx) => (
-                    <div
-                        className={styles.sidebarItem}
-                        key={'conversation'.concat(idx.toString())}
-                    >
-                        <ProfilePicture
-                            image={conversation.usersId}
-                            width={75}
-                            height={75}
-                        />
-                        <Link
-                            href={`/a/messages/${conversation.id}`}
-                            className={styles.link}
-                        >
-                            {conversation.username}
-                        </Link>
-                    </div>
-                ))}
+                <Sidebar fecthedConversations={conversations} />
             </div>
             <div className={`${styles.messagesContainer}`}>{children}</div>
         </div>

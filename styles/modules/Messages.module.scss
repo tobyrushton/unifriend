@@ -26,7 +26,6 @@
     margin: -1px 0;
     align-items: center;
     padding: 0.5rem 1rem;
-
 }
 
 .sidebar::-webkit-scrollbar {
@@ -68,6 +67,7 @@
         background-color: variables.$background_color;
         border: none;
         outline: none;
+        padding: 0;
     }
 }
 
@@ -140,4 +140,8 @@
 .inputButton {
     background-color: transparent;
     border-style: none;
+}
+
+.selected {
+    background: rgba(0, 0, 0, 0.37);
 }
