@@ -66,10 +66,19 @@ export const createFriend = extendType({
                 friendID: nonNull(stringArg()),
                 usersId: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
-                return ctx.prisma.friends.create({
+            resolve: async (_parent, args, ctx) => {
+                const friendship = (await ctx.prisma.friends.create({
                     data: args, // creates a new friend
-                }) as unknown as FriendID
+                })) as unknown as FriendID
+
+                await ctx.prisma.conversations.create({
+                    data: {
+                        userOneId: args.friendID,
+                        userTwoId: args.usersId,
+                    },
+                })
+
+                return friendship
             },
         })
     },
