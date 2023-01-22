@@ -5,13 +5,14 @@ import { cookies } from 'next/headers'
 import {
     ChildrenProps,
     Theme,
-    UserObjectWithSettings,
     GetSessionReturn,
     EmailQuery,
     QueryReturn,
     QueryReturnInterface,
     Join,
     Settings,
+    UserObjectWithID,
+    FriendsWithID,
 } from '../types'
 import {
     LoadingProvider,
@@ -48,8 +49,11 @@ const getSession = async (): Promise<GetSessionReturn | null> => {
     const { data } = await apollo.query<
         QueryReturn<
             Join<
-                UserObjectWithSettings,
-                { settings: QueryReturnInterface<Settings, 'Settings'> }
+                UserObjectWithID,
+                {
+                    settings: QueryReturnInterface<Settings, 'Settings'>
+                    friends: QueryReturnInterface<FriendsWithID[], 'Friends'>
+                }
             >,
             'User',
             'getUserFromAuth'
@@ -65,6 +69,7 @@ const getSession = async (): Promise<GetSessionReturn | null> => {
     const {
         __typename,
         settings: { __typename: __, ...settings },
+        friends,
         ...user
     } = data.getUserFromAuth
 
@@ -72,6 +77,7 @@ const getSession = async (): Promise<GetSessionReturn | null> => {
         session,
         user,
         settings,
+        friends,
     }
 }
 
@@ -95,6 +101,7 @@ const RootLayout = async ({
                             <UserProvider
                                 fetchedUser={session?.user}
                                 fetchedSettings={session?.settings}
+                                fetchedFriends={session?.friends}
                             >
                                 <ThemeProvider>{children}</ThemeProvider>
                             </UserProvider>

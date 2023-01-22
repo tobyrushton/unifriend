@@ -1,4 +1,4 @@
-import { UserObjectWithID } from './User'
+import { UserObjectWithID, UserObjectWithSettings } from './User'
 
 export interface Friends {
     friendID: string
@@ -34,4 +34,9 @@ export type FriendReturn = FriendReturnOne | FriendReturnTwo | FriendReturnThree
 export type FriendRequestParams = {
     usersId: string
     friendId: string
+}
+
+export interface UserObjectWithSettingsAndFriends
+    extends UserObjectWithSettings {
+    friends: FriendsWithID[]
 }

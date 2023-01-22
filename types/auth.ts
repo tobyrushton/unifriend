@@ -1,4 +1,5 @@
 import { Session } from '@supabase/supabase-js'
+import { FriendsWithID } from './Friends'
 import { Settings } from './settings'
 import { UserObjectWithID } from './User'
 
@@ -41,4 +42,5 @@ export type GetSessionReturn = {
     session: Session
     user: UserObjectWithID
     settings: Settings
+    friends: FriendsWithID[]
 }

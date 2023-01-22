@@ -9,9 +9,10 @@ import {
     EmailQuery,
     Settings,
     UpdateSettingsArgs,
-    UserObjectWithSettings,
     QueryReturn,
     UserProviderProps,
+    FriendsWithID,
+    UserObjectWithSettingsAndFriends,
 } from '../../types'
 import { GET_USER_BY_EMAIL } from '../../graphql/queries'
 import { useQuery } from '../../hooks/graphql/useQuery'
@@ -43,6 +44,7 @@ export const UserProvider: FC<UserProviderProps> = ({
     children,
     fetchedUser,
     fetchedSettings,
+    fetchedFriends,
 }) => {
     // creates state to store the users details
     const [user, setUser] = useState<UserObjectWithID>(
@@ -50,6 +52,9 @@ export const UserProvider: FC<UserProviderProps> = ({
     )
     const [settings, setSettings] = useState<Settings>(
         fetchedSettings ?? defaultSettings
+    )
+    const [friends, setFriends] = useState<FriendsWithID[]>(
+        fetchedFriends ?? []
     )
 
     // all hooks used
@@ -76,7 +81,7 @@ export const UserProvider: FC<UserProviderProps> = ({
             if (session?.user.email) {
                 const { data, error } = await query<
                     QueryReturn<
-                        UserObjectWithSettings,
+                        UserObjectWithSettingsAndFriends,
                         'User',
                         'getUserFromAuth'
                     >,
@@ -87,10 +92,12 @@ export const UserProvider: FC<UserProviderProps> = ({
                     const {
                         __typename,
                         settings: userSettings,
+                        friends: userFriends,
                         ...userDetails
                     } = data.getUserFromAuth
                     setUser(userDetails)
                     setSettings(userSettings)
+                    setFriends(userFriends)
                 } else if (error)
                     createNotification({
                         type: 'error',
@@ -151,8 +158,8 @@ export const UserProvider: FC<UserProviderProps> = ({
     // value that is passed down
     const providerValue: UserContextInterface = useMemo(
         // memoised
-        () => ({ user, resetPassword, settings, updateSettings }),
-        [user, resetPassword, settings, updateSettings]
+        () => ({ user, resetPassword, settings, updateSettings, friends }),
+        [user, resetPassword, settings, updateSettings, friends]
     )
 
     return (

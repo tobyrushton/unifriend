@@ -3,6 +3,7 @@ import { Settings, UniversityPreference } from './settings'
 import { Color } from './colors'
 import { UserObjectWithID } from './User'
 import { MessageWithId } from './Messages'
+import { FriendsWithID } from './Friends'
 
 export interface UpdateSettingsArgs {
     darkMode?: boolean
@@ -11,6 +12,7 @@ export interface UpdateSettingsArgs {
 export interface UserContextInterface {
     user: UserObjectWithID
     settings: Settings
+    friends: FriendsWithID[]
     updateSettings: (args: UpdateSettingsArgs) => void
     resetPassword: (password: string) => Promise<void>
 }
@@ -22,6 +24,7 @@ export type ChildrenProps = {
 export type UserProviderProps = ChildrenProps & {
     fetchedUser?: UserObjectWithID
     fetchedSettings?: Settings
+    fetchedFriends?: FriendsWithID[]
 }
 
 export interface LoadingContextInterface {

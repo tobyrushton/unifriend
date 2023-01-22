@@ -4,6 +4,7 @@ import {
     TempUserObject,
     UserObjectWithSettings,
     UserUpdateObject,
+    UserObjectWithSettingsAndFriends,
 } from '../../types'
 import { Friend, FriendRequest } from './Friends'
 import { Settings } from './Settings'
@@ -221,8 +222,8 @@ export const GetUserFromAuth = extendType({
                         email: args.email,
                     },
                     // gets the users settings
-                    include: { settings: true },
-                }) as unknown as UserObjectWithSettings
+                    include: { settings: true, friends: true },
+                }) as unknown as UserObjectWithSettingsAndFriends
             },
         })
     },
