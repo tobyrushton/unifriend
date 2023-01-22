@@ -215,7 +215,8 @@ describe('user query tests', () => {
     })
 
     it('should return user from email', async () => {
-        mockCtx.prisma.users.findUnique.mockResolvedValue(userObject)
+        const temp = { ...userObject, friends: [] }
+        mockCtx.prisma.users.findUnique.mockResolvedValue(temp)
 
         const response = await ApolloMockServer.executeOperation(
             {
@@ -249,6 +250,7 @@ describe('user query tests', () => {
                 darkMode: false,
                 universityPreference: 'OWN',
             },
+            friends: [],
         })
     })
 
