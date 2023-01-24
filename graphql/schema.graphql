@@ -65,6 +65,7 @@ type Query {
   GetUserIdFromConversationId(conversationId: String!, email: String!): UserFromConversationReturn!
   UserQueryByEmail(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: String!, firstName: Boolean, id: Boolean, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
   getAuthFromUsername(username: String!): Email!
+  getConversation(userOneId: String!, userTwoId: String!): Conversation!
   getConversations(id: String!): [ConversationReturn]!
   getFriendRequests(friendID: String!): [GetFriend]!
   getFriends(usersId: String!): [GetFriend]!

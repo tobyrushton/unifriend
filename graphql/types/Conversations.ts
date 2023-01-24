@@ -1,7 +1,9 @@
 import { objectType, nonNull, stringArg, extendType } from 'nexus'
 import {
+    Conversation as ConversationType,
     ConversationFetchOne,
     ConversationFetchTwo,
+    ConversationPartial,
     ConversationReturn as ConversationReturnType,
 } from '../../types'
 import { Message } from './Messages'
@@ -49,6 +51,33 @@ export const ConversationReturn = objectType({
         t.string('id')
         t.string('usersId')
         t.string('username')
+    },
+})
+
+export const GetConversation = extendType({
+    type: 'Query',
+    definition(t) {
+        t.nonNull.field('getConversation', {
+            type: Conversation,
+            args: {
+                userOneId: nonNull(stringArg()),
+                userTwoId: nonNull(stringArg()),
+            },
+            resolve: async (_, args, ctx) => {
+                const query1: ConversationPartial | null =
+                    await ctx.prisma.conversations.findFirst({ where: args })
+
+                const query2: ConversationPartial | null =
+                    await ctx.prisma.conversations.findFirst({
+                        where: {
+                            userOneId: args.userTwoId,
+                            userTwoId: args.userTwoId,
+                        },
+                    })
+
+                return (query1 ?? query2) as ConversationType
+            },
+        })
     },
 })
 

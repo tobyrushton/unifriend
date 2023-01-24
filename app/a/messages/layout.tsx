@@ -14,7 +14,7 @@ import { getServerSideSupabase } from '../../../lib/supabase'
 import { initiateApollo } from '../../../lib/apollo'
 import {
     GET_USER_BY_EMAIL_OPTIONAL,
-    GET_CONVERSATION,
+    GET_CONVERSATIONS,
 } from '../../../graphql/queries'
 import styles from '../../../styles/modules/Messages.module.scss'
 import { Sidebar } from './sidebar'
@@ -47,7 +47,7 @@ const getData = async (): Promise<ConversationReturn[]> => {
     const { data } = await apollo.query<
         QueryReturn<ConversationReturn[], 'test', 'getConversations'>,
         IDArguement
-    >({ query: GET_CONVERSATION, variables: { id } })
+    >({ query: GET_CONVERSATIONS, variables: { id } })
 
     return data.getConversations
 }
@@ -60,7 +60,7 @@ const MessagesLayout = async ({
     return (
         <div className={styles.marginTop}>
             <div className={`${styles.sidebar}`}>
-                <Sidebar fecthedConversations={conversations} />
+                <Sidebar fetchedConversations={conversations} />
             </div>
             <div className={`${styles.messagesContainer}`}>{children}</div>
         </div>

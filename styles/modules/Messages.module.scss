@@ -145,3 +145,50 @@
 .selected {
     background: rgba(0, 0, 0, 0.37);
 }
+
+.fazed {
+    @include mixins.fazeOut();
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.newMessageContainer {
+    display: flex;
+    width: 30rem;
+    height: 30rem;
+    background-color: variables.$secondary_color;
+    padding: 1rem;
+    border-radius: 1rem;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.messageButton {
+    background-color: transparent;
+    border-style: none;
+}
+
+.newItemList {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.newItem {
+    display: flex;
+    gap: .5rem;
+    padding: .5rem;
+    align-items: center;
+    cursor: pointer;
+}
+
+.newItem:hover{
+    background: rgba(0, 0, 0, 0.37);
+}
+
+.newItemText {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}

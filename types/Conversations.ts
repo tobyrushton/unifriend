@@ -39,3 +39,15 @@ export type GetUserFromConversationReturn = {
     firstName: string
     lastName: string
 }
+
+export type NewConversationUser = {
+    id: string
+    firstName: string
+    lastName: string
+    username: string
+}
+
+export type NewConversationArgs = {
+    userOneId: string
+    userTwoId: string
+}
