@@ -31,6 +31,6 @@ export const config = {
         '/required-session',
         '/realtime',
         '/',
-        '/a/:path',
+        '/a/:path*',
     ],
 }

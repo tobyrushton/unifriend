@@ -84,6 +84,13 @@
     @include mixins.fontClass();
 }
 
+.loadingItem {
+    display: flex;
+    background-color: variables.$secondary_color;
+    border-radius: .25rem;
+    height: 2rem;
+}
+
 @media screen and (max-width: 1200px) {
     .friend {
         width: calc( 33.33% - 2rem - 2px);

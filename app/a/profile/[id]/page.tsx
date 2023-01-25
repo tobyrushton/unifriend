@@ -1,4 +1,5 @@
-// import { FC, useEffect, useState } from 'react'
+import 'server-only'
+
 import Link from 'next/link'
 import { ReactElement } from 'react'
 import {
@@ -20,7 +21,7 @@ const getData = async (
 ): Promise<[UserObject | Error, UserFromFriend[] | Error]> => {
     const apollo = initiateApollo()
 
-    const test: [UserObject | Error, UserFromFriend[] | Error] =
+    const res: [UserObject | Error, UserFromFriend[] | Error] =
         await Promise.all([
             (async (): Promise<UserObject | Error> => {
                 const { data, error } = await apollo.query<
@@ -52,7 +53,7 @@ const getData = async (
             })(),
         ])
 
-    return test
+    return res
 }
 
 const Profile = async ({
