@@ -8,12 +8,29 @@ export const middleware = async (req: NextRequest): Promise<NextResponse> => {
     const supabase = createMiddlewareSupabaseClient({ req, res })
 
     const {
-        data: { session: _session },
+        data: { session },
     } = await supabase.auth.getSession()
+
+    const url = req.nextUrl.clone()
+
+    if (session && !url.pathname.startsWith('/a')) {
+        url.pathname = '/a'
+        return NextResponse.redirect(url)
+    }
+    if (url.pathname.startsWith('/a') && session === null) {
+        url.pathname = '/'
+        return NextResponse.redirect(url)
+    }
 
     return res
 }
 
 export const config = {
-    matcher: ['/optional-session', '/required-session', '/realtime'],
+    matcher: [
+        '/optional-session',
+        '/required-session',
+        '/realtime',
+        '/',
+        '/a/:path',
+    ],
 }
