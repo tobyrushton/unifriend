@@ -192,3 +192,10 @@
     flex-direction: column;
     gap: .25rem;
 }
+
+.loadingItem {
+    display: flex;
+    background-color: variables.$secondary_color;
+    border-radius: .25rem;
+    height: 2rem;
+}
