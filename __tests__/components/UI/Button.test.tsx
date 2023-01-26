@@ -4,7 +4,10 @@ import '@testing-library/jest-dom'
 
 describe('Button', () => {
     it('should render', () => {
-        const { getByText } = render(<Button onClick={jest.fn()}>Test</Button>)
+        const { getByText, container } = render(
+            <Button onClick={jest.fn()}>Test</Button>
+        )
+        expect(container.firstChild).toMatchSnapshot()
         expect(getByText('Test')).toBeInTheDocument()
     })
     it('should render filled', () => {
@@ -22,6 +25,7 @@ describe('Button', () => {
             </Button>
         )
         expect(getByText('Test')).toHaveClass('inactive')
+        expect(getByText('Test')).toBeDisabled()
     })
     it('should render with style', () => {
         const { getByText } = render(

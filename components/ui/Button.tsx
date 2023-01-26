@@ -16,7 +16,7 @@ export const Button: FC<ButtonProps> = ({
     <button
         onClick={e => {
             e.preventDefault()
-            if (!inactive) onClick()
+            onClick()
         }}
         className={`${styles.fontText} ${styles.button} ${
             filled ? styles.filled : ''
@@ -24,6 +24,7 @@ export const Button: FC<ButtonProps> = ({
         tabIndex={0}
         style={style}
         type={submit ? 'submit' : 'button'}
+        disabled={inactive}
     >
         {children}
     </button>

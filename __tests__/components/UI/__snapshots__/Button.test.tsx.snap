@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button should render 1`] = `
+<button
+  class="fontText button  "
+  tabindex="0"
+  type="button"
+>
+  Test
+</button>
+`;
