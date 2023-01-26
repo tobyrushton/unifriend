@@ -85,10 +85,10 @@ describe('DropDown component tests', () => {
             )
         )
 
-        expect(container).toBeTruthy()
-        expect(screen.queryByText('Friend Requests')).toBeTruthy()
-        expect(screen.queryByText('Settings')).toBeTruthy()
-        expect(screen.queryByText('View Profile')).toBeTruthy()
+        expect(container).toBeInTheDocument()
+        expect(screen.queryByText('Friend Requests')).toBeInTheDocument()
+        expect(screen.queryByText('Settings')).toBeInTheDocument()
+        expect(screen.queryByText('View Profile')).toBeInTheDocument()
     })
 
     it('component can be disabled', async () => {
@@ -109,12 +109,14 @@ describe('DropDown component tests', () => {
                 </LoadingProvider>
             )
         )
-        expect(screen.queryByText('Friend Requests')).toBeTruthy()
+        expect(screen.queryByText('Friend Requests')).toBeInTheDocument()
 
         await act(async () => map.mousedown({ pageX: 0, pageY: 0 }))
 
         await waitFor(() => {
-            expect(screen.queryByText('Friend Requests')).toBeFalsy()
+            expect(
+                screen.queryByText('Friend Requests')
+            ).not.toBeInTheDocument()
         })
     })
 

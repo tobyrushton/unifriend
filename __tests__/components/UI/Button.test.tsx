@@ -1,38 +1,68 @@
-import { screen, render, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { Button } from '../../../components'
+import '@testing-library/jest-dom'
 
-describe('Button component tests', () => {
-    let clicked = false
-
-    const onClick = (): void => {
-        clicked = true
-    }
-
-    beforeEach(() => {
-        clicked = false
+describe('Button', () => {
+    it('should render', () => {
+        const { getByText } = render(<Button onClick={jest.fn()}>Test</Button>)
+        expect(getByText('Test')).toBeInTheDocument()
     })
-
-    it('button renders with text', () => {
-        render(<Button onClick={onClick}> Hello World! </Button>)
-        expect(screen.getByText(/^Hello World!$/i)).toBeTruthy()
-    })
-
-    it('button disables', () => {
-        render(
-            <Button inactive onClick={onClick}>
-                {' '}
-                Hello World!{' '}
+    it('should render filled', () => {
+        const { getByText } = render(
+            <Button onClick={jest.fn()} filled>
+                Test
             </Button>
         )
-
-        fireEvent.click(screen.getByRole('button'))
-        expect(clicked).toBeFalsy()
+        expect(getByText('Test')).toHaveClass('filled')
     })
-
-    it('button clicks', () => {
-        render(<Button onClick={onClick}> Click!</Button>)
-        fireEvent.click(screen.getByRole('button'))
-
-        expect(clicked).toBeTruthy()
+    it('should render inactive', () => {
+        const { getByText } = render(
+            <Button onClick={jest.fn()} inactive>
+                Test
+            </Button>
+        )
+        expect(getByText('Test')).toHaveClass('inactive')
+    })
+    it('should render with style', () => {
+        const { getByText } = render(
+            <Button onClick={jest.fn()} style={{ color: 'red' }}>
+                Test
+            </Button>
+        )
+        expect(getByText('Test')).toHaveStyle('color: red')
+    })
+    it('should render with submit type', () => {
+        const { getByText } = render(
+            <Button onClick={jest.fn()} submit>
+                Test
+            </Button>
+        )
+        expect(getByText('Test')).toHaveAttribute('type', 'submit')
+    })
+    it('should call onClick', () => {
+        const onClick = jest.fn()
+        const { getByText } = render(<Button onClick={onClick}>Test</Button>)
+        fireEvent.click(getByText('Test'))
+        expect(onClick).toHaveBeenCalled()
+    })
+    it('should not call onClick if inactive', () => {
+        const onClick = jest.fn()
+        const { getByText } = render(
+            <Button onClick={onClick} inactive>
+                Test
+            </Button>
+        )
+        fireEvent.click(getByText('Test'))
+        expect(onClick).not.toHaveBeenCalled()
+    })
+    it('should not call onClick on enter if inactive', () => {
+        const onClick = jest.fn()
+        const { getByText } = render(
+            <Button onClick={onClick} inactive>
+                Test
+            </Button>
+        )
+        fireEvent.keyDown(getByText('Test'), { key: 'Enter', code: 13 })
+        expect(onClick).not.toHaveBeenCalled()
     })
 })

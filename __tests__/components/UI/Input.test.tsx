@@ -1,75 +1,126 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Input } from '../../../components'
+import '@testing-library/jest-dom'
 
-describe('Input component tests', () => {
-    let val = ''
+describe('Input', () => {
+    const setValue = jest.fn()
 
-    beforeEach(() => {
-        val = ''
-    })
-
-    const setValue = (change: string): void => {
-        val = change
-    }
-
-    it('component renders', () => {
-        render(<Input placeholder="Test" setValue={setValue} type="text" />)
-
-        expect(screen.getByPlaceholderText('Test')).toBeTruthy()
-    })
-
-    it('changes value on input', () => {
-        render(<Input placeholder="Test" setValue={setValue} type="text" />)
-
-        fireEvent.input(screen.getByPlaceholderText('Test'), {
-            target: { value: 'Test Value' },
-        })
-        expect(val).toBe('Test Value')
-    })
-
-    it('changes value on input for date', () => {
+    it('should render with text', () => {
         render(
             <Input
-                placeholder="Test"
-                setValue={setValue}
-                type="date"
-                maxLength={8}
-            />
-        )
-
-        fireEvent.input(screen.getByPlaceholderText('Test'), {
-            target: { value: '2005-06-12' },
-        })
-        expect(val).toBe('2005-06-12')
-    })
-
-    it('changes value on input for password', () => {
-        render(
-            <Input
-                placeholder="Test"
-                setValue={setValue}
-                type="password"
-                maxLength={8}
-            />
-        )
-
-        fireEvent.input(screen.getByPlaceholderText('Test'), {
-            target: { value: 'password123' },
-        })
-        expect(val).toBe('password123')
-    })
-
-    it('takes variable default value', () => {
-        render(
-            <Input
-                placeholder="Test"
+                type="text"
+                placeholder="Test Placeholder"
                 setValue={setValue}
                 value="Test Value"
-                type="text"
-                maxLength={8}
             />
         )
 
-        expect(screen.getByDisplayValue('Test Value')).toBeTruthy()
+        expect(
+            screen.getByPlaceholderText('Test Placeholder')
+        ).toBeInTheDocument()
+    })
+    it('should set value', () => {
+        render(
+            <Input
+                type="text"
+                placeholder="Test Placeholder"
+                setValue={setValue}
+            />
+        )
+
+        fireEvent.input(screen.getByPlaceholderText('Test Placeholder'), {
+            target: { value: 'Test Value' },
+        })
+        expect(setValue).toHaveBeenCalled()
+        expect(setValue).toHaveBeenCalledWith('Test Value')
+        expect(screen.getByPlaceholderText('Test Placeholder')).toHaveValue(
+            'Test Value'
+        )
+    })
+    it('should render with password', () => {
+        render(
+            <Input
+                type="password"
+                placeholder="Test Placeholder"
+                setValue={setValue}
+                value="Test Value"
+            />
+        )
+
+        expect(
+            screen.getByPlaceholderText('Test Placeholder')
+        ).toBeInTheDocument()
+    })
+    it('should render with file', () => {
+        render(
+            <Input
+                type="file"
+                placeholder="Test Placeholder"
+                setValue={setValue}
+            />
+        )
+        expect(
+            screen.getByPlaceholderText('Test Placeholder')
+        ).toBeInTheDocument()
+    })
+    it('should render with date', () => {
+        render(
+            <Input
+                type="date"
+                placeholder="Test Placeholder"
+                setValue={setValue}
+                value="Test Value"
+            />
+        )
+        expect(
+            screen.getByPlaceholderText('Test Placeholder')
+        ).toBeInTheDocument()
+    })
+    it('should be able to set value with date', () => {
+        render(
+            <Input
+                type="date"
+                placeholder="Test Placeholder"
+                setValue={setValue}
+            />
+        )
+        fireEvent.input(screen.getByPlaceholderText('Test Placeholder'), {
+            target: { value: '2005-06-12' },
+        })
+        expect(setValue).toHaveBeenCalled()
+        expect(screen.getByPlaceholderText('Test Placeholder')).toHaveValue(
+            '2005-06-12'
+        )
+    })
+    it('should set value with password', () => {
+        render(
+            <Input
+                type="password"
+                placeholder="Test Placeholder"
+                setValue={setValue}
+            />
+        )
+
+        fireEvent.input(screen.getByPlaceholderText('Test Placeholder'), {
+            target: { value: 'Test Value' },
+        })
+        expect(setValue).toHaveBeenCalled()
+        expect(screen.getByPlaceholderText('Test Placeholder')).toHaveValue(
+            'Test Value'
+        )
+    })
+    it('should take a default value', () => {
+        const testValue = 'Test Value'
+        render(
+            <Input
+                type="text"
+                placeholder="Test Placeholder"
+                setValue={setValue}
+                value={testValue}
+            />
+        )
+        expect(screen.getByPlaceholderText('Test Placeholder')).toHaveValue(
+            testValue
+        )
     })
 })

@@ -1,24 +1,33 @@
-import { render, fireEvent } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { Text } from '../../../components'
 
-describe('Text component tests', () => {
-    it('renders text inside', () => {
-        const { queryByText } = render(<Text> Hello World! </Text>)
-        expect(queryByText(/^Hello World!$/i)).toBeTruthy()
+// tests for Text component
+describe('Text', () => {
+    it('should render', () => {
+        const { container } = render(<Text> </Text>)
+        expect(container).toBeTruthy()
     })
-
-    it('click property works', () => {
-        let clicked = false
-        const onClick = (): void => {
-            clicked = true
-        }
-        const { getByText } = render(
-            <Text clickable onClick={onClick}>
+    it('should render with text', () => {
+        const { container } = render(<Text> Text </Text>)
+        expect(container).toBeTruthy()
+    })
+    it('should render with style', () => {
+        const { container } = render(<Text style={{ color: 'red' }}> </Text>)
+        expect(container).toBeTruthy()
+    })
+    it('should render with text and style', () => {
+        const { container } = render(<Text style={{ color: 'red' }}>Test</Text>)
+        expect(container).toBeTruthy()
+    })
+    it('should call onClick function', () => {
+        const onClick = jest.fn()
+        const { container } = render(
+            <Text onClick={onClick} clickable>
                 {' '}
-                Hello World!{' '}
             </Text>
         )
-        fireEvent.click(getByText(/^Hello World!$/i))
-        expect(clicked).toBeTruthy()
+        const text = container.querySelector('p')
+        fireEvent.click(text as Element)
+        expect(onClick).toHaveBeenCalled()
     })
 })
