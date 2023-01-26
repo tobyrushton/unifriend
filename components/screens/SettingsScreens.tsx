@@ -104,7 +104,7 @@ export const SlideTwo: FC = () => {
             // creates success notification if successful
             createNotification({
                 type: 'success',
-                content: 'Colour mode updated successfully',
+                content: 'University preference updated successfully',
             })
             // updates value stored in provider upon completion
             updateSettings({ universityPreference: preference })
