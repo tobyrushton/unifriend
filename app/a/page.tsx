@@ -1,8 +1,6 @@
 import 'server-only'
 
 import { ReactElement } from 'react'
-import Image from 'next/image'
-import { User } from '../../components/ui/User'
 import styles from '../../styles/modules/Home.module.scss'
 import {
     UserObjectWithID,
@@ -17,6 +15,7 @@ import {
 import { GET_USER, GET_USER_BY_EMAIL_OPTIONAL } from '../../graphql/queries'
 import { initiateApollo } from '../../lib/apollo'
 import { getServerSideSupabase } from '../../lib/supabase'
+import { UserContainer } from './UserContainer'
 
 const getData = async (): Promise<UserObjectWithID[]> => {
     const apollo = initiateApollo()
@@ -64,18 +63,7 @@ const A = async (): Promise<ReactElement> => {
 
     return (
         <div className={styles.wrapper}>
-            <Image
-                className={styles.retryImage}
-                src="/retry.svg"
-                width={50}
-                height={50}
-                alt="retry icon"
-            />
-            <div className={styles.usersContainer}>
-                {users.map((user, idx) => (
-                    <User key={'user'.concat(idx.toString())} user={user} />
-                ))}
-            </div>
+            <UserContainer fetchedUsers={users} />
         </div>
     )
 }

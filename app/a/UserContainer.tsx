@@ -23,10 +23,9 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
     const { setLoading } = useLoadingScreen()
     const { loading, query } = useQuery()
 
-    useEffect(() => setLoading(loading), [loading])
+    useEffect(() => setLoading(loading), [loading, setLoading])
 
     const getNewUsers = async (): Promise<void> => {
-        console.log('t')
         const { data, error } = await query<
             QueryReturn<UserObjectWithID[], 'User', 'user'>,
             Join<
@@ -38,9 +37,8 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
             id: user.id,
             universityPreference: settings.universityPreference,
             university: user.university,
-            fetchPolicy: 'no-cache'
+            fetchPolicy: 'no-cache',
         })
-        console.log(data)
         if (error)
             createNotification({
                 type: 'error',
@@ -58,10 +56,13 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
                 height={50}
                 alt="retry icon"
                 onClick={getNewUsers}
+                style={{
+                    filter: settings.darkMode ? 'invert(1)' : 'invert(0)',
+                }}
             />
             <div className={styles.usersContainer}>
-                {users.map((user, idx) => (
-                    <User key={'user'.concat(idx.toString())} user={user} />
+                {users.map((userCard, idx) => (
+                    <User key={'user'.concat(idx.toString())} user={userCard} />
                 ))}
             </div>
         </>
