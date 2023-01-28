@@ -82,6 +82,7 @@ export type Join<X, Y> = X & Y
 
 export interface Query {
     query: DocumentNode
+    fetchPolicy?: 'no-cache' | 'cache-first' | 'network-only' | 'cache-only'
 }
 
 export interface Mutation {
