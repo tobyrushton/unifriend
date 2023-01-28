@@ -1,71 +1,90 @@
 // not used during build time.
 
 import { PrismaClient } from '@prisma/client'
+import { UniversityEmailArray } from '../types'
+import { getUniversity } from '../lib/utils'
+import data from '../lib/utils/universities.json'
+
+const UniversityEmailEndings: UniversityEmailArray =
+    data as UniversityEmailArray
 
 const prisma = new PrismaClient()
 
+const firstNames = [
+    'Olivia',
+    'Amelia',
+    'Isla',
+    'Ava',
+    'Emily',
+    'Toby',
+    'Oliver',
+    'Harry',
+    'Jack',
+    'Charlie',
+]
+
+const lastNames = [
+    'Smith',
+    'Jones',
+    'Williams',
+    'Taylor',
+    'Brown',
+    'Davies',
+    'Evans',
+    'Wilson',
+    'Thomas',
+    'Roberts',
+]
+
+const universityCourses = [
+    'Computer Science',
+    'Mathematics',
+    'Physics',
+    'Chemistry',
+    'Biology',
+    'Economics',
+    'Business',
+    'Psychology',
+    'Law',
+    'Medicine',
+]
+
 // creates fake data in the database in order for testing purposes
 async function main(): Promise<void> {
-    await prisma.users.create({
-        data: {
-            firstName: 'Toby',
-            lastName: 'Rushton',
-            university: 'Oxford University',
-            course: 'Computer Science',
-            username: 'tobyrushton',
-            birthday: '12062005',
-            bio: '',
-            email: 'temp@email.com',
-            settings: {
-                create: {},
+    for (let i = 0; i < 100; i++) {
+        const firstName = firstNames[Math.floor(Math.random() * 10)]
+        const lastName = lastNames[Math.floor(Math.random() * 10)]
+        const email = `${firstName}${Math.floor(Math.random() * 100)}${
+            UniversityEmailEndings[Math.floor(Math.random() * 132)].email
+        }`
+        const university = getUniversity(email) as string
+
+        // eslint-disable-next-line no-await-in-loop
+        await prisma.users.create({
+            data: {
+                firstName,
+                lastName,
+                email,
+                university,
+                course: universityCourses[Math.floor(Math.random() * 10)],
+                bio: `${firstName} ${lastName} is a student at ${university}`,
+                username: `${firstName}${lastName}${Math.floor(
+                    Math.random() * 100
+                )}`,
+                birthday: `${new Date(
+                    new Date('2000-01-01').getTime() +
+                        Math.random() *
+                            (new Date('2005-01-28').getTime() -
+                                new Date('2000-01-01').getTime())
+                ).toISOString()}`,
+                settings: {
+                    create: {
+                        universityPreference: 'ALL',
+                    },
+                },
             },
-        },
-    })
-    await prisma.users.create({
-        data: {
-            firstName: 'Olivia',
-            lastName: 'Rushton',
-            university: 'Sheffield University',
-            course: 'Financial Mathematics',
-            username: 'oliviarushton',
-            birthday: '27072002',
-            bio: '',
-            email: 'temp2@email.com',
-            settings: {
-                create: {},
-            },
-        },
-    })
-    await prisma.users.create({
-        data: {
-            firstName: 'Toby',
-            lastName: 'Rushton',
-            university: 'UCL',
-            course: 'Computer Science',
-            username: 'toby',
-            birthday: '2005-06-12',
-            bio: '',
-            email: 'txbyplayz@gmail.com',
-            settings: {
-                create: {},
-            },
-        },
-    })
-    await prisma.users.create({
-        data: {
-            firstName: 'Olivia',
-            lastName: 'Rushton',
-            university: 'Sheffield University',
-            course: 'Financial Mathematics',
-            username: 'orushton1',
-            birthday: '2002-07-27',
-            bio: '',
-            email: 'Orushton1@sheffield.ac.uk',
-            settings: {
-                create: {},
-            },
-        },
-    })
+        })
+    }
 }
 
 main()

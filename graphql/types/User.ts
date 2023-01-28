@@ -94,9 +94,63 @@ export const UserQuery = extendType({
     definition(t) {
         t.nonNull.list.field('user', {
             type: 'User',
-            resolve: (_parent, _args, ctx) => {
+            args: {
+                id: nonNull(stringArg()),
+                universityPreference: nonNull(stringArg()),
+                university: nonNull(stringArg()),
+            },
+            resolve: (_parent, args, ctx) => {
                 // returns all rows in the user table
-                return ctx.prisma.users.findMany()
+                return ctx.prisma.users.findMany({
+                    take: 10,
+                    where: {
+                        AND: [
+                            {
+                                id: {
+                                    not: args.id,
+                                },
+                            },
+                            {
+                                OR: [
+                                    {
+                                        friends: {
+                                            some: {
+                                                AND: [
+                                                    {
+                                                        friendID: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                    {
+                                                        usersId: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    },
+                                    {
+                                        friends: {
+                                            none: {},
+                                        },
+                                    },
+                                ],
+                            },
+                            args.universityPreference === 'ALL'
+                                ? {
+                                      settings: {
+                                          universityPreference: {
+                                              equals: 'ALL',
+                                          },
+                                      },
+                                  }
+                                : {
+                                      university: args.university,
+                                  },
+                        ],
+                    },
+                })
             },
         })
     },

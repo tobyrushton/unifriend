@@ -72,4 +72,5 @@ export type UserByEmailOptions = {
     bio?: boolean
     id?: boolean
     all?: boolean
+    settings?: boolean
 }

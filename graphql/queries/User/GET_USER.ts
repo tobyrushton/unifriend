@@ -1,8 +1,16 @@
 import { gql } from '@apollo/client'
 
 export const GET_USER = gql`
-    query MyQuery {
-        user {
+    query MyQuery(
+        $id: String!
+        $universityPreference: String!
+        $university: String!
+    ) {
+        user(
+            id: $id
+            universityPreference: $universityPreference
+            university: $university
+        ) {
             bio
             course
             birthday

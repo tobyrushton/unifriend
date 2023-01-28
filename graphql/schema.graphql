@@ -70,7 +70,7 @@ type Query {
   getFriendRequests(friendID: String!): [GetFriend]!
   getFriends(usersId: String!): [GetFriend]!
   getUserFromAuth(email: String!): User!
-  user: [User]!
+  user(id: String!, university: String!, universityPreference: String!): [User]!
   users(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: Boolean, firstName: Boolean, id: String!, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
 }
 
