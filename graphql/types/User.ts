@@ -9,7 +9,7 @@ import {
 import { Friend, FriendRequest } from './Friends'
 import { Settings } from './Settings'
 import { Message } from './Messages'
-import { isValidEmail, isValidUsername } from '../../lib/utils'
+import { isValidEmail, isValidUsername, randomPick } from '../../lib/utils'
 
 // types User that's defined within the graphQL api.
 export const User = objectType({
@@ -99,10 +99,25 @@ export const UserQuery = extendType({
                 universityPreference: nonNull(stringArg()),
                 university: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
+            resolve: async (_parent, args, ctx) => {
+                // allows for the users to be randomised
+                const orderDirection = randomPick(['asc', 'desc'])
+                const orderBy = randomPick([
+                    'id',
+                    'firstName',
+                    'lastName',
+                    'university',
+                    'course',
+                    'username',
+                    'email',
+                ])
+
                 // returns all rows in the user table
                 return ctx.prisma.users.findMany({
                     take: 10,
+                    orderBy: {
+                        [orderBy]: orderDirection,
+                    },
                     where: {
                         AND: [
                             {
