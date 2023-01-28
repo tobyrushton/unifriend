@@ -9,3 +9,18 @@
     height: calc( 100% - 100px );
     background-color: variables.$background_color;
 }
+
+.retryImage{
+    margin-left: auto;
+    padding: 2rem;
+}
+
+.usersContainer {
+    display: flex;
+    padding: 0 2rem;
+    overflow-y: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1;
+    gap: 1rem;
+}
