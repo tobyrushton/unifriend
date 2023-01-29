@@ -30,4 +30,15 @@ describe('Text', () => {
         fireEvent.click(text as Element)
         expect(onClick).toHaveBeenCalled()
     })
+    it('should call onClick when header', () => {
+        const onClick = jest.fn()
+        const { container } = render(
+            <Text onClick={onClick} clickable header>
+                {' '}
+            </Text>
+        )
+        const text = container.querySelector('h1')
+        fireEvent.click(text as Element)
+        expect(onClick).toHaveBeenCalled()
+    })
 })
