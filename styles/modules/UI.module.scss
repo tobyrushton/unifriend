@@ -307,9 +307,12 @@
     display: flex;
     margin-left: .5rem;
     flex-direction: column;
+
     h1{
         font-size: 2rem !important;
+        text-decoration: none;
     }
+
     p{
         font-size: 1rem !important;
     }
@@ -319,14 +322,53 @@
     display: flex;
     flex-direction: column;
     padding: 0.5rem 1rem;
+
     p{
         font-size: 1rem !important;
     }
+}
+
+.popupWrapper {
+    @include mixins.fazeOut();
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    border-radius: 25px;
+    background-color: variables.$secondary_color;
+    padding: 2rem;
+    border-width: 2px;
+    border-style: solid;
+    border-color: variables.$accent_color;
+}
+
+.popupButtons {
+    display: flex;
+    gap: 1rem;
 }
 
 
 @media screen and (max-width: 1000px) {
     .notification{
         width: calc(100% - 1rem);
+    }
+
+    .user{
+        width: calc(100% - 1rem);
+    }
+
+    .userHeaderText{
+        h1{
+            font-size: 3rem !important;
+        }
+
+        p{
+            font-size: .1.5rem !important;
+        }
     }
 }

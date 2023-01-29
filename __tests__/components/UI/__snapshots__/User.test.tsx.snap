@@ -27,13 +27,18 @@ exports[`User should render 1`] = `
       <div
         class="userHeaderText"
       >
-        <h1
-          class="fontText extraLarge left"
+        <div
+          role="button"
+          tabindex="0"
         >
-          Toby
-           
-          Rushton
-        </h1>
+          <h1
+            class="fontText extraLarge clickable left"
+          >
+            Toby
+             
+            Rushton
+          </h1>
+        </div>
         <p
           class="fontText   left"
         >

@@ -2,7 +2,7 @@
 
 import { FC, useEffect, useState } from 'react'
 import Image from 'next/image'
-import { User } from '../../components'
+import { User, Text } from '../../components'
 import { UserObjectWithID, QueryReturn, Join, IDArguement } from '../../types'
 import {
     useQuery,
@@ -61,9 +61,16 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
                 }}
             />
             <div className={styles.usersContainer}>
-                {users.map((userCard, idx) => (
-                    <User key={'user'.concat(idx.toString())} user={userCard} />
-                ))}
+                {users.length > 0 ? (
+                    users.map((userCard, idx) => (
+                        <User
+                            key={'user'.concat(idx.toString())}
+                            user={userCard}
+                        />
+                    ))
+                ) : (
+                    <Text header>No users found</Text>
+                )}
             </div>
         </>
     )
