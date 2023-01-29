@@ -23,11 +23,13 @@ const user: UserObjectWithID = {
 // This is a test for the User component
 describe('User', () => {
     it('should render', () => {
-        const { container } = render(<User user={user} />)
+        const { container } = render(
+            <User user={user} getNewUser={jest.fn()} />
+        )
         expect(container).toMatchSnapshot()
     })
     it('should render correct user information', () => {
-        render(<User user={user} />)
+        render(<User user={user} getNewUser={jest.fn()} />)
         expect(screen.getByText('Toby Rushton')).toBeInTheDocument()
         expect(screen.getByText('📚 Computer Science')).toBeInTheDocument()
         expect(screen.getByText('🎓 University of Test')).toBeInTheDocument()
@@ -39,7 +41,7 @@ describe('User', () => {
             render(
                 <MockedProvider>
                     <ProviderStack>
-                        <User user={user} />
+                        <User user={user} getNewUser={jest.fn()} />
                     </ProviderStack>
                 </MockedProvider>
             )
@@ -53,7 +55,7 @@ describe('User', () => {
             render(
                 <MockedProvider>
                     <ProviderStack>
-                        <User user={user} />
+                        <User user={user} getNewUser={jest.fn()} />
                     </ProviderStack>
                 </MockedProvider>
             )
