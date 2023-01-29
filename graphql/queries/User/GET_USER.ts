@@ -5,11 +5,13 @@ export const GET_USER = gql`
         $id: String!
         $universityPreference: String!
         $university: String!
+        $take: Int
     ) {
         user(
             id: $id
             universityPreference: $universityPreference
             university: $university
+            take: $take
         ) {
             bio
             course

@@ -20,7 +20,11 @@ import { CREATE_FRIEND_REQUEST } from '../../graphql/queries'
 import styles from '../../styles/modules/UI.module.scss'
 import { Button } from './Button'
 
-const FriendPopup: FC<{ id: string; exit: () => void }> = ({ id, exit }) => {
+const FriendPopup: FC<{
+    id: string
+    exit: () => void
+    getNewUser: (id: string) => Promise<void>
+}> = ({ id, exit, getNewUser }) => {
     const { mutation, loading } = useMutation()
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
@@ -49,6 +53,7 @@ const FriendPopup: FC<{ id: string; exit: () => void }> = ({ id, exit }) => {
                 content: 'Friend request sent',
             })
             setLoading(false)
+            getNewUser(id)
             exit()
         }
     }
@@ -72,12 +77,19 @@ const FriendPopup: FC<{ id: string; exit: () => void }> = ({ id, exit }) => {
     )
 }
 
-export const User: FC<{ user: UserObjectWithID }> = ({ user }) => {
+export const User: FC<{
+    user: UserObjectWithID
+    getNewUser: (id: string) => Promise<void>
+}> = ({ user, getNewUser }) => {
     const [displayPopup, setDisplayPopup] = useState(false)
     return (
         <>
             {displayPopup && (
-                <FriendPopup id={user.id} exit={() => setDisplayPopup(false)} />
+                <FriendPopup
+                    id={user.id}
+                    exit={() => setDisplayPopup(false)}
+                    getNewUser={getNewUser}
+                />
             )}
             <div className={styles.user}>
                 <div className={styles.userHeader}>

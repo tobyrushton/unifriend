@@ -1,4 +1,11 @@
-import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
+import {
+    objectType,
+    extendType,
+    nonNull,
+    stringArg,
+    booleanArg,
+    intArg,
+} from 'nexus'
 import {
     EmailQuery,
     TempUserObject,
@@ -98,6 +105,7 @@ export const UserQuery = extendType({
                 id: nonNull(stringArg()),
                 universityPreference: nonNull(stringArg()),
                 university: nonNull(stringArg()),
+                take: intArg(),
             },
             resolve: async (_parent, args, ctx) => {
                 // allows for the users to be randomised
@@ -114,7 +122,7 @@ export const UserQuery = extendType({
 
                 // returns all rows in the user table
                 return ctx.prisma.users.findMany({
-                    take: 10,
+                    take: args.take ?? 10,
                     orderBy: {
                         [orderBy]: orderDirection,
                     },
@@ -129,7 +137,7 @@ export const UserQuery = extendType({
                                 OR: [
                                     {
                                         friends: {
-                                            some: {
+                                            every: {
                                                 AND: [
                                                     {
                                                         friendID: {
@@ -149,6 +157,89 @@ export const UserQuery = extendType({
                                         friends: {
                                             none: {},
                                         },
+                                    },
+                                ],
+                            },
+                            {
+                                OR: [
+                                    {
+                                        Friends_Friends_friendIDToUsers: {
+                                            every: {
+                                                AND: [
+                                                    {
+                                                        friendID: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                    {
+                                                        usersId: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    },
+                                    {
+                                        Friends_Friends_friendIDToUsers: {
+                                            none: {},
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                OR: [
+                                    {
+                                        friendRequests: {
+                                            every: {
+                                                AND: [
+                                                    {
+                                                        friendID: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                    {
+                                                        usersId: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    },
+                                    {
+                                        friendRequests: {
+                                            none: {},
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                OR: [
+                                    {
+                                        FriendRequests_FriendRequests_friendIDToUsers:
+                                            {
+                                                every: {
+                                                    AND: [
+                                                        {
+                                                            friendID: {
+                                                                not: args.id,
+                                                            },
+                                                        },
+                                                        {
+                                                            usersId: {
+                                                                not: args.id,
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                    },
+                                    {
+                                        FriendRequests_FriendRequests_friendIDToUsers:
+                                            {
+                                                none: {},
+                                            },
                                     },
                                 ],
                             },

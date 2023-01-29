@@ -47,6 +47,38 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
         if (data) setUsers(data.user)
     }
 
+    const getNewUser = async (id: string): Promise<void> => {
+        const { data, error } = await query<
+            QueryReturn<UserObjectWithID, 'User', 'user'>,
+            Join<
+                IDArguement,
+                {
+                    universityPreference: string
+                    university: string
+                    take: number
+                }
+            >
+        >({
+            query: GET_USER,
+            id: user.id,
+            universityPreference: settings.universityPreference,
+            university: user.university,
+            take: 1,
+            fetchPolicy: 'no-cache',
+        })
+        if (error)
+            createNotification({
+                type: 'error',
+                content: 'Error fetching users',
+            })
+        if (data)
+            setUsers(prev =>
+                structuredClone(prev)
+                    .filter(u => u.id !== id)
+                    .concat(data.user)
+            )
+    }
+
     return (
         <>
             <Image
@@ -66,6 +98,7 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
                         <User
                             key={'user'.concat(idx.toString())}
                             user={userCard}
+                            getNewUser={getNewUser}
                         />
                     ))
                 ) : (
