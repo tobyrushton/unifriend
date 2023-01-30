@@ -25,14 +25,18 @@ const FriendPopup: FC<{
     exit: () => void
     getNewUser: (id: string) => Promise<void>
 }> = ({ id, exit, getNewUser }) => {
+    // hooks
     const { mutation, loading } = useMutation()
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
     const { user } = useUser()
 
+    // sets loading screen when loading
     useEffect(() => setLoading(loading), [loading, setLoading])
 
+    // creates a friend request
     const createFriend = async (): Promise<void> => {
+        // mutation to create friend request
         const { success, error } = await mutation<
             QueryReturn<FriendsWithID, 'Friend', 'createFriend'>,
             FriendRequestParams
@@ -53,8 +57,8 @@ const FriendPopup: FC<{
                 content: 'Friend request sent',
             })
             setLoading(false)
-            getNewUser(id)
-            exit()
+            getNewUser(id) // gets a new user
+            exit() // closes the popup
         }
     }
 

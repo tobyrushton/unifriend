@@ -14,14 +14,18 @@ export const ThemeProvider: FC<ChildrenProps> = ({ children }) => {
     const { settings } = useUser()
 
     useEffect(() => {
+        // sets the theme to the users preference
         const themeType: Theme = settings.darkMode ? 'dark' : 'light'
 
+        // sets the theme
         setTheme(settings.darkMode ? colors.dark : colors.light)
 
+        // sets the theme in a cookie
         Cookies.set('theme', themeType, {
             expires: new Date().setFullYear(new Date().getFullYear() + 1),
         })
 
+        // sets the theme in the html
         document.documentElement.setAttribute('data-theme', themeType)
     }, [settings.darkMode])
 

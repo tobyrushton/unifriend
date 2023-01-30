@@ -21,9 +21,11 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
     fetchedMessages,
 }) => {
     const [messages, setMessages] = useState<MessageWithId[]>(
+        // reverse the messages so the newest messages are at the bottom
         structuredClone(fetchedMessages.reverse())
     )
 
+    // adds a message to the messages array
     const addMessage = (newMessage: MessageWithId): void => {
         setMessages(prevState => {
             const temp = structuredClone(prevState)
@@ -32,12 +34,14 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
         })
     }
 
+    // subscribes to new messages
     useSubscription<
         QueryReturn<MessageWithId, 'Message', 'GetMessageUpdates'>,
         IDArguement
     >(SUBSCRIBE_TO_MESSAGES, {
         variables: { id: conversationId },
         onData: ({ data: { data } }) => {
+            // on new message received, add it to the messages array
             if (data?.GetMessageUpdates) {
                 const { __typename, ...newMessage } = data.GetMessageUpdates
                 addMessage(newMessage)

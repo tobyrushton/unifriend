@@ -15,6 +15,7 @@ export const ProfilePicture: FC<ProfilePictureProps> = ({
 }) => {
     const [src, setSrc] = useState<string>()
 
+    // sets the src to undefined when the image changes
     useEffect(() => {
         setSrc(undefined)
     }, [image, setSrc])
