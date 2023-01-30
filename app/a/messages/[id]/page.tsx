@@ -20,6 +20,7 @@ import { Messages } from './messages'
 import { getServerSideSupabase } from '../../../../lib/supabase'
 import styles from '../../../../styles/modules/Messages.module.scss'
 
+// fetches all messages and the other users details
 const getData = async (
     id: string
 ): Promise<
@@ -31,13 +32,17 @@ const getData = async (
     const {
         data: { session },
     } = await supabase.auth.getSession()
+    // if no session is found, throw an error
     if (session === null) throw new Error('No session found')
 
+    // fetches all messages and the other users details
+    // Promise.all is used to fetch both queries at the same time in parallel
     const val: [
         MessageWithId[] | Error,
         GetUserFromConversationReturn | Error
     ] = await Promise.all([
         (async (): Promise<MessageWithId[] | Error> => {
+            // fetches all messages
             const { data, error } = await apollo.query<
                 QueryReturn<MessageWithId[], 'Message', 'GetMessages'>,
                 IDArguement
@@ -47,6 +52,7 @@ const getData = async (
             return data.GetMessages
         })(),
         (async (): Promise<GetUserFromConversationReturn | Error> => {
+            // fetches the other users details
             const { data, error } = await apollo.query<
                 QueryReturn<
                     GetUserFromConversationReturn,

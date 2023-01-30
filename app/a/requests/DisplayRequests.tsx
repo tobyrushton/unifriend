@@ -23,20 +23,24 @@ export const DisplayRequests: FC<{ fetchedRequests?: UserFromFriend[] }> = ({
         fetchedRequests
     )
 
+    // hooks
     const { createNotification } = useNotifications()
     const { loading, mutation } = useMutation()
     const { setLoading } = useLoadingScreen()
     const { user } = useUser()
 
+    // synchornises the loading state with the loading state of the query hook
     useEffect(() => {
         setLoading(loading)
     }, [loading, setLoading])
 
+    // deletes a friend request
     const handleDeleteRequest = async ({
         id,
     }: {
         id: string
     }): Promise<{ success: boolean }> => {
+        // mutation to delete the friend request
         const { error, success } = await mutation<IDArguement, IDArguement>({
             mutation: DELETE_FRIEND_REQUEST,
             id,
@@ -50,6 +54,7 @@ export const DisplayRequests: FC<{ fetchedRequests?: UserFromFriend[] }> = ({
             })
 
         if (success)
+            // removes the request from the state
             setRequests(
                 [...(requests as UserFromFriend[])]?.filter(
                     request => request.rowId !== id
@@ -59,6 +64,7 @@ export const DisplayRequests: FC<{ fetchedRequests?: UserFromFriend[] }> = ({
         return { success }
     }
 
+    // creates a friendship
     const handleCreateFriend = async ({
         id,
         friendId,
@@ -68,8 +74,10 @@ export const DisplayRequests: FC<{ fetchedRequests?: UserFromFriend[] }> = ({
     }): Promise<void> => {
         const { success: deleteSuccess } = await handleDeleteRequest({
             id,
-        })
+        }) // deletes the friend request first
+        // if the request was not deleted successfully, return
         if (!deleteSuccess) return
+        // mutation to create a friendship
         const { error, success } = await mutation<
             IDArguement,
             FriendRequestParams

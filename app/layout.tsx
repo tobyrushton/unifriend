@@ -29,9 +29,11 @@ import '../styles/globals.scss'
 
 export const revalidate = 0
 
+// gets the users current theme
 const getTheme = (): Theme => {
     const nextCookies = cookies()
 
+    // checks cookies for theme, if none is found it defaults to light
     return (nextCookies.get('theme')?.value ?? 'light') as Theme
 }
 
@@ -46,6 +48,7 @@ const getSession = async (): Promise<GetSessionReturn | null> => {
 
     const apollo = initiateApollo()
 
+    // fetches the users data
     const { data } = await apollo.query<
         QueryReturn<
             Join<

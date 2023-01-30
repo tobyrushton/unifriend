@@ -27,19 +27,24 @@ export const Sidebar: FC<{ fetchedConversations: ConversationReturn[] }> = ({
         NewConversationUser[]
     >([])
 
+    // hooks
     const { friends, user } = useUser()
     const { query } = useQuery()
     const { createNotification } = useNotifications()
 
+    // filters conversations based on search
     const filter = (): void => {
         setConversations(
             fetchedConversations.filter(val => val.username.includes(search))
         )
     }
 
+    // filters conversations when search is updated
     useEffect(filter, [search, fetchedConversations])
 
     useEffect(() => {
+        // fetches users for new conversation when the component is mounted
+        // Promise.all is used to execute the queries in parallel
         Promise.all(
             friends.map(friend =>
                 (async (): Promise<NewConversationUser> => {

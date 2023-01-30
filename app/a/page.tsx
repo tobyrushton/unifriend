@@ -17,13 +17,17 @@ import { initiateApollo } from '../../lib/apollo'
 import { getServerSideSupabase } from '../../lib/supabase'
 import { UserContainer } from './UserContainer'
 
+// fetches the users to be displayed on the page
 const getData = async (): Promise<UserObjectWithID[]> => {
     const apollo = initiateApollo()
     const supabase = getServerSideSupabase()
 
+    // gets the users current session
     const {
         data: { session },
     } = await supabase.auth.getSession()
+
+    // fetches the users id, settings and university
     const { data: UserData, error: UserError } = await apollo.query<
         QueryReturn<
             Join<IDArguement, { settings: Settings; university: University }>,
@@ -42,6 +46,7 @@ const getData = async (): Promise<UserObjectWithID[]> => {
     })
     if (UserError) throw UserError
 
+    // fetches the different users based on the users settings
     const { data, error } = await apollo.query<
         QueryReturn<UserObjectWithID[], 'User', 'user'>,
         Join<IDArguement, { universityPreference: string; university: string }>

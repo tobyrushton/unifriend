@@ -19,6 +19,7 @@ import {
 import styles from '../../../styles/modules/Messages.module.scss'
 import { Sidebar } from './sidebar'
 
+// fetches the users conversations
 const getData = async (): Promise<ConversationReturn[]> => {
     const supabase = getServerSideSupabase()
     const {
@@ -29,6 +30,7 @@ const getData = async (): Promise<ConversationReturn[]> => {
 
     const apollo = initiateApollo()
 
+    // fetches the users id
     const {
         data: {
             UserQueryByEmail: { id },
@@ -44,6 +46,7 @@ const getData = async (): Promise<ConversationReturn[]> => {
 
     if (userError) throw userError
 
+    // fetches the users conversations
     const { data } = await apollo.query<
         QueryReturn<ConversationReturn[], 'test', 'getConversations'>,
         IDArguement

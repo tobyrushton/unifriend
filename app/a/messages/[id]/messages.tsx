@@ -6,15 +6,18 @@ import { useUser, useMessages } from '../../../../hooks'
 import styles from '../../../../styles/modules/Messages.module.scss'
 
 export const Messages: FC = () => {
+    // hooks
     const { user } = useUser()
     const { messages } = useMessages()
 
+    // ref to the bottom of the messages
     const bottom = useRef<HTMLDivElement | null>(null)
 
     const scrollToBottom = (): void => {
         bottom.current?.scrollIntoView()
     }
 
+    // scrolls to the bottom of the messages when the messages are updated
     useEffect(scrollToBottom, [messages.length])
 
     return (

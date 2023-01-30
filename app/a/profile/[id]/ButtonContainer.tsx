@@ -27,16 +27,20 @@ type Props = {
 }
 
 export const ButtonContainer: FC<Props> = ({ profileId, friends }) => {
+    // hooks
     const { loading, mutation } = useMutation()
     const { user } = useUser()
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
 
+    // synchornises the loading state with the loading state of the query hook
     useEffect(() => {
         setLoading(loading)
     }, [loading, setLoading])
 
+    // sends a friend request
     const handleFriendRequest = async (): Promise<void> => {
+        // mutation to send a friend request
         const { success, error } = await mutation<Friends, FriendRequestParams>(
             {
                 mutation: CREATE_FRIEND_REQUEST,
@@ -58,13 +62,16 @@ export const ButtonContainer: FC<Props> = ({ profileId, friends }) => {
             )
     }
 
+    // removes a friend
     const handleRemoveFriend = async (): Promise<void> => {
-        if (!friends) return
+        if (!friends) return // ensures that the friends array is not empty
 
+        // finds the id of the friend to be removed
         const id = friends.find(friend => friend.id === user.id)?.rowId
 
         if (!id) return
 
+        // mutation to remove the friend
         const { success, error } = await mutation<IDArguement, IDArguement>({
             mutation: DELETE_FRIEND,
             id,

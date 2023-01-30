@@ -18,14 +18,18 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
 }) => {
     const [users, setUsers] = useState<UserObjectWithID[]>(fetchedUsers)
 
+    // hooks
     const { user, settings } = useUser()
     const { createNotification } = useNotifications()
     const { setLoading } = useLoadingScreen()
     const { loading, query } = useQuery()
 
+    // synchornises the loading state with the loading state of the query hook
     useEffect(() => setLoading(loading), [loading, setLoading])
 
+    // fetches a new user when list is refreshed
     const getNewUsers = async (): Promise<void> => {
+        // fetches new user based on users settings
         const { data, error } = await query<
             QueryReturn<UserObjectWithID[], 'User', 'user'>,
             Join<
@@ -37,7 +41,7 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
             id: user.id,
             universityPreference: settings.universityPreference,
             university: user.university,
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'no-cache', // no cache in order to ensure different return every time.
         })
         if (error)
             createNotification({
@@ -47,7 +51,9 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
         if (data) setUsers(data.user)
     }
 
+    // fetches a new user when a user is removed
     const getNewUser = async (id: string): Promise<void> => {
+        // fetches a new user based on users settings
         const { data, error } = await query<
             QueryReturn<UserObjectWithID, 'User', 'user'>,
             Join<
@@ -64,7 +70,7 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
             universityPreference: settings.universityPreference,
             university: user.university,
             take: 1,
-            fetchPolicy: 'no-cache',
+            fetchPolicy: 'no-cache', // no cache in order to ensure different return every time.
         })
         if (error)
             createNotification({
@@ -72,6 +78,7 @@ export const UserContainer: FC<{ fetchedUsers: UserObjectWithID[] }> = ({
                 content: 'Error fetching users',
             })
         if (data)
+            // replaces the user that was removed with the new user
             setUsers(prev =>
                 structuredClone(prev)
                     .filter(u => u.id !== id)

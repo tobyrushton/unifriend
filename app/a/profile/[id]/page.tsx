@@ -16,14 +16,18 @@ import { isError } from '../../../../lib/utils'
 import { ButtonContainer } from './ButtonContainer'
 import styles from '../../../../styles/modules/Profile.module.scss'
 
+// fetches the users data and their friends
 const getData = async (
     id: string
 ): Promise<[UserObject | Error, UserFromFriend[] | Error]> => {
     const apollo = initiateApollo()
 
+    // fetches the users data and their friends using a Promise.all
+    // Promise.all is used to execute the queries in parallel
     const res: [UserObject | Error, UserFromFriend[] | Error] =
         await Promise.all([
             (async (): Promise<UserObject | Error> => {
+                // fetches the users data
                 const { data, error } = await apollo.query<
                     QueryReturn<UserObject, 'users', 'users'>,
                     SelectUserByIDParameters
@@ -42,6 +46,7 @@ const getData = async (
                 return error as Error
             })(),
             (async (): Promise<UserFromFriend[] | Error> => {
+                // fetches the users friends
                 const { data, error } = await apollo.query<
                     QueryReturn<UserFromFriend[], 'Friends', 'getFriends'>,
                     IDArguement
@@ -61,6 +66,7 @@ const Profile = async ({
 }: {
     params: { id: string }
 }): Promise<ReactElement> => {
+    // fetches the data with the params of the pathname
     const [profile, friends] = await getData(params.id)
 
     // errors screen to be created later.

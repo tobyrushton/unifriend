@@ -19,6 +19,7 @@ import { initiateApollo } from '../../../lib/apollo'
 import { getServerSideSupabase } from '../../../lib/supabase'
 import { DisplayRequests } from './DisplayRequests'
 
+// fetches the users friend requests
 const getData = async (): Promise<
     [IDArguement | Error, UserFromFriend[] | Error]
 > => {
@@ -32,6 +33,7 @@ const getData = async (): Promise<
 
     const apollo = initiateApollo()
 
+    // fetches the users id
     const {
         data: {
             UserQueryByEmail: { id },
@@ -46,6 +48,7 @@ const getData = async (): Promise<
     })
     if (userError) return [userError, new Error()]
 
+    // fetches the users friend requests
     const {
         error,
         data: { getFriendRequests: friends },

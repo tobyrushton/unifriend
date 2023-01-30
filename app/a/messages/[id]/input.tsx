@@ -15,14 +15,18 @@ import styles from '../../../../styles/modules/Messages.module.scss'
 
 export const MessageInput: FC = () => {
     const [message, setMessage] = useState<string>('')
+
+    // hooks
     const { mutation } = useMutation()
     const { createNotification } = useNotifications()
     const { user } = useUser()
     const { conversationId } = useMessages()
 
+    // sends a message
     const handleSendMessage = async (): Promise<void> => {
-        if (!message) return
+        if (!message) return // if the message is empty, do nothing
 
+        // mutation to send a message
         const { error } = await mutation<MessageWithId, SendMessageArgs>({
             mutation: CREATE_MESSAGE,
             id: conversationId,
@@ -34,7 +38,7 @@ export const MessageInput: FC = () => {
             error.forEach(e =>
                 createNotification({ type: 'error', content: e.message })
             )
-        setMessage('')
+        setMessage('') // resets the message
     }
 
     return (

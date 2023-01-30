@@ -25,6 +25,7 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
     const [users, setUsers] = useState<NewConversationUser[]>(fetchedUsers)
     const [search, setSearch] = useState<string>('')
 
+    // hooks
     const { query, loading: queryLoading } = useQuery()
     const { mutation, loading: mutationLoading } = useMutation()
     const { user } = useUser()
@@ -32,6 +33,7 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
     const { setLoading } = useLoadingScreen()
     const router = useRouter()
 
+    // filters users based on search input
     const filter = (): void => {
         const inp = search.toLowerCase()
         setUsers(
@@ -45,9 +47,11 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
         )
     }
 
+    // checks if a conversation already exists
     const checkForConversation = async (
         id: string
     ): Promise<string | undefined> => {
+        // query to search for conversation
         const { data, error } = await query<
             ConversationPartial,
             NewConversationArgs
@@ -58,10 +62,13 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
         return undefined
     }
 
+    // creates a new conversation
     const createConversation = async (id: string): Promise<void> => {
+        // check if conversation already exists
         const check = await checkForConversation(id)
         if (check) router.push(`/a/messages/${check}`)
 
+        // mutation to create a new conversation
         const { error } = await mutation<
             ConversationPartial,
             NewConversationArgs
@@ -73,8 +80,10 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
         // on success router.push to conversation page.
     }
 
+    // filters when search input changes
     useEffect(filter, [search, fetchedUsers])
 
+    // synchornises the loading state with the loading state of the query and mutation hooks
     useEffect(() => {
         setLoading(mutationLoading || queryLoading)
     }, [mutationLoading, queryLoading, setLoading])
