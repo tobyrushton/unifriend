@@ -120,12 +120,17 @@ export const UserQuery = extendType({
                     'email',
                 ])
 
-                // returns all rows in the user table
+                // returns 10 rows from the database
                 return ctx.prisma.users.findMany({
                     take: args.take ?? 10,
                     orderBy: {
                         [orderBy]: orderDirection,
                     },
+                    // filters the rows to only return rows that match the arguements
+                    // returns if no friend relation or friend request relation exists
+                    // and if the university matches the arguement if universityPreference is 'OWN'
+                    // or if the university is not the same and the
+                    // universityPreference is 'ALL' for both users
                     where: {
                         AND: [
                             {

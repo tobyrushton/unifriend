@@ -37,6 +37,7 @@ export const CreateConversations = extendType({
                 userTwoId: nonNull(stringArg()),
             },
             resolve: (_, args, ctx) => {
+                // create a conversation
                 return ctx.prisma.conversations.create({
                     data: args,
                 })
@@ -64,9 +65,12 @@ export const GetConversation = extendType({
                 userTwoId: nonNull(stringArg()),
             },
             resolve: async (_, args, ctx) => {
+                // get a conversation
                 const query1: ConversationPartial | null =
                     await ctx.prisma.conversations.findFirst({ where: args })
 
+                // if the conversation doesn't exist,
+                // then we need to reverse the userOneId and userTwoId
                 const query2: ConversationPartial | null =
                     await ctx.prisma.conversations.findFirst({
                         where: {
@@ -75,6 +79,7 @@ export const GetConversation = extendType({
                         },
                     })
 
+                // return the conversation
                 return (query1 ?? query2) as ConversationType
             },
         })
@@ -102,7 +107,7 @@ export const GetConversations = extendType({
                     id: item.id,
                     usersId: item.userTwo.id,
                     username: item.userTwo.username,
-                }))
+                })) // map the data to the correct format
 
                 const query2: ConversationReturnType[] = (
                     await ctx.prisma.conversations.findMany({
@@ -116,8 +121,9 @@ export const GetConversations = extendType({
                     id: item.id,
                     usersId: item.userOne.id,
                     username: item.userOne.username,
-                }))
+                })) // map the data to the correct format
 
+                // return the conversations
                 return query1.concat(query2)
             },
         })
@@ -134,27 +140,33 @@ export const GetUserIdFromConversationId = extendType({
                 email: nonNull(stringArg()),
             },
             resolve: async (_, args, ctx) => {
+                // get the user id from the conversation id
                 const user = await ctx.prisma.users.findUnique({
                     where: { email: args.email },
                     select: { id: true },
                 })
+                // if the user doesn't exist, then throw an error
                 if (!user) throw new Error('No account exists')
                 const { id } = user
 
+                // get the conversation
                 const conversation = await ctx.prisma.conversations.findUnique({
                     where: { id: args.conversationId },
                 })
                 if (!conversation) throw new Error('No conversation exists')
 
+                // get the other user id
                 const userId =
                     conversation.userOneId === id
                         ? conversation.userTwoId
                         : conversation.userOneId
 
+                // get the user
                 const foundUser = await ctx.prisma.users.findUnique({
                     where: { id: userId },
                     select: { firstName: true, lastName: true },
                 })
+                // if the user doesn't exist, then throw an error
                 if (!foundUser) throw new Error('No user found')
 
                 return {

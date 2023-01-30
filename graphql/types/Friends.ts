@@ -148,6 +148,7 @@ export const getFriendRequests = extendType({
                         },
                     })
 
+                // removes unnecessary data and maps the query to the correct type
                 const friendRequests = query.map(item => {
                     const { id, ...user } = item
                     const details = (user as FriendReturnTwo).Users
@@ -195,6 +196,7 @@ export const getFriends = extendType({
                         },
                     })
 
+                // joins the two queries together and maps them to the correct type
                 const friends = (query1.concat(query2) as FriendReturn[]).map(
                     item => {
                         const { id, ...user } = item
@@ -203,6 +205,7 @@ export const getFriends = extendType({
                                 .Users_Friends_friendIDToUsers ??
                             (user as FriendReturnTwo).Users
 
+                        // returns only required information
                         return {
                             rowId: id,
                             id: details?.id,

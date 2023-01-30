@@ -111,7 +111,7 @@ export const GetInitialMessages = extendType({
                     where: {
                         conversationId: args.id,
                     },
-                    orderBy: { sentAt: 'desc' },
+                    orderBy: { sentAt: 'desc' }, // orders by most recent
                     take: 20, // gets initial 20 messages
                 })
             },
@@ -128,8 +128,9 @@ export const GetMessagesSubscription = extendType({
                 id: nonNull(stringArg()),
             },
             subscribe: (_, args, ctx) =>
+                // subscribes to new messages with matching id
                 ctx.pubsub.subscribe('newMessage', args.id),
-            resolve: payload => payload,
+            resolve: payload => payload, // returns message when new message is published
         })
     },
 })
