@@ -82,6 +82,11 @@
     border-left: solid;
     border-color: variables.$accent_color;
     border-width: 2px;
+
+    p{
+        align-self: flex-end;
+        margin-right: 0.5rem;
+    }
 }
 
 .messageContainer {

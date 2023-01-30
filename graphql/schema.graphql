@@ -35,6 +35,10 @@ type GetFriend {
   username: String!
 }
 
+type IDArguement {
+  id: String
+}
+
 type Message {
   conversationId: String
   id: String
@@ -83,6 +87,7 @@ type Settings {
 
 type Subscription {
   GetMessageUpdates(id: String!): Message!
+  MarkMessageAsRead(id: String!): IDArguement!
 }
 
 type User {

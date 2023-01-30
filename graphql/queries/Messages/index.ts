@@ -1,3 +1,5 @@
 export * from './GET_MESSAGES'
 export * from './CREATE_MESSAGE'
 export * from './SUBSCRIBE_TO_MESSAGES'
+export * from './MARK_MESSAGE_AS_READ'
+export * from './SUBSCRIBE_TO_MESSAGES_BEING_READ'

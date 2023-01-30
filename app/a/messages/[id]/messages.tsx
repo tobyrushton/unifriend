@@ -1,7 +1,7 @@
 'use client'
 
 import { FC, useEffect, useRef } from 'react'
-import { Message } from '../../../../components'
+import { Message, Text } from '../../../../components'
 import { useUser, useMessages } from '../../../../hooks'
 import styles from '../../../../styles/modules/Messages.module.scss'
 
@@ -30,6 +30,13 @@ export const Messages: FC = () => {
                     {message.message}
                 </Message>
             ))}
+            <Text small>
+                {messages.at(-1)?.senderId === user.id
+                    ? messages.at(-1)?.seen
+                        ? 'Seen'
+                        : 'Delivered'
+                    : null}
+            </Text>
             <div ref={bottom} />
         </div>
     )

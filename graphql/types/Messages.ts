@@ -65,13 +65,19 @@ export const MarkMessageAsRead = extendType({
                 // takes the  id of the message as a parameter.
                 id: nonNull(stringArg()),
             },
-            resolve: (_parent, args, ctx) => {
-                return ctx.prisma.messages.update({
+            resolve: async (_parent, args, ctx) => {
+                const data = (await ctx.prisma.messages.update({
                     where: { id: args.id },
                     data: {
                         seen: true, // updates seen attribute to true.
                     },
-                }) as unknown as MessageWithId
+                })) as unknown as MessageWithId
+
+                ctx.pubsub.publish('messageRead', data.conversationId, {
+                    id: data.id,
+                })
+
+                return data
             },
         })
     },
@@ -131,6 +137,29 @@ export const GetMessagesSubscription = extendType({
                 // subscribes to new messages with matching id
                 ctx.pubsub.subscribe('newMessage', args.id),
             resolve: payload => payload, // returns message when new message is published
+        })
+    },
+})
+
+export const MessageFromMarkAsReadSubscription = objectType({
+    name: 'IDArguement',
+    definition(t) {
+        t.string('id')
+    },
+})
+
+export const MarkMessageAsReadSubscription = extendType({
+    type: 'Subscription',
+    definition(t) {
+        t.nonNull.field('MarkMessageAsRead', {
+            type: 'IDArguement',
+            args: {
+                id: nonNull(stringArg()),
+            },
+            subscribe: (_, args, ctx) =>
+                // subscribes to messages updating with matching id
+                ctx.pubsub.subscribe('messageRead', args.id),
+            resolve: payload => payload, // returns message message id when message is updated
         })
     },
 })

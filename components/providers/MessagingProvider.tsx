@@ -1,8 +1,14 @@
 'use client'
 
-import { FC, createContext, useState, useMemo } from 'react'
+import { FC, createContext, useState, useMemo, useEffect } from 'react'
 import { useSubscription } from '@apollo/client'
-import { SUBSCRIBE_TO_MESSAGES } from '../../graphql/queries'
+import { useUser } from '../../hooks/providers/useUser'
+import { useMutation } from '../../hooks/graphql/useMutation'
+import {
+    MARK_MESSAGE_AS_READ,
+    SUBSCRIBE_TO_MESSAGES,
+    SUBSCRIBE_TO_MESSAGES_BEING_READ,
+} from '../../graphql/queries'
 import {
     IDArguement,
     MessageContextInterface,
@@ -25,6 +31,9 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
         structuredClone(fetchedMessages.reverse())
     )
 
+    const { user } = useUser()
+    const { mutation } = useMutation()
+
     // adds a message to the messages array
     const addMessage = (newMessage: MessageWithId): void => {
         setMessages(prevState => {
@@ -33,6 +42,34 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
             return temp
         })
     }
+
+    // marks all messages as read
+    const setMessagesToRead = useMemo(
+        () => async (): Promise<void> => {
+            const unreadMessages = structuredClone(messages).filter(
+                ({ seen, senderId }) => !seen && senderId !== user.id
+            )
+
+            // executes the mutations in parallel
+            Promise.all(
+                unreadMessages.map(({ id }) =>
+                    (async (): Promise<void> => {
+                        // marks the message as read
+                        await mutation<IDArguement, IDArguement>({
+                            mutation: MARK_MESSAGE_AS_READ,
+                            id,
+                        })
+                    })()
+                )
+            )
+        },
+        [messages, mutation, user.id]
+    )
+
+    // marks all messages as read when the messages array is updated
+    useEffect(() => {
+        setMessagesToRead()
+    }, [messages, user.id, setMessagesToRead])
 
     // subscribes to new messages
     useSubscription<
@@ -46,6 +83,26 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
                 const { __typename, ...newMessage } = data.GetMessageUpdates
                 addMessage(newMessage)
             }
+        },
+    })
+
+    useSubscription<
+        QueryReturn<IDArguement, 'IDArguement', 'MarkMessageAsRead'>,
+        IDArguement
+    >(SUBSCRIBE_TO_MESSAGES_BEING_READ, {
+        variables: { id: conversationId },
+        onData: ({ data: { data } }) => {
+            setMessages(prevState =>
+                structuredClone(prevState).map(message => {
+                    if (message.id === data?.MarkMessageAsRead?.id) {
+                        return {
+                            ...message,
+                            seen: true,
+                        }
+                    }
+                    return message
+                })
+            )
         },
     })
 
