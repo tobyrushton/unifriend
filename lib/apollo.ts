@@ -54,14 +54,18 @@ class SSELink extends ApolloLink {
     }
 }
 
+// site url
 const uri =
     process.env.NODE_ENV === 'production'
         ? 'https://famous-bombolone-2a6fd0.netlify.app/api/graphql'
         : 'http://localhost:3000/api/graphql'
 
+// server side events url for subscriptions
 const sseLink = new SSELink({ uri })
+// http link for queries and mutations
 const httpLink = new HttpLink({ uri })
 
+// split between sse and http links
 const link = split(
     ({ query, operationName }) => {
         const definition = getOperationAST(query, operationName)
@@ -75,6 +79,7 @@ const link = split(
     httpLink
 )
 
+// initiate apollo client
 export const initiateApollo = (): ApolloClient<object> => {
     return new ApolloClient({
         link,

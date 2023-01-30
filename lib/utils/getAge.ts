@@ -1,3 +1,4 @@
+// calculate age from date of birth
 export const getAge = (dateString: string): number => {
     const today = new Date()
     const birthDate = new Date(dateString)

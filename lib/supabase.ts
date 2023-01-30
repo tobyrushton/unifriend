@@ -8,6 +8,7 @@ import { headers, cookies } from 'next/headers'
 // creates an instance of supabase that will be used to handle authentication.
 export const supabase = createBrowserSupabaseClient()
 
+// creates an instance of supabase that will be used to handle authentication on the server side.
 export const getServerSideSupabase = (): SupabaseClient =>
     createServerComponentSupabaseClient({
         headers,
