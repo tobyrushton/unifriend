@@ -98,15 +98,16 @@ export interface ApolloQueryReturn {
     query: ApolloQueryFunction
 }
 
-export interface ApolloMutationFunctionReturn {
+export interface ApolloMutationFunctionReturn<TReturn> {
     success: boolean
     error: readonly Error[] | undefined
+    data: TReturn | undefined
 }
 
 /* eslint-disable-next-line */
 export type ApolloMutationFunction = <Return, Params>(
     args: Join<Mutation, Params>
-) => Promise<ApolloMutationFunctionReturn>
+) => Promise<ApolloMutationFunctionReturn<Return>>
 
 export interface ApolloMutationReturn {
     loading: boolean

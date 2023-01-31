@@ -14,6 +14,7 @@ import {
     ConversationPartial,
     NewConversationArgs,
     NewConversationUser,
+    QueryReturn,
 } from '../../../types'
 import { CREATE_CONVERSATION, GET_CONVERSATION } from '../../../graphql/queries'
 import styles from '../../../styles/modules/Messages.module.scss'
@@ -69,8 +70,12 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
         if (check) router.push(`/a/messages/${check}`)
 
         // mutation to create a new conversation
-        const { error } = await mutation<
-            ConversationPartial,
+        const { error, data } = await mutation<
+            QueryReturn<
+                ConversationPartial,
+                'Conversation',
+                'CreateConversation'
+            >,
             NewConversationArgs
         >({ mutation: CREATE_CONVERSATION, userOneId: user.id, userTwoId: id })
         if (error)
@@ -78,6 +83,7 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
                 createNotification({ type: 'error', content: err.message })
             )
         // on success router.push to conversation page.
+        if (data) router.push(`/a/messages/${data.CreateConversation.id}`)
     }
 
     // filters when search input changes

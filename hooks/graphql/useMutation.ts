@@ -21,18 +21,18 @@ export const useMutation = (): ApolloMutationReturn => {
         setLoading(true)
         let errors: readonly Error[] | undefined
         let success = false
+        let data: Return | undefined
         // executes mutation
         try {
-            const { errors: mutationErrors, data } = await apollo.mutate<
-                Return,
-                Params
-            >({
-                mutation,
-                variables,
-            })
+            const { errors: mutationErrors, data: mutationData } =
+                await apollo.mutate<Return, Params>({
+                    mutation,
+                    variables,
+                })
 
             errors = mutationErrors as unknown as Error[]
-            success = !!data
+            success = !!mutationData
+            if (mutationData) data = mutationData
         } catch (e) {
             errors = [e as Error]
         }
@@ -42,6 +42,7 @@ export const useMutation = (): ApolloMutationReturn => {
         return {
             error: errors,
             success,
+            data,
         }
     }
 
