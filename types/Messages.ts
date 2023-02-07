@@ -3,7 +3,7 @@ export interface Message {
     senderId: string
     conversationId: string
     seen: boolean
-    sentAt: Date
+    sentAt: string // stored as iso date string
 }
 
 export interface MessageWithId extends Message {

@@ -3,7 +3,7 @@ import { UserObjectWithID, UserObjectWithSettings } from './User'
 export interface Friends {
     friendID: string
     userId: string
-    friendedAt: any[] // temporary data type
+    friendedAt: string // stored as iso date string
 }
 
 export interface FriendsWithID extends Friends {
