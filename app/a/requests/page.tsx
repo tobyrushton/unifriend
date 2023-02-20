@@ -68,9 +68,9 @@ const getData = async (): Promise<
 const Requests = async (): Promise<ReactElement> => {
     const [user, requests] = await getData()
 
-    // error logic here
-    if (isError(user)) return <div />
-    if (isError(requests)) return <div />
+    // if there is an error, throw it to present error screen
+    if (isError(user)) throw user
+    if (isError(requests)) throw requests
 
     return <DisplayRequests fetchedRequests={requests} />
 }

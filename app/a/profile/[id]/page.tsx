@@ -69,9 +69,9 @@ const Profile = async ({
     // fetches the data with the params of the pathname
     const [profile, friends] = await getData(params.id)
 
-    // errors screen to be created later.
-    if (isError(profile)) return <div />
-    if (isError(friends)) return <div />
+    // if error is present throws error to present the error screen
+    if (isError(profile)) throw profile
+    if (isError(friends)) throw friends
 
     return (
         <div className={styles.container}>
