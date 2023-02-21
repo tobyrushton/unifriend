@@ -17,7 +17,7 @@ import {
 import { isError } from '../../../../lib/utils'
 import { MessageInput } from './input'
 import { Messages } from './messages'
-import { getServerSideSupabase } from '../../../../lib/supabase'
+import { getServerSideSupabase } from '../../../../lib/supabase.server'
 import styles from '../../../../styles/modules/Messages.module.scss'
 
 // fetches all messages and the other users details

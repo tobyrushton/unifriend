@@ -16,7 +16,7 @@ import {
 } from '../../../graphql/queries'
 import { isError } from '../../../lib/utils'
 import { initiateApollo } from '../../../lib/apollo'
-import { getServerSideSupabase } from '../../../lib/supabase'
+import { getServerSideSupabase } from '../../../lib/supabase.server'
 import { DisplayRequests } from './DisplayRequests'
 
 // fetches the users friend requests

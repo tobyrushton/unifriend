@@ -10,7 +10,7 @@ import {
     UserByEmailOptions,
     ConversationReturn,
 } from '../../../types'
-import { getServerSideSupabase } from '../../../lib/supabase'
+import { getServerSideSupabase } from '../../../lib/supabase.server'
 import { initiateApollo } from '../../../lib/apollo'
 import {
     GET_USER_BY_EMAIL_OPTIONAL,

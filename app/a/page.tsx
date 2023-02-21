@@ -14,7 +14,7 @@ import {
 } from '../../types'
 import { GET_USER, GET_USER_BY_EMAIL_OPTIONAL } from '../../graphql/queries'
 import { initiateApollo } from '../../lib/apollo'
-import { getServerSideSupabase } from '../../lib/supabase'
+import { getServerSideSupabase } from '../../lib/supabase.server'
 import { UserContainer } from './UserContainer'
 
 // fetches the users to be displayed on the page
