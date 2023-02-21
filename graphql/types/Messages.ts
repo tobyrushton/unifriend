@@ -45,7 +45,7 @@ export const CreateMessage = extendType({
 
                 const message: MessageWithId = messages.messages.at(
                     -1
-                ) as MessageWithId
+                ) as unknown as MessageWithId
 
                 ctx.pubsub.publish('newMessage', args.conversationId, message)
 
