@@ -81,6 +81,7 @@ describe('User Provider tests', () => {
                                 darkMode: false,
                                 universityPreference: 'OWN',
                             },
+                            friends: [],
                         },
                     },
                 },
