@@ -53,7 +53,7 @@ export const User = objectType({
 export const UserQueryByID = extendType({
     type: 'Query', // query refers to returning data from the database
     definition(t) {
-        t.nullable.field('users', {
+        t.nonNull.field('users', {
             type: 'User', // uses type user defined earlier.
             args: {
                 // all arguements that can be taken by the Query.
@@ -398,7 +398,7 @@ export const GetUserFromAuth = extendType({
 export const UserQueryByEmail = extendType({
     type: 'Query', // query refers to returning data from the database
     definition(t) {
-        t.nullable.field('UserQueryByEmail', {
+        t.nonNull.field('UserQueryByEmail', {
             type: 'User', // uses type user defined earlier.
             args: {
                 // all arguements that can be taken by the Query.
@@ -415,6 +415,7 @@ export const UserQueryByEmail = extendType({
                 all: booleanArg(),
             },
             resolve: (_parent, args, ctx) => {
+                console.log(args.email)
                 return ctx.prisma.users.findUnique({
                     where: {
                         // finds the unique user row in the databse with corresponding id

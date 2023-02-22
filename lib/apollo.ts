@@ -9,6 +9,7 @@ import {
 import { split } from '@apollo/client/link/core'
 import { HttpLink } from '@apollo/client/link/http'
 import { print, getOperationAST } from 'graphql'
+import { onError } from '@apollo/client/link/error'
 
 /* eslint-disable-next-line */
 type SSELinkOptions = EventSourceInit & { uri: string }
@@ -79,10 +80,20 @@ const link = split(
     httpLink
 )
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+        graphQLErrors.forEach(({ message, locations, path }) =>
+            console.log(
+                `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            )
+        )
+    if (networkError) console.log(`[Network error]: ${networkError}`)
+})
+
 // initiate apollo client
 export const initiateApollo = (): ApolloClient<object> => {
     return new ApolloClient({
-        link,
+        link: ApolloLink.from([errorLink, link]),
         cache: new InMemoryCache(),
         ssrMode: typeof window === 'undefined',
     })

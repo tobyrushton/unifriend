@@ -67,7 +67,7 @@ type Query {
   CheckUsernameIsTaken(username: String!): Boolean!
   GetMessages(id: String!): [Message]!
   GetUserIdFromConversationId(conversationId: String!, email: String!): UserFromConversationReturn!
-  UserQueryByEmail(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: String!, firstName: Boolean, id: Boolean, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
+  UserQueryByEmail(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: String!, firstName: Boolean, id: Boolean, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User!
   getAuthFromUsername(username: String!): Email!
   getConversation(userOneId: String!, userTwoId: String!): Conversation!
   getConversations(id: String!): [ConversationReturn]!
@@ -75,7 +75,7 @@ type Query {
   getFriends(usersId: String!): [GetFriend]!
   getUserFromAuth(email: String!): User!
   user(id: String!, take: Int, university: String!, universityPreference: String!): [User]!
-  users(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: Boolean, firstName: Boolean, id: String!, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
+  users(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: Boolean, firstName: Boolean, id: String!, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User!
 }
 
 type Settings {
