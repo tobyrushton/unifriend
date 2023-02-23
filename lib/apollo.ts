@@ -93,7 +93,10 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 // initiate apollo client
 export const initiateApollo = (): ApolloClient<object> => {
     return new ApolloClient({
-        link: ApolloLink.from([errorLink, link]),
+        link:
+            process.env.NODE_ENV === 'development'
+                ? ApolloLink.from([errorLink, link])
+                : link,
         cache: new InMemoryCache(),
         ssrMode: typeof window === 'undefined',
     })
