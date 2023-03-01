@@ -16,5 +16,10 @@
         }
     ],
     "separateMajorMinor": true,
-    "dependencyDashboard": false
+    "dependencyDashboard": false,
+    "schedule": [
+      "after 10pm every weekday",
+      "before 5am every weekday",
+      "every weekend"
+    ]
 }
