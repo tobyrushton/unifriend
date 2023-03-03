@@ -14,7 +14,7 @@
 
 .errorContainer {
     display: flex;
-    width: 50vw;
+    width: 25vw;
     height: 10rem;
     border-radius: .5rem;
     background-color: variables.$secondary_color;
@@ -27,5 +27,11 @@
 
     button {
         background-color: variables.$error_color;
+    }
+}
+
+@media screen and (max-width: 100px) {
+    .errorContainer {
+        width: 50vw;
     }
 }
