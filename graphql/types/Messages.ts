@@ -1,5 +1,5 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
-import { MessageId, MessageWithId } from '../../types'
+import { MessageWithId } from '../../types'
 import { DateTime } from '../scalars/DateTime'
 
 // table messages in the database
@@ -96,7 +96,11 @@ export const DeleteMessage = extendType({
             resolve: async (_parent, args, ctx) => {
                 const message = (await ctx.prisma.messages.delete({
                     where: { id: args.id }, // deletes row in the database
-                })) as unknown as MessageId
+                })) as unknown as MessageWithId
+
+                ctx.pubsub.publish('messageDeleted', message.conversationId, {
+                    id: message.id,
+                })
 
                 return message
             },
@@ -159,7 +163,23 @@ export const MarkMessageAsReadSubscription = extendType({
             subscribe: (_, args, ctx) =>
                 // subscribes to messages updating with matching id
                 ctx.pubsub.subscribe('messageRead', args.id),
-            resolve: payload => payload, // returns message message id when message is updated
+            resolve: payload => payload, // returns message id when message is updated
+        })
+    },
+})
+
+export const DeletedMessagesSubscription = extendType({
+    type: 'Subscription',
+    definition(t) {
+        t.nonNull.field('DeletedMessages', {
+            type: 'IDArguement',
+            args: {
+                id: nonNull(stringArg()),
+            },
+            subscribe: (_, args, ctx) =>
+                // subscribes to messages deleting with matching id
+                ctx.pubsub.subscribe('messageDeleted', args.id),
+            resolve: payload => payload, // returns message id when message is deleted
         })
     },
 })

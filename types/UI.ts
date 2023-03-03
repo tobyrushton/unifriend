@@ -1,4 +1,4 @@
-import { RefObject } from 'react'
+import React, { RefObject } from 'react'
 import { DocumentNode } from 'graphql'
 import { ChildrenProps, NotificationInterface } from './providers'
 import { Color } from './colors'
@@ -105,4 +105,5 @@ export type MutationButtonProps<_Return, Params> = ChildrenProps & {
 
 export type MessageProps = ChildrenProps & {
     recieved?: boolean // will default as sent message
+    onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void
 }

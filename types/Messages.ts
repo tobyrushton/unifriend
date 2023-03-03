@@ -19,3 +19,18 @@ export type SendMessageArgs = {
     senderId: string
     message: string
 }
+
+export interface MessageContextMenuInterface {
+    x: number
+    y: number
+    clicked: boolean
+    id: string
+}
+
+export interface MessageContextMenuProps {
+    id: string
+    position: {
+        top: string
+        left: string
+    }
+}

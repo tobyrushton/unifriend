@@ -8,6 +8,7 @@ import {
     MARK_MESSAGE_AS_READ,
     SUBSCRIBE_TO_MESSAGES,
     SUBSCRIBE_TO_MESSAGES_BEING_READ,
+    SUBSCRIBE_TO_DELETED_MESSAGES,
 } from '../../graphql/queries'
 import {
     IDArguement,
@@ -102,6 +103,20 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
                     }
                     return message
                 })
+            )
+        },
+    })
+
+    useSubscription<
+        QueryReturn<IDArguement, 'IDArguement', 'DeleteMessage'>,
+        IDArguement
+    >(SUBSCRIBE_TO_DELETED_MESSAGES, {
+        variables: { id: conversationId },
+        onData: ({ data: { data } }) => {
+            setMessages(prevState =>
+                structuredClone(prevState).filter(
+                    message => message.id !== data?.DeleteMessage?.id
+                )
             )
         },
     })

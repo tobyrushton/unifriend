@@ -7,6 +7,7 @@ import { IDArguement, MessageWithId } from '../types'
 type PubSubArgs = {
     newMessage: [conversationId: string, payload: MessageWithId]
     messageRead: [conversationId: string, payload: IDArguement]
+    messageDeleted: [conversationId: string, payload: IDArguement]
 }
 
 // Create a pubsub instance

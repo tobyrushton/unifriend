@@ -204,3 +204,13 @@
     border-radius: .25rem;
     height: 2rem;
 }
+
+.contextMenu {
+    position: absolute;
+    display: flex;
+    background-color: variables.$primary_color;
+    border-radius: .25rem;
+    border-color: variables.$accent_color;
+    border-style: solid;
+    border-width: 1px;
+}

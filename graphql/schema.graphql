@@ -86,6 +86,7 @@ type Settings {
 }
 
 type Subscription {
+  DeletedMessages(id: String!): IDArguement!
   GetMessageUpdates(id: String!): Message!
   MarkMessageAsRead(id: String!): IDArguement!
 }
