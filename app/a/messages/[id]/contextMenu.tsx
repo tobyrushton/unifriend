@@ -25,7 +25,7 @@ export const ContextMenu: FC<MessageContextMenuProps> = ({ id, position }) => {
 
     return (
         <div className={styles.contextMenu} style={position}>
-            <Text clickable onClick={handleDeleteMessage}>
+            <Text clickable onClick={handleDeleteMessage} small>
                 Delete
             </Text>
         </div>

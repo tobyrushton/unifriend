@@ -21,6 +21,15 @@ export const Messages: FC = () => {
         bottom.current?.scrollIntoView()
     }
 
+    // calculates the left position of the context menu
+    const calcLeft = (x: number): number => {
+        const width = window.innerWidth - 400
+        const left = x - 400
+
+        if (left > width - 100) return width - 100
+        return left
+    }
+
     // scrolls to the bottom of the messages when the messages are updated
     useEffect(scrollToBottom, [messages.length])
 
@@ -51,8 +60,8 @@ export const Messages: FC = () => {
                         e.preventDefault()
                         if (message.senderId !== user.id) return
                         setContextMenu({
-                            x: e.clientX,
-                            y: e.clientY,
+                            x: e.pageX,
+                            y: e.pageY,
                             clicked: true,
                             id: message.id,
                         })
@@ -65,8 +74,8 @@ export const Messages: FC = () => {
                 <ContextMenu
                     id={contextMenu.id}
                     position={{
-                        top: `${contextMenu.x}px`,
-                        left: `${contextMenu.y}px`,
+                        top: `${contextMenu.y - 100}px`,
+                        left: `${calcLeft(contextMenu.x)}px`,
                     }}
                 />
             )}
