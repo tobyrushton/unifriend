@@ -108,14 +108,14 @@ export const MessagingProvider: FC<MessagingProviderProps> = ({
     })
 
     useSubscription<
-        QueryReturn<IDArguement, 'IDArguement', 'DeleteMessage'>,
+        QueryReturn<IDArguement, 'IDArguement', 'DeletedMessages'>,
         IDArguement
     >(SUBSCRIBE_TO_DELETED_MESSAGES, {
         variables: { id: conversationId },
         onData: ({ data: { data } }) => {
             setMessages(prevState =>
                 structuredClone(prevState).filter(
-                    message => message.id !== data?.DeleteMessage?.id
+                    message => message.id !== data?.DeletedMessages?.id
                 )
             )
         },
