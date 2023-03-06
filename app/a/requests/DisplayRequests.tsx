@@ -97,41 +97,47 @@ export const DisplayRequests: FC<{ fetchedRequests?: UserFromFriend[] }> = ({
     }
 
     return (
-        <div className={styles.requestContainer}>
-            {requests?.map((request, idx) => (
-                <div
-                    className={styles.request}
-                    key={'request'.concat(idx.toString())}
-                >
-                    <ProfilePicture image={request.id} width={75} height={75} />
-                    <Text>{request.username}</Text>
-                    <div className={styles.buttons}>
-                        <Text
-                            clickable
-                            small
-                            color="success"
-                            onClick={() =>
-                                handleCreateFriend({
-                                    id: request.rowId,
-                                    friendId: request.id,
-                                })
-                            }
-                        >
-                            Accept
-                        </Text>
-                        <Text
-                            clickable
-                            small
-                            color="error"
-                            onClick={() =>
-                                handleDeleteRequest({ id: request.rowId })
-                            }
-                        >
-                            Deny
-                        </Text>
+        <div className={styles.screen}>
+            <div className={styles.requestContainer}>
+                {requests?.map((request, idx) => (
+                    <div
+                        className={styles.request}
+                        key={'request'.concat(idx.toString())}
+                    >
+                        <ProfilePicture
+                            image={request.id}
+                            width={75}
+                            height={75}
+                        />
+                        <Text>{request.username}</Text>
+                        <div className={styles.buttons}>
+                            <Text
+                                clickable
+                                small
+                                color="success"
+                                onClick={() =>
+                                    handleCreateFriend({
+                                        id: request.rowId,
+                                        friendId: request.id,
+                                    })
+                                }
+                            >
+                                Accept
+                            </Text>
+                            <Text
+                                clickable
+                                small
+                                color="error"
+                                onClick={() =>
+                                    handleDeleteRequest({ id: request.rowId })
+                                }
+                            >
+                                Deny
+                            </Text>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     )
 }
