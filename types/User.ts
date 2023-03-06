@@ -10,6 +10,7 @@ export interface ShellUser {
 
 export interface CreateUserObject extends ShellUser {
     email: string
+    bio: string | undefined
 }
 
 export interface CreateUserObjectWithUniversity extends CreateUserObject {

@@ -9,6 +9,7 @@ export const CREATE_USER = gql`
         $course: String!
         $username: String!
         $email: String!
+        $bio: String
     ) {
         createUser(
             firstName: $firstName
@@ -18,6 +19,7 @@ export const CREATE_USER = gql`
             course: $course
             username: $username
             email: $email
+            bio: $bio
         ) {
             bio
             birthday

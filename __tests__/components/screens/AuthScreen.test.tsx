@@ -410,7 +410,7 @@ describe('AuthScreen tests', () => {
         })
         fireEvent.click(screen.getByText('Next'))
         expect(screen.queryByPlaceholderText('Course')).toBeTruthy()
-        expect(screen.queryByText('Sign Up')).toBeTruthy()
+        expect(screen.queryByText('Next')).toBeTruthy()
     })
 
     it('can sign up', async () => {
@@ -504,6 +504,9 @@ describe('AuthScreen tests', () => {
                 target: { value: '2005-06-12' },
             })
         })
+        fireEvent.click(screen.getByText('Next'))
+
+        expect(screen.queryByText('Sign Up')).toBeTruthy()
         fireEvent.click(screen.getByText('Sign Up'))
 
         await waitFor(() =>

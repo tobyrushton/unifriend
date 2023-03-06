@@ -22,6 +22,7 @@ export interface SignUpState {
     birthday: string
     username: string
     course: string
+    bio: string | undefined
 }
 
 export interface LogInState {

@@ -282,6 +282,7 @@ export const CreateUserMutation = extendType({
                 course: nonNull(stringArg()),
                 username: nonNull(stringArg()),
                 email: nonNull(stringArg()),
+                bio: stringArg(),
             },
             resolve: (_parent, args, ctx) => {
                 if (!isValidEmail(args.email))
@@ -302,7 +303,7 @@ export const CreateUserMutation = extendType({
                         birthday: args.birthday,
                         username: args.username,
                         email: args.email,
-                        bio: '',
+                        bio: args.bio ?? '',
                         settings: {
                             create: {},
                         },

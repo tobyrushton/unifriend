@@ -16,7 +16,7 @@ import {
     QueryReturn,
 } from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
-import { Input, Text, Button, Exit } from '../ui'
+import { Input, Text, Button, Exit, ProfilePicture } from '../ui'
 import { ConfirmEmailScreen } from './ConfirmEmailScreen'
 import {
     useLogIn,
@@ -39,6 +39,7 @@ import {
     CREATE_USER,
     GET_AUTH_FROM_USERNAME,
 } from '../../graphql/queries'
+import { uploadImage } from '../../lib/utils/handleImages'
 
 export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
     // all state defined that is used for this screen
@@ -73,6 +74,8 @@ export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
         },
         { active: false },
     ])
+    const [profilePicture, setProfilePicture] = useState<File>()
+    const [previewUrl, setPreviewUrl] = useState<string>()
 
     // all hook responses that are needed to sign up and log in
     const { response: signIn, loading: signInLoading } = useLogIn()
@@ -95,6 +98,21 @@ export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
         queryLoading,
         mutationLoading,
     ])
+
+    useEffect(() => {
+        // if no profile picture inputted, sets the previewUrl to be undefined
+        if (!profilePicture) {
+            setPreviewUrl(undefined)
+            return undefined
+        }
+
+        // gets the preview url
+        const objectUrl = URL.createObjectURL(profilePicture)
+        setPreviewUrl(objectUrl)
+
+        // free memory when ever this component is unmounted
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [profilePicture, setPreviewUrl])
 
     useEffect(() => {
         // displays whether the user has entered a valid email or not
@@ -329,8 +347,8 @@ export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
                         }),
                     } // combines state with the university given
 
-                    const { success, error } = await mutation<
-                        UserObjectWithID,
+                    const { success, error, data } = await mutation<
+                        QueryReturn<UserObjectWithID, 'User', 'createUser'>,
                         CreateUserObjectWithUniversity
                     >({
                         mutation: CREATE_USER,
@@ -344,6 +362,10 @@ export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
                         })
                         // then sets the display confirm email screen to true
                         setDisplayConfirmEmail(true)
+
+                        // uploads profile picture if set
+                        if (profilePicture && data)
+                            uploadImage(profilePicture, data.createUser.id)
                     } else if (error)
                         // creates error notification on error
                         error.forEach(err => {
@@ -591,68 +613,123 @@ export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
                                                 </>
                                             ) : (
                                                 <>
-                                                    <Input
-                                                        placeholder="Course"
-                                                        type="text"
-                                                        style={{
-                                                            marginTop: '2.5%',
-                                                        }}
-                                                        setValue={change => {
-                                                            setState(
-                                                                prevState => {
-                                                                    const temp =
-                                                                        {
-                                                                            ...prevState,
-                                                                        } as SignUpState
-                                                                    temp.course =
-                                                                        change
-                                                                    return temp
+                                                    {signUpSlides.slide ===
+                                                    3 ? (
+                                                        <>
+                                                            <Input
+                                                                placeholder="Course"
+                                                                type="text"
+                                                                style={{
+                                                                    marginTop:
+                                                                        '2.5%',
+                                                                }}
+                                                                setValue={change => {
+                                                                    setState(
+                                                                        prevState => {
+                                                                            const temp =
+                                                                                {
+                                                                                    ...prevState,
+                                                                                } as SignUpState
+                                                                            temp.course =
+                                                                                change
+                                                                            return temp
+                                                                        }
+                                                                    )
+                                                                }}
+                                                                value={
+                                                                    (
+                                                                        state as SignUpState
+                                                                    ).course
                                                                 }
-                                                            )
-                                                        }}
-                                                        value={
-                                                            (
-                                                                state as SignUpState
-                                                            ).course
-                                                        }
-                                                    />
-                                                    <Input
-                                                        placeholder="Birthday"
-                                                        type="date"
-                                                        style={{
-                                                            marginTop: '2.5%',
-                                                        }}
-                                                        setValue={change => {
-                                                            setState(
-                                                                prevState => {
-                                                                    const temp =
-                                                                        {
-                                                                            ...prevState,
-                                                                        } as SignUpState
-                                                                    temp.birthday =
-                                                                        change
-                                                                    return temp
+                                                            />
+                                                            <Input
+                                                                placeholder="Birthday"
+                                                                type="date"
+                                                                style={{
+                                                                    marginTop:
+                                                                        '2.5%',
+                                                                }}
+                                                                setValue={change => {
+                                                                    setState(
+                                                                        prevState => {
+                                                                            const temp =
+                                                                                {
+                                                                                    ...prevState,
+                                                                                } as SignUpState
+                                                                            temp.birthday =
+                                                                                change
+                                                                            return temp
+                                                                        }
+                                                                    )
+                                                                }}
+                                                                maxLength={16}
+                                                                value={
+                                                                    (
+                                                                        state as SignUpState
+                                                                    ).birthday
                                                                 }
-                                                            )
-                                                        }}
-                                                        maxLength={16}
-                                                        value={
-                                                            (
-                                                                state as SignUpState
-                                                            ).birthday
-                                                        }
-                                                    />
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Text
+                                                                bold
+                                                                textAlign="left"
+                                                                style={{
+                                                                    width: '100%',
+                                                                }}
+                                                            >
+                                                                Profile Picture
+                                                            </Text>
+                                                            <ProfilePicture
+                                                                image={
+                                                                    previewUrl ??
+                                                                    '/Profile-picture.png'
+                                                                }
+                                                            />
+                                                            <Input
+                                                                type="file"
+                                                                placeholder="Profile Picture"
+                                                                setValue={
+                                                                    setProfilePicture
+                                                                }
+                                                            />
+                                                            <Input
+                                                                placeholder="Bio"
+                                                                type="text"
+                                                                style={{
+                                                                    marginTop:
+                                                                        '2.5%',
+                                                                }}
+                                                                setValue={change => {
+                                                                    setState(
+                                                                        prevState => {
+                                                                            const temp =
+                                                                                {
+                                                                                    ...prevState,
+                                                                                } as SignUpState
+                                                                            temp.bio =
+                                                                                change
+                                                                            return temp
+                                                                        }
+                                                                    )
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
                                                 </>
                                             )}
                                         </>
                                     )}
                                     <Button
                                         onClick={() =>
-                                            signUpSlides.slide === 3
+                                            signUpSlides.slide === 4
                                                 ? clickSignUp()
                                                 : setSignUpSlides(
                                                       prevState => ({
-                                                          buttonActive: false,
+                                                          buttonActive:
+                                                              prevState.slide ===
+                                                              3,
                                                           slide:
                                                               prevState.slide +
                                                               1,
@@ -665,7 +742,7 @@ export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
                                         inactive={!signUpSlides.buttonActive}
                                         submit
                                     >
-                                        {signUpSlides.slide === 3
+                                        {signUpSlides.slide === 4
                                             ? 'Sign Up'
                                             : 'Next'}
                                     </Button>
