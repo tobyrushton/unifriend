@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, useEffect, useState } from 'react'
 import { Text, Button, Input } from '../ui'
 import { supabase } from '../../lib/supabase'

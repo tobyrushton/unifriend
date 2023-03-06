@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-micro'
+import { gql } from '@apollo/client'
 
-export const UpdateSettingsMutation = gql`
+export const UPDATE_SETTINGS = gql`
     mutation Mutation(
         $id: String!
         $universityPreference: String

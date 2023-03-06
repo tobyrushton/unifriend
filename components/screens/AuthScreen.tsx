@@ -1,21 +1,22 @@
+'use client'
+
 import { FC, useState, useEffect } from 'react'
 import {
-    authProps,
-    logInState,
-    signUpState,
+    AuthProps,
+    LogInState,
+    SignUpState,
     signUpSlidesInterface,
-    createUserObject,
-    createUserObjectWithUniversity,
+    CreateUserObject,
+    CreateUserObjectWithUniversity,
     ErrorTextState,
     CheckUsernameArgs,
-    CheckUsernameIsTaken,
-    emailQuery,
+    EmailQuery,
     GetEmailParams,
-    GetAuthFromUsernameQuery,
     UserObjectWithID,
+    QueryReturn,
 } from '../../types'
 import styles from '../../styles/modules/Authentication.module.scss'
-import { Input, Text, Button, Exit } from '../ui'
+import { Input, Text, Button, Exit, ProfilePicture } from '../ui'
 import { ConfirmEmailScreen } from './ConfirmEmailScreen'
 import {
     useLogIn,
@@ -34,14 +35,15 @@ import {
 } from '../../lib/utils'
 import { ForgottenPasswordScreen } from './ForgottenPasswordScreen'
 import {
-    CheckUsernameIsTakenQuery,
-    CreateUserMutation,
-    GetAuthFromUsername,
+    CHECK_USERNAME_IS_TAKEN,
+    CREATE_USER,
+    GET_AUTH_FROM_USERNAME,
 } from '../../graphql/queries'
+import { uploadImage } from '../../lib/utils/handleImages'
 
-export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
+export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
     // all state defined that is used for this screen
-    const [state, setState] = useState<logInState | signUpState>(
+    const [state, setState] = useState<LogInState | SignUpState>(
         logIn
             ? {
                   email: '',
@@ -72,6 +74,8 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         },
         { active: false },
     ])
+    const [profilePicture, setProfilePicture] = useState<File>()
+    const [previewUrl, setPreviewUrl] = useState<string>()
 
     // all hook responses that are needed to sign up and log in
     const { response: signIn, loading: signInLoading } = useLogIn()
@@ -94,6 +98,21 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         queryLoading,
         mutationLoading,
     ])
+
+    useEffect(() => {
+        // if no profile picture inputted, sets the previewUrl to be undefined
+        if (!profilePicture) {
+            setPreviewUrl(undefined)
+            return undefined
+        }
+
+        // gets the preview url
+        const objectUrl = URL.createObjectURL(profilePicture)
+        setPreviewUrl(objectUrl)
+
+        // free memory when ever this component is unmounted
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [profilePicture, setPreviewUrl])
 
     useEffect(() => {
         // displays whether the user has entered a valid email or not
@@ -141,10 +160,10 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
         const check = async (): Promise<void> => {
             if (isSignUpState(state)) {
                 const { data, error } = await query<
-                    CheckUsernameIsTaken<boolean>,
+                    QueryReturn<boolean, '', 'CheckUsernameIsTaken'>,
                     CheckUsernameArgs
                 >({
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     username: state.username,
                 })
                 if (error)
@@ -267,9 +286,9 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
             // if the user types a valid username fetches their email to use for log in
             if (isValidUsername(email)) {
                 const { data, error } = await query<
-                    GetAuthFromUsernameQuery<emailQuery, 'Email'>,
+                    QueryReturn<EmailQuery, 'Email', 'getAuthFromUsername'>,
                     GetEmailParams
-                >({ query: GetAuthFromUsername, username: email })
+                >({ query: GET_AUTH_FROM_USERNAME, username: email })
                 if (error) {
                     // outputs error
                     createNotification({
@@ -318,22 +337,22 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                     })
                 else {
                     // removes the password property from state as not needed
-                    const temp: Partial<Pick<signUpState, 'password'>> &
-                        Omit<signUpState, 'password'> = state
+                    const temp: Partial<Pick<SignUpState, 'password'>> &
+                        Omit<SignUpState, 'password'> = state
                     delete temp.password
-                    const CreateUserObject: createUserObjectWithUniversity = {
-                        ...(temp as createUserObject),
+                    const CreateUser: CreateUserObjectWithUniversity = {
+                        ...(temp as CreateUserObject),
                         ...({ university } as {
                             university: string
                         }),
                     } // combines state with the university given
 
-                    const { success, error } = await mutation<
-                        UserObjectWithID,
-                        createUserObjectWithUniversity
+                    const { success, error, data } = await mutation<
+                        QueryReturn<UserObjectWithID, 'User', 'createUser'>,
+                        CreateUserObjectWithUniversity
                     >({
-                        mutation: CreateUserMutation,
-                        ...CreateUserObject,
+                        mutation: CREATE_USER,
+                        ...CreateUser,
                     }) // creates the user
 
                     if (success) {
@@ -343,6 +362,10 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                         })
                         // then sets the display confirm email screen to true
                         setDisplayConfirmEmail(true)
+
+                        // uploads profile picture if set
+                        if (profilePicture && data)
+                            uploadImage(profilePicture, data.createUser.id)
                     } else if (error)
                         // creates error notification on error
                         error.forEach(err => {
@@ -384,7 +407,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                             setState(prevState => {
                                                 const temp = {
                                                     ...prevState,
-                                                } as logInState
+                                                } as LogInState
                                                 temp.email = change
                                                 return temp
                                             })
@@ -398,7 +421,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                             setState(prevState => {
                                                 const temp = {
                                                     ...prevState,
-                                                } as logInState
+                                                } as LogInState
                                                 temp.password = change
                                                 return temp
                                             })
@@ -443,7 +466,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     setState(prevState => {
                                                         const temp = {
                                                             ...prevState,
-                                                        } as signUpState
+                                                        } as SignUpState
                                                         temp.firstName = change
                                                         return temp
                                                     })
@@ -453,7 +476,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                 }}
                                                 maxLength={16}
                                                 value={
-                                                    (state as signUpState)
+                                                    (state as SignUpState)
                                                         .firstName
                                                 }
                                             />
@@ -464,7 +487,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     setState(prevState => {
                                                         const temp = {
                                                             ...prevState,
-                                                        } as signUpState
+                                                        } as SignUpState
                                                         temp.lastName = change
                                                         return temp
                                                     })
@@ -474,7 +497,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                 }}
                                                 maxLength={16}
                                                 value={
-                                                    (state as signUpState)
+                                                    (state as SignUpState)
                                                         .lastName
                                                 }
                                             />
@@ -485,7 +508,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                     setState(prevState => {
                                                         const temp = {
                                                             ...prevState,
-                                                        } as signUpState
+                                                        } as SignUpState
                                                         temp.email = change
                                                         return temp
                                                     })
@@ -495,7 +518,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                 }}
                                                 maxLength={32}
                                                 value={
-                                                    (state as signUpState).email
+                                                    (state as SignUpState).email
                                                 }
                                             />
                                             {displayErrorText[0].active ? (
@@ -520,7 +543,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                                     const temp =
                                                                         {
                                                                             ...prevState,
-                                                                        } as signUpState
+                                                                        } as SignUpState
                                                                     temp.username =
                                                                         change
                                                                     return temp
@@ -533,7 +556,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                         maxLength={16}
                                                         value={
                                                             (
-                                                                state as signUpState
+                                                                state as SignUpState
                                                             ).username
                                                         }
                                                     />
@@ -558,7 +581,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                                     const temp =
                                                                         {
                                                                             ...prevState,
-                                                                        } as signUpState
+                                                                        } as SignUpState
                                                                     temp.password =
                                                                         change
                                                                     return temp
@@ -571,7 +594,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                         maxLength={16}
                                                         value={
                                                             (
-                                                                state as signUpState
+                                                                state as SignUpState
                                                             ).password
                                                         }
                                                     />
@@ -590,68 +613,123 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                                 </>
                                             ) : (
                                                 <>
-                                                    <Input
-                                                        placeholder="Course"
-                                                        type="text"
-                                                        style={{
-                                                            marginTop: '2.5%',
-                                                        }}
-                                                        setValue={change => {
-                                                            setState(
-                                                                prevState => {
-                                                                    const temp =
-                                                                        {
-                                                                            ...prevState,
-                                                                        } as signUpState
-                                                                    temp.course =
-                                                                        change
-                                                                    return temp
+                                                    {signUpSlides.slide ===
+                                                    3 ? (
+                                                        <>
+                                                            <Input
+                                                                placeholder="Course"
+                                                                type="text"
+                                                                style={{
+                                                                    marginTop:
+                                                                        '2.5%',
+                                                                }}
+                                                                setValue={change => {
+                                                                    setState(
+                                                                        prevState => {
+                                                                            const temp =
+                                                                                {
+                                                                                    ...prevState,
+                                                                                } as SignUpState
+                                                                            temp.course =
+                                                                                change
+                                                                            return temp
+                                                                        }
+                                                                    )
+                                                                }}
+                                                                value={
+                                                                    (
+                                                                        state as SignUpState
+                                                                    ).course
                                                                 }
-                                                            )
-                                                        }}
-                                                        value={
-                                                            (
-                                                                state as signUpState
-                                                            ).course
-                                                        }
-                                                    />
-                                                    <Input
-                                                        placeholder="Birthday"
-                                                        type="date"
-                                                        style={{
-                                                            marginTop: '2.5%',
-                                                        }}
-                                                        setValue={change => {
-                                                            setState(
-                                                                prevState => {
-                                                                    const temp =
-                                                                        {
-                                                                            ...prevState,
-                                                                        } as signUpState
-                                                                    temp.birthday =
-                                                                        change
-                                                                    return temp
+                                                            />
+                                                            <Input
+                                                                placeholder="Birthday"
+                                                                type="date"
+                                                                style={{
+                                                                    marginTop:
+                                                                        '2.5%',
+                                                                }}
+                                                                setValue={change => {
+                                                                    setState(
+                                                                        prevState => {
+                                                                            const temp =
+                                                                                {
+                                                                                    ...prevState,
+                                                                                } as SignUpState
+                                                                            temp.birthday =
+                                                                                change
+                                                                            return temp
+                                                                        }
+                                                                    )
+                                                                }}
+                                                                maxLength={16}
+                                                                value={
+                                                                    (
+                                                                        state as SignUpState
+                                                                    ).birthday
                                                                 }
-                                                            )
-                                                        }}
-                                                        maxLength={16}
-                                                        value={
-                                                            (
-                                                                state as signUpState
-                                                            ).birthday
-                                                        }
-                                                    />
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Text
+                                                                bold
+                                                                textAlign="left"
+                                                                style={{
+                                                                    width: '100%',
+                                                                }}
+                                                            >
+                                                                Profile Picture
+                                                            </Text>
+                                                            <ProfilePicture
+                                                                image={
+                                                                    previewUrl ??
+                                                                    '/Profile-picture.png'
+                                                                }
+                                                            />
+                                                            <Input
+                                                                type="file"
+                                                                placeholder="Profile Picture"
+                                                                setValue={
+                                                                    setProfilePicture
+                                                                }
+                                                            />
+                                                            <Input
+                                                                placeholder="Bio"
+                                                                type="text"
+                                                                style={{
+                                                                    marginTop:
+                                                                        '2.5%',
+                                                                }}
+                                                                setValue={change => {
+                                                                    setState(
+                                                                        prevState => {
+                                                                            const temp =
+                                                                                {
+                                                                                    ...prevState,
+                                                                                } as SignUpState
+                                                                            temp.bio =
+                                                                                change
+                                                                            return temp
+                                                                        }
+                                                                    )
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
                                                 </>
                                             )}
                                         </>
                                     )}
                                     <Button
                                         onClick={() =>
-                                            signUpSlides.slide === 3
+                                            signUpSlides.slide === 4
                                                 ? clickSignUp()
                                                 : setSignUpSlides(
                                                       prevState => ({
-                                                          buttonActive: false,
+                                                          buttonActive:
+                                                              prevState.slide ===
+                                                              3,
                                                           slide:
                                                               prevState.slide +
                                                               1,
@@ -664,7 +742,7 @@ export const AuthScreen: FC<authProps> = ({ logIn, signUp, changeAuth }) => {
                                         inactive={!signUpSlides.buttonActive}
                                         submit
                                     >
-                                        {signUpSlides.slide === 3
+                                        {signUpSlides.slide === 4
                                             ? 'Sign Up'
                                             : 'Next'}
                                     </Button>

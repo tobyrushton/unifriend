@@ -2,6 +2,19 @@
 ### Do not make changes to this file directly
 
 
+type Conversation {
+  id: String
+  messages: [Message]
+  userOneId: String
+  userTwoId: String
+}
+
+type ConversationReturn {
+  id: String
+  username: String
+  usersId: String
+}
+
 """DateTime custom scalar type."""
 scalar DateTime
 
@@ -11,28 +24,39 @@ type Email {
 
 type Friend {
   friendID: String
-  friendedAt: [DateTime]
-  id: Int
+  friendedAt: DateTime
+  id: String
   usersId: String
 }
 
+type GetFriend {
+  id: String!
+  rowId: String!
+  username: String!
+}
+
+type IDArguement {
+  id: String
+}
+
 type Message {
+  conversationId: String
   id: String
   message: String
-  recipientID: String
   seen: Boolean
-  senderID: String
-  sentAt: [DateTime]
+  senderId: String
+  sentAt: DateTime
 }
 
 type Mutation {
+  CreateConversation(userOneId: String!, userTwoId: String!): Conversation!
   UpdateSettings(darkMode: Boolean, universityPreference: String, usersId: String!): Settings!
   createFriend(friendID: String!, usersId: String!): Friend!
   createFriendRequest(friendID: String!, usersId: String!): friendRequest!
-  createMessage(message: String!, recipientID: String!, senderID: String!): Message!
-  createUser(birthday: String!, course: String!, email: String!, firstName: String!, lastName: String!, university: String!, username: String!): User!
-  deleteFriend(friendID: String!, usersId: String!): Friend!
-  deleteFriendRequest(friendID: String!, usersId: String!): friendRequest!
+  createMessage(conversationId: String!, message: String!, senderId: String!): Message!
+  createUser(bio: String, birthday: String!, course: String!, email: String!, firstName: String!, lastName: String!, university: String!, username: String!): User!
+  deleteFriend(id: String!): Friend!
+  deleteFriendRequest(id: String!): friendRequest!
   deleteMessage(id: String!): Message!
   deleteUser(id: String!): User!
   markMessageAsRead(id: String!): Message!
@@ -41,12 +65,17 @@ type Mutation {
 
 type Query {
   CheckUsernameIsTaken(username: String!): Boolean!
+  GetMessages(id: String!): [Message]!
+  GetUserIdFromConversationId(conversationId: String!, email: String!): UserFromConversationReturn!
+  UserQueryByEmail(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: String!, firstName: Boolean, id: Boolean, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User!
   getAuthFromUsername(username: String!): Email!
-  getFriendRequests(usersId: String!): friendRequest!
-  getFriends(usersId: String!): Friend!
+  getConversation(userOneId: String!, userTwoId: String!): Conversation!
+  getConversations(id: String!): [ConversationReturn]!
+  getFriendRequests(friendID: String!): [GetFriend]!
+  getFriends(usersId: String!): [GetFriend]!
   getUserFromAuth(email: String!): User!
-  user: [User]!
-  users(bio: Boolean, birthday: Boolean, course: Boolean, email: Boolean, firstName: Boolean, id: String!, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User
+  user(id: String!, take: Int, university: String!, universityPreference: String!): [User]!
+  users(all: Boolean, bio: Boolean, birthday: Boolean, course: Boolean, email: Boolean, firstName: Boolean, id: String!, lastName: Boolean, settings: Boolean, university: Boolean, username: Boolean): User!
 }
 
 type Settings {
@@ -54,6 +83,12 @@ type Settings {
   id: String
   universityPreference: String
   usersId: String
+}
+
+type Subscription {
+  DeletedMessages(id: String!): IDArguement!
+  GetMessageUpdates(id: String!): Message!
+  MarkMessageAsRead(id: String!): IDArguement!
 }
 
 type User {
@@ -73,9 +108,15 @@ type User {
   username: String
 }
 
+type UserFromConversationReturn {
+  firstName: String
+  id: String
+  lastName: String
+}
+
 type friendRequest {
-  createdAt: [DateTime]
+  createdAt: DateTime
   friendID: String
-  id: Int
+  id: String
   usersId: String
 }

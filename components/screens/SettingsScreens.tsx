@@ -1,20 +1,22 @@
+'use client'
+
 import { FC, useState, useEffect } from 'react'
 import { Text, Toggle, Input, Button, ProfilePicture } from '../ui'
 import {
-    UpdateSettingsMutation,
-    UpdateUserMutation,
-    CheckUsernameIsTakenQuery,
+    UPDATE_SETTINGS,
+    UPDATE_USER,
+    CHECK_USERNAME_IS_TAKEN,
 } from '../../graphql/queries'
 import {
     Settings,
-    settingsUpdateObject,
+    SettingsUpdateObject,
     UniversityPreference,
     UserUpdateObject,
     UpdateUserReturn,
     UpdateUserParamaters,
     ErrorTextState,
     CheckUsernameArgs,
-    CheckUsernameIsTaken,
+    QueryReturn,
 } from '../../types'
 import {
     useNotifications,
@@ -38,8 +40,8 @@ export const SlideOne: FC = () => {
     const run = async (dark: boolean): Promise<void> => {
         const { success, error } = await mutation<
             Settings,
-            settingsUpdateObject
-        >({ mutation: UpdateSettingsMutation, darkMode: dark, id: user.id })
+            SettingsUpdateObject
+        >({ mutation: UPDATE_SETTINGS, darkMode: dark, id: user.id })
         if (success) {
             // creates success notification if successful
             createNotification({
@@ -92,9 +94,9 @@ export const SlideTwo: FC = () => {
     const run = async (preference: UniversityPreference): Promise<void> => {
         const { success, error } = await mutation<
             Settings,
-            settingsUpdateObject
+            SettingsUpdateObject
         >({
-            mutation: UpdateSettingsMutation,
+            mutation: UPDATE_SETTINGS,
             universityPreference: preference,
             id: user.id,
         })
@@ -102,7 +104,7 @@ export const SlideTwo: FC = () => {
             // creates success notification if successful
             createNotification({
                 type: 'success',
-                content: 'Colour mode updated successfully',
+                content: 'University preference updated successfully',
             })
             // updates value stored in provider upon completion
             updateSettings({ universityPreference: preference })
@@ -192,10 +194,10 @@ export const SlideThree: FC = () => {
         const run = async (): Promise<void> => {
             if (state?.username) {
                 const { data, error } = await query<
-                    CheckUsernameIsTaken<boolean>,
+                    QueryReturn<boolean, '', 'CheckUsernameIsTaken'>,
                     CheckUsernameArgs
                 >({
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     username: state.username,
                 })
                 if (error)
@@ -250,7 +252,7 @@ export const SlideThree: FC = () => {
         const { success, error } = await mutation<
             UpdateUserReturn,
             UpdateUserParamaters
-        >({ mutation: UpdateUserMutation, id: user.id, ...state })
+        >({ mutation: UPDATE_USER, id: user.id, ...state })
         if (profilePicture) {
             const { error: imageError, success: imageSuccess } =
                 await uploadImage(profilePicture, user.id)

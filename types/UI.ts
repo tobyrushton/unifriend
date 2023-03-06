@@ -1,33 +1,36 @@
-import { RefObject } from 'react'
+import React, { RefObject } from 'react'
+import { DocumentNode } from 'graphql'
 import { ChildrenProps, NotificationInterface } from './providers'
+import { Color } from './colors'
 
-export type color = 'primary' | 'secondary' | 'error' | 'success'
+type TextAlign = 'left' | 'center' | 'right'
 
-type textAlign = 'left' | 'center' | 'right'
-
-type styleProperties = {
+type StyleProperties = {
     marginTop?: string
     marginBottom?: string
     marginLeft?: string
     marginRight?: string
     margin?: string
+    color?: string
+    width?: string
+    height?: string
 }
 
 export interface LogoProps {
-    color: color
-    style?: styleProperties
+    color: Color
+    style?: StyleProperties
 }
 
 export interface TextProps extends ChildrenProps {
     bold?: boolean
     header?: boolean
-    style?: styleProperties
+    style?: StyleProperties
     large?: boolean
     small?: boolean
     clickable?: boolean
-    color?: color
+    color?: Color
     onClick?: () => void
-    textAlign?: textAlign
+    textAlign?: TextAlign
 }
 
 export interface ButtonProps extends ChildrenProps {
@@ -35,18 +38,18 @@ export interface ButtonProps extends ChildrenProps {
     submit?: boolean
     filled?: boolean
     inactive?: boolean
-    style?: styleProperties
+    style?: StyleProperties
 }
 
-export type inputType = 'password' | 'text' | 'date'
+export type InputType = 'password' | 'text' | 'date'
 
 export type InputProps =
     | {
           placeholder: string
-          type: inputType
+          type: InputType
           setValue: (update: string) => void
           value?: string | undefined
-          style?: styleProperties
+          style?: StyleProperties
           maxLength?: number
       }
     | {
@@ -54,7 +57,7 @@ export type InputProps =
           type: 'file'
           setValue: (update: File) => void
           value?: string | undefined
-          style?: styleProperties
+          style?: StyleProperties
           maxLength?: number
       }
 
@@ -74,7 +77,7 @@ export interface signUpSlidesInterface {
 export interface ProfilePictureProps {
     width?: number
     height?: number
-    style?: styleProperties
+    style?: StyleProperties
     image: string
 }
 
@@ -87,6 +90,20 @@ export interface DropDownProps {
 
 export interface ToggleProps {
     onCheck: (change: boolean) => void
-    style?: styleProperties
+    style?: StyleProperties
     value?: boolean
+}
+
+export type MutationButtonProps<_Return, Params> = ChildrenProps & {
+    args: Params
+    mutation: DocumentNode
+    successMessage: string
+    style?: StyleProperties
+    filled?: boolean
+    inactive?: boolean
+}
+
+export type MessageProps = ChildrenProps & {
+    recieved?: boolean // will default as sent message
+    onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void
 }

@@ -1,15 +1,20 @@
+import { Session } from '@supabase/supabase-js'
+import { FriendsWithID } from './Friends'
+import { Settings } from './settings'
+import { UserObjectWithID } from './User'
+
 type authType = 'log in' | 'sign up'
 
-export interface authState {
+export interface AuthState {
     active: boolean
     type?: authType
 }
 
-export type authProps =
-    | { logIn: true; signUp?: never; changeAuth: (change: authState) => void }
-    | { logIn?: never; signUp: true; changeAuth: (change: authState) => void }
+export type AuthProps =
+    | { logIn: true; signUp?: never; changeAuth: (change: AuthState) => void }
+    | { logIn?: never; signUp: true; changeAuth: (change: AuthState) => void }
 
-export interface signUpState {
+export interface SignUpState {
     firstName: string
     lastName: string
     email: string
@@ -17,9 +22,10 @@ export interface signUpState {
     birthday: string
     username: string
     course: string
+    bio: string | undefined
 }
 
-export interface logInState {
+export interface LogInState {
     email: string
     password: string
 }
@@ -32,3 +38,10 @@ export type ErrorTextState =
           active: true
           content: string
       }
+
+export type GetSessionReturn = {
+    session: Session
+    user: UserObjectWithID
+    settings: Settings
+    friends: FriendsWithID[]
+}

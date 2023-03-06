@@ -1,26 +1,16 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { Exit } from '../../../components'
+import '@testing-library/jest-dom'
 
-describe('Exit component tests', () => {
-    let clicked = false
-
-    const onClick = (): void => {
-        clicked = true
-    }
-
-    beforeEach(() => {
-        clicked = false
+describe('Exit', () => {
+    it('should render', () => {
+        const { container } = render(<Exit onClick={jest.fn()} />)
+        expect(container).toBeTruthy()
     })
-
-    it('component renders', () => {
-        render(<Exit onClick={onClick} />)
-
-        expect(screen.getByRole('button')).toBeTruthy()
-    })
-
-    it('component updates value on click', () => {
-        render(<Exit onClick={onClick} />)
-        fireEvent.click(screen.getByRole('button'))
-        expect(clicked).toBeTruthy()
+    it('should call onClick', () => {
+        const onClick = jest.fn()
+        const { getByRole } = render(<Exit onClick={onClick} />)
+        fireEvent.click(getByRole('button'))
+        expect(onClick).toHaveBeenCalled()
     })
 })

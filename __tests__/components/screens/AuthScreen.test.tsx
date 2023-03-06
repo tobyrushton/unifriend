@@ -1,33 +1,9 @@
 import { MockedProvider, MockedResponse } from '@apollo/client/testing'
 import { render, fireEvent, screen, waitFor } from '@testing-library/react'
-import { useRouter } from 'next/navigation'
 import { act } from 'react-dom/test-utils'
 import { ProviderStack } from '../../__helpers__/ProviderStack'
 import { AuthScreen } from '../../../components'
-import {
-    CheckUsernameIsTakenQuery,
-    CreateUserMutation,
-} from '../../../graphql/queries'
-
-jest.mock('next/navigation', () => ({
-    useRouter: jest.fn(() => ({
-        router: {
-            push: jest.fn(),
-        },
-    })),
-    usePathname: jest.fn(),
-}))
-
-jest.mock('../../../lib/supabase', () => ({
-    supabase: {
-        auth: {
-            getSession: jest.fn(),
-            onAuthStateChange: jest.fn(),
-            signInWithPassword: jest.fn(),
-            signUp: jest.fn(),
-        },
-    },
-}))
+import { CHECK_USERNAME_IS_TAKEN, CREATE_USER } from '../../../graphql/queries'
 
 describe('AuthScreen tests', () => {
     let exited = false
@@ -43,9 +19,6 @@ describe('AuthScreen tests', () => {
         .auth
     supabaseAuthMock.onAuthStateChange.mockReturnValue({
         data: { subscription: { unsubscribe: jest.fn() } },
-    })
-    ;(useRouter as jest.Mock).mockReturnValue({
-        push: (path: string) => window.history.pushState({}, '', path),
     })
 
     it('screen renders for logIn', async () => {
@@ -338,7 +311,7 @@ describe('AuthScreen tests', () => {
           const mocks:MockedResponse<Record<string, any>>[] = [
             {
                 request: {
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     variables: {
                         username: 'toby',
                     },
@@ -389,7 +362,7 @@ describe('AuthScreen tests', () => {
         const mocks:MockedResponse<Record<string, any>>[] = [
             {
                 request: {
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     variables: {
                         username: 'toby',
                     },
@@ -437,7 +410,7 @@ describe('AuthScreen tests', () => {
         })
         fireEvent.click(screen.getByText('Next'))
         expect(screen.queryByPlaceholderText('Course')).toBeTruthy()
-        expect(screen.queryByText('Sign Up')).toBeTruthy()
+        expect(screen.queryByText('Next')).toBeTruthy()
     })
 
     it('can sign up', async () => {
@@ -445,7 +418,7 @@ describe('AuthScreen tests', () => {
                 const mocks:MockedResponse<Record<string, any>>[] = [
             {
                 request: {
-                    query: CheckUsernameIsTakenQuery,
+                    query: CHECK_USERNAME_IS_TAKEN,
                     variables: {
                         username: 'toby',
                     },
@@ -458,7 +431,7 @@ describe('AuthScreen tests', () => {
             },
             {
                 request: {
-                    query: CreateUserMutation,
+                    query: CREATE_USER,
                     variables: {
                         firstName: 'Toby',
                         lastName: 'Rushton',
@@ -531,6 +504,9 @@ describe('AuthScreen tests', () => {
                 target: { value: '2005-06-12' },
             })
         })
+        fireEvent.click(screen.getByText('Next'))
+
+        expect(screen.queryByText('Sign Up')).toBeTruthy()
         fireEvent.click(screen.getByText('Sign Up'))
 
         await waitFor(() =>

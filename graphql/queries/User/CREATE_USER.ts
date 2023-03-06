@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-micro'
+import { gql } from '@apollo/client'
 
-export const CreateUserMutation = gql`
+export const CREATE_USER = gql`
     mutation Mutation(
         $firstName: String!
         $lastName: String!
@@ -9,6 +9,7 @@ export const CreateUserMutation = gql`
         $course: String!
         $username: String!
         $email: String!
+        $bio: String
     ) {
         createUser(
             firstName: $firstName
@@ -18,6 +19,7 @@ export const CreateUserMutation = gql`
             course: $course
             username: $username
             email: $email
+            bio: $bio
         ) {
             bio
             birthday

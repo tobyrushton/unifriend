@@ -1,4 +1,4 @@
-export type university =
+export type University =
     | 'Abertay University'
     | 'Aberystwyth University'
     | 'Anglia Ruskin University'
@@ -135,7 +135,7 @@ export type university =
     | 'test university'
 
 export interface UniversityEmail {
-    university: university
+    university: University
     email: string
 }
 

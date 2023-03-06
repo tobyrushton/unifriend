@@ -1,0 +1,43 @@
+@use '../reusables//variables';
+
+.screen {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    width: 100%;
+    height: calc( 100% - 100px);
+    margin-top: 100px;
+    background-color: variables.$background_color;
+}
+
+.requestContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.request {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-style: solid;
+    border-width: 2px;
+    border-color: variables.$accent_color;
+    padding: 1rem;
+    width: 100%;
+    margin-top: -2px;
+}
+
+.buttons {
+    display: flex;
+    gap: .5rem;
+    margin-left: auto;
+    margin-right: .5rem;
+
+    p{
+        text-decoration: none;
+        border-radius: .25rem;
+        background-color:variables.$inactive_color;
+        padding: .5rem 1rem;
+    }
+}

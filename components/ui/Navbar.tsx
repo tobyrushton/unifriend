@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, RefObject, useRef, useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -41,11 +43,11 @@ export const Navbar: FC = () => {
     )
 
     return (
-        <div className={styles.navbar}>
+        <nav className={styles.navbar}>
             <Link href="/a" passHref legacyBehavior>
                 {/* eslint-disable-next-line */}
                 <a style={{ textDecoration: 'none'}}>
-                    <Logo color="secondary" style={{ marginLeft: '2.5%' }} />
+                    <Logo color="text" style={{ marginLeft: '2.5%' }} />
                 </a>
             </Link>
             <div className={styles.pushLeft}>
@@ -82,6 +84,6 @@ export const Navbar: FC = () => {
             {displayDropDown ? (
                 <DropDown handleClickOutside={handleClickOutside} />
             ) : null}
-        </div>
+        </nav>
     )
 }

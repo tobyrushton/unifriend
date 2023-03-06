@@ -1,16 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Notification } from '../../../components'
+import '@testing-library/jest-dom'
 
 describe('Notification component tests', () => {
-    let clicked = false
-
-    const onClick = (): void => {
-        clicked = true
-    }
-
-    beforeEach(() => {
-        clicked = false
-    })
+    const onClick = jest.fn()
 
     it('renders with text', () => {
         render(
@@ -21,7 +14,7 @@ describe('Notification component tests', () => {
             />
         )
 
-        expect(screen.getByText('Test Content')).toBeTruthy()
+        expect(screen.getByText('Test Content')).toBeInTheDocument()
     })
 
     it('click functionaility works', () => {
@@ -34,6 +27,6 @@ describe('Notification component tests', () => {
         )
 
         fireEvent.click(screen.getByRole('button'))
-        expect(clicked).toBeTruthy()
+        expect(onClick).toHaveBeenCalled()
     })
 })

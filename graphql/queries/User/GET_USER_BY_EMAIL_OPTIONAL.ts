@@ -1,25 +1,31 @@
-import { gql } from 'apollo-server-micro'
+import { gql } from '@apollo/client'
 
-export const UserByIDQuery = gql`
-    query Query(
-        $id: String!
+export const GET_USER_BY_EMAIL_OPTIONAL = gql`
+    query UserQueryByEmail(
+        $email: String!
         $firstName: Boolean
         $lastName: Boolean
         $university: Boolean
-        $course: Boolean
         $birthday: Boolean
+        $course: Boolean
         $bio: Boolean
+        $settings: Boolean
+        $id: Boolean
         $username: Boolean
+        $all: Boolean
     ) {
-        users(
-            id: $id
+        UserQueryByEmail(
+            email: $email
             firstName: $firstName
             lastName: $lastName
             university: $university
-            course: $course
             birthday: $birthday
+            course: $course
             bio: $bio
+            settings: $settings
+            id: $id
             username: $username
+            all: $all
         ) {
             id
             firstName
@@ -29,6 +35,11 @@ export const UserByIDQuery = gql`
             birthday
             username
             bio
+            settings {
+                universityPreference
+                darkMode
+            }
+            email
         }
     }
 `

@@ -17,7 +17,11 @@ export const useQuery = (): ApolloQueryReturn => {
 
     const runQuery: ApolloQueryFunction = useMemo(
         () =>
-            async <Params, Return>({ query, ...vars }: Join<Query, Params>) => {
+            async <Params, Return>({
+                query,
+                fetchPolicy,
+                ...vars
+            }: Join<Query, Params>) => {
                 const variables = { ...vars } as Params
                 setLoading(true)
                 let error: Error | undefined
@@ -33,6 +37,7 @@ export const useQuery = (): ApolloQueryReturn => {
                                     abort: abort.signal,
                                 },
                             },
+                            fetchPolicy,
                         })
                     data = queryData
                     error = queryError

@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Message should render correctly 1`] = `
+<div>
+  <div
+    class="message "
+  >
+    <p
+      class="fontText   left"
+    >
+      Test
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Message should render correctly with recieved prop 1`] = `
+<div>
+  <div
+    class="message recieved"
+  >
+    <p
+      class="fontText   left"
+    >
+      Test
+    </p>
+  </div>
+</div>
+`;

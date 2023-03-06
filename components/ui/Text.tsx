@@ -1,7 +1,10 @@
+'use client'
+
 import { FC } from 'react'
 import { TextProps } from '../../types'
+import { useTheme } from '../../hooks/providers/useTheme'
 import styles from '../../styles/modules/UI.module.scss'
-import { colors } from '../../styles/reusables/colors'
+import '@fontsource/orbitron'
 
 export const Text: FC<TextProps> = ({
     bold,
@@ -15,15 +18,18 @@ export const Text: FC<TextProps> = ({
     onClick,
     textAlign,
 }) => {
+    const { theme } = useTheme()
+
     const styling = color
         ? {
               ...{
-                  color: colors[color],
+                  color: theme[color],
               },
               ...style,
           }
         : style
-    return header ? (
+
+    return header && !clickable ? (
         <h1
             className={
                 bold
@@ -38,6 +44,23 @@ export const Text: FC<TextProps> = ({
         >
             {children}
         </h1>
+    ) : clickable && header ? (
+        <div onClick={onClick} role="button" tabIndex={0}>
+            <h1
+                className={
+                    bold
+                        ? `${styles.fontTextBold} ${styles.extraLarge} ${
+                              styles.clickable
+                          } ${styles[textAlign ?? 'left']}`
+                        : `${styles.fontText} ${styles.extraLarge} ${
+                              styles.clickable
+                          } ${styles[textAlign ?? 'left']}`
+                }
+                style={style}
+            >
+                {children}
+            </h1>
+        </div>
     ) : clickable ? (
         <div onClick={onClick} role="button" tabIndex={0}>
             <p

@@ -25,10 +25,10 @@ describe('Navbar component tests', () => {
             </LoadingProvider>
         )
 
-        expect(container).toBeTruthy()
-        expect(screen.queryByText(/UniFriend$/i)).toBeTruthy()
-        expect(screen.queryByAltText('Profile Picture')).toBeTruthy()
-        expect(screen.queryByRole('button')).toBeTruthy()
+        expect(container).toBeInTheDocument()
+        expect(screen.queryByText(/UniFriend$/i)).toBeInTheDocument()
+        expect(screen.queryByAltText('Profile Picture')).toBeInTheDocument()
+        expect(screen.queryByRole('button')).toBeInTheDocument()
     })
 
     it('drop down should toggle', async () => {
@@ -53,13 +53,13 @@ describe('Navbar component tests', () => {
         fireEvent.click(screen.getByRole('button'))
 
         await waitFor(async () =>
-            expect(screen.queryByText('View Profile')).toBeTruthy()
+            expect(screen.queryByText('View Profile')).toBeInTheDocument()
         )
 
         await act(async () => map.mousedown({ pageY: 0, pageX: 0 }))
 
         await waitFor(async () =>
-            expect(screen.queryByText('View Profile')).toBeFalsy()
+            expect(screen.queryByText('View Profile')).not.toBeInTheDocument()
         )
     })
 
@@ -74,6 +74,6 @@ describe('Navbar component tests', () => {
             )
         )
 
-        expect(screen.getAllByRole('link').length).toBe(2)
+        expect(screen.getAllByRole('link').length).toBe(3)
     })
 })

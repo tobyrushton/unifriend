@@ -1,14 +1,22 @@
-import { objectType, extendType, nonNull, stringArg, booleanArg } from 'nexus'
 import {
-    emailQuery,
-    tempUserObject,
+    objectType,
+    extendType,
+    nonNull,
+    stringArg,
+    booleanArg,
+    intArg,
+} from 'nexus'
+import {
+    EmailQuery,
+    TempUserObject,
     UserObjectWithSettings,
     UserUpdateObject,
+    UserObjectWithSettingsAndFriends,
 } from '../../types'
 import { Friend, FriendRequest } from './Friends'
 import { Settings } from './Settings'
 import { Message } from './Messages'
-import { isValidEmail, isValidUsername } from '../../lib/utils'
+import { isValidEmail, isValidUsername, randomPick } from '../../lib/utils'
 
 // types User that's defined within the graphQL api.
 export const User = objectType({
@@ -45,7 +53,7 @@ export const User = objectType({
 export const UserQueryByID = extendType({
     type: 'Query', // query refers to returning data from the database
     definition(t) {
-        t.nullable.field('users', {
+        t.nonNull.field('users', {
             type: 'User', // uses type user defined earlier.
             args: {
                 // all arguements that can be taken by the Query.
@@ -59,6 +67,7 @@ export const UserQueryByID = extendType({
                 username: booleanArg(),
                 email: booleanArg(),
                 settings: booleanArg(),
+                all: booleanArg(),
             },
             resolve: (_parent, args, ctx) => {
                 return ctx.prisma.users.findUnique({
@@ -66,18 +75,20 @@ export const UserQueryByID = extendType({
                         // finds the unique user row in the databse with corresponding id
                         id: args.id,
                     },
-                    select: {
-                        // selects which columns from that databse to return
-                        firstName: args.firstName ?? false,
-                        lastName: args.lastName ?? false,
-                        university: args.university ?? false,
-                        birthday: args.birthday ?? false,
-                        course: args.course ?? false,
-                        bio: args.bio ?? false,
-                        username: args.username ?? false,
-                        email: args.email ?? false,
-                        settings: args.settings ?? false,
-                    },
+                    select: args.all
+                        ? undefined
+                        : {
+                              // selects which columns from that databse to return
+                              firstName: args.firstName ?? false,
+                              lastName: args.lastName ?? false,
+                              university: args.university ?? false,
+                              birthday: args.birthday ?? false,
+                              course: args.course ?? false,
+                              bio: args.bio ?? false,
+                              username: args.username ?? false,
+                              email: args.email ?? false,
+                              settings: args.settings ?? false,
+                          },
                 }) as unknown as UserObjectWithSettings
             },
         })
@@ -90,9 +101,167 @@ export const UserQuery = extendType({
     definition(t) {
         t.nonNull.list.field('user', {
             type: 'User',
-            resolve: (_parent, _args, ctx) => {
-                // returns all rows in the user table
-                return ctx.prisma.users.findMany()
+            args: {
+                id: nonNull(stringArg()),
+                universityPreference: nonNull(stringArg()),
+                university: nonNull(stringArg()),
+                take: intArg(),
+            },
+            resolve: async (_parent, args, ctx) => {
+                // allows for the users to be randomised
+                const orderDirection = randomPick(['asc', 'desc'])
+                const orderBy = randomPick([
+                    'id',
+                    'firstName',
+                    'lastName',
+                    'university',
+                    'course',
+                    'username',
+                    'email',
+                ])
+
+                // returns 10 rows from the database
+                return ctx.prisma.users.findMany({
+                    take: args.take ?? 10,
+                    orderBy: {
+                        [orderBy]: orderDirection,
+                    },
+                    // filters the rows to only return rows that match the arguements
+                    // returns if no friend relation or friend request relation exists
+                    // and if the university matches the arguement if universityPreference is 'OWN'
+                    // or if the university is not the same and the
+                    // universityPreference is 'ALL' for both users
+                    where: {
+                        AND: [
+                            {
+                                id: {
+                                    not: args.id,
+                                },
+                            },
+                            {
+                                OR: [
+                                    {
+                                        friends: {
+                                            every: {
+                                                AND: [
+                                                    {
+                                                        friendID: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                    {
+                                                        usersId: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    },
+                                    {
+                                        friends: {
+                                            none: {},
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                OR: [
+                                    {
+                                        Friends_Friends_friendIDToUsers: {
+                                            every: {
+                                                AND: [
+                                                    {
+                                                        friendID: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                    {
+                                                        usersId: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    },
+                                    {
+                                        Friends_Friends_friendIDToUsers: {
+                                            none: {},
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                OR: [
+                                    {
+                                        friendRequests: {
+                                            every: {
+                                                AND: [
+                                                    {
+                                                        friendID: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                    {
+                                                        usersId: {
+                                                            not: args.id,
+                                                        },
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    },
+                                    {
+                                        friendRequests: {
+                                            none: {},
+                                        },
+                                    },
+                                ],
+                            },
+                            {
+                                OR: [
+                                    {
+                                        FriendRequests_FriendRequests_friendIDToUsers:
+                                            {
+                                                every: {
+                                                    AND: [
+                                                        {
+                                                            friendID: {
+                                                                not: args.id,
+                                                            },
+                                                        },
+                                                        {
+                                                            usersId: {
+                                                                not: args.id,
+                                                            },
+                                                        },
+                                                    ],
+                                                },
+                                            },
+                                    },
+                                    {
+                                        FriendRequests_FriendRequests_friendIDToUsers:
+                                            {
+                                                none: {},
+                                            },
+                                    },
+                                ],
+                            },
+                            args.universityPreference === 'ALL'
+                                ? {
+                                      settings: {
+                                          universityPreference: {
+                                              equals: 'ALL',
+                                          },
+                                      },
+                                  }
+                                : {
+                                      university: args.university,
+                                  },
+                        ],
+                    },
+                })
             },
         })
     },
@@ -113,6 +282,7 @@ export const CreateUserMutation = extendType({
                 course: nonNull(stringArg()),
                 username: nonNull(stringArg()),
                 email: nonNull(stringArg()),
+                bio: stringArg(),
             },
             resolve: (_parent, args, ctx) => {
                 if (!isValidEmail(args.email))
@@ -133,7 +303,7 @@ export const CreateUserMutation = extendType({
                         birthday: args.birthday,
                         username: args.username,
                         email: args.email,
-                        bio: '',
+                        bio: args.bio ?? '',
                         settings: {
                             create: {},
                         },
@@ -163,7 +333,7 @@ export const UpdateUserMutation = extendType({
                 bio: stringArg(),
             },
             resolve: (_parent, args, ctx) => {
-                const temp: tempUserObject = { ...args } as tempUserObject
+                const temp: TempUserObject = { ...args } as TempUserObject
                 delete temp.id // removes id property so that it is not passed in the updates.
                 const userUpdates: UserUpdateObject = temp
 
@@ -218,7 +388,54 @@ export const GetUserFromAuth = extendType({
                         email: args.email,
                     },
                     // gets the users settings
-                    include: { settings: true },
+                    include: { settings: true, friends: true },
+                }) as unknown as UserObjectWithSettingsAndFriends
+            },
+        })
+    },
+})
+
+// fetches user by ID
+export const UserQueryByEmail = extendType({
+    type: 'Query', // query refers to returning data from the database
+    definition(t) {
+        t.nonNull.field('UserQueryByEmail', {
+            type: 'User', // uses type user defined earlier.
+            args: {
+                // all arguements that can be taken by the Query.
+                email: nonNull(stringArg()),
+                firstName: booleanArg(),
+                lastName: booleanArg(),
+                university: booleanArg(),
+                course: booleanArg(),
+                birthday: booleanArg(),
+                bio: booleanArg(),
+                username: booleanArg(),
+                settings: booleanArg(),
+                id: booleanArg(),
+                all: booleanArg(),
+            },
+            resolve: (_parent, args, ctx) => {
+                console.log(args.email)
+                return ctx.prisma.users.findUnique({
+                    where: {
+                        // finds the unique user row in the databse with corresponding id
+                        email: args.email,
+                    },
+                    select: args.all
+                        ? undefined
+                        : {
+                              // selects which columns from that databse to return
+                              firstName: args.firstName ?? false,
+                              lastName: args.lastName ?? false,
+                              university: args.university ?? false,
+                              birthday: args.birthday ?? false,
+                              course: args.course ?? false,
+                              bio: args.bio ?? false,
+                              username: args.username ?? false,
+                              settings: args.settings ?? false,
+                              id: args.id ?? false,
+                          },
                 }) as unknown as UserObjectWithSettings
             },
         })
@@ -251,7 +468,7 @@ export const GetAuthFromUsername = extendType({
                         // returns only the email
                         email: true,
                     },
-                }) as unknown as emailQuery
+                }) as unknown as EmailQuery
             },
         })
     },

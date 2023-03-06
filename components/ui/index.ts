@@ -1,3 +1,5 @@
+'use client'
+
 export * from './Logo'
 export * from './Text'
 export * from './Button'
@@ -8,3 +10,5 @@ export * from './Navbar'
 export * from './DropDown'
 export * from './ProfilePicture'
 export * from './Toggle'
+export * from './Message'
+export * from './User'

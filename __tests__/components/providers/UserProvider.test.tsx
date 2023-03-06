@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { FC } from 'react'
 import { MockedProvider, MockedResponse } from '@apollo/client/testing'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { act } from 'react-dom/test-utils'
 import { useUser } from '../../../hooks'
 import {
@@ -9,7 +9,7 @@ import {
     NotificationProvider,
     LoadingProvider,
 } from '../../../components'
-import { UserByEmailQuery } from '../../../graphql/queries'
+import { GET_USER_BY_EMAIL } from '../../../graphql/queries'
 
 const ProviderTestComponent: FC = () => {
     const { user } = useUser()
@@ -23,24 +23,6 @@ const ProviderTestComponent: FC = () => {
     )
 }
 
-jest.mock('next/navigation', () => ({
-    useRouter: jest.fn(() => ({
-        router: {
-            push: jest.fn(),
-        },
-    })),
-    usePathname: jest.fn(),
-}))
-
-jest.mock('../../../lib/supabase', () => ({
-    supabase: {
-        auth: {
-            getSession: jest.fn(),
-            onAuthStateChange: jest.fn(),
-        },
-    },
-}))
-
 describe('User Provider tests', () => {
     /* eslint-disable-next-line */
     let mocks: MockedResponse<Record<string, any>>[] = []
@@ -48,9 +30,6 @@ describe('User Provider tests', () => {
         .auth
     supabaseAuthMock.onAuthStateChange.mockReturnValue({
         data: { subscription: { unsubscribe: jest.fn() } },
-    })
-    ;(useRouter as jest.Mock).mockReturnValue({
-        push: (path: string) => window.history.pushState({}, '', path),
     })
 
     it('children can consume context', async () => {
@@ -81,7 +60,7 @@ describe('User Provider tests', () => {
         mocks = [
             {
                 request: {
-                    query: UserByEmailQuery,
+                    query: GET_USER_BY_EMAIL,
                     variables: {
                         email: 'test@email.ac.uk',
                     },
@@ -102,6 +81,7 @@ describe('User Provider tests', () => {
                                 darkMode: false,
                                 universityPreference: 'OWN',
                             },
+                            friends: [],
                         },
                     },
                 },

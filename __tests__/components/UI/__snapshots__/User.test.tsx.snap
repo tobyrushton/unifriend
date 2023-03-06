@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User should render 1`] = `
+<div>
+  <div
+    class="user"
+  >
+    <div
+      class="userHeader"
+    >
+      <a
+        href="/a/profile/123"
+      >
+        <img
+          alt="Profile Picture"
+          class="profilePicture"
+          data-nimg="1"
+          decoding="async"
+          height="75"
+          loading="lazy"
+          src="http://localhost/_next/image?url=%2FProfile-picture.png&w=256&q=75"
+          srcset="/_next/image?url=%2FProfile-picture.png&w=96&q=75 1x, /_next/image?url=%2FProfile-picture.png&w=256&q=75 2x"
+          style="color: transparent; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;"
+          width="75"
+        />
+      </a>
+      <div
+        class="userHeaderText"
+      >
+        <div
+          role="button"
+          tabindex="0"
+        >
+          <h1
+            class="fontText extraLarge clickable left"
+          >
+            Toby
+             
+            Rushton
+          </h1>
+        </div>
+        <p
+          class="fontText   left"
+        >
+          📚 
+          Computer Science
+        </p>
+        <p
+          class="fontText   left"
+        >
+          🎓 
+          University of Test
+        </p>
+        <p
+          class="fontText   left"
+        >
+          🎂 
+          17
+           years old
+        </p>
+      </div>
+    </div>
+    <div
+      class="detailsContainer"
+    >
+      <p
+        class="fontText   left"
+      >
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis,.
+      </p>
+    </div>
+  </div>
+</div>
+`;

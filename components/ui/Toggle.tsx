@@ -1,3 +1,5 @@
+'use client'
+
 import { FC } from 'react'
 import styles from '../../styles/modules/UI.module.scss'
 import { ToggleProps } from '../../types'

@@ -1,4 +1,4 @@
-import { university, UniversityEmailArray } from '../../types'
+import { University, UniversityEmailArray } from '../../types'
 import data from './universities.json'
 
 const UniversityEmailEndings: UniversityEmailArray =
@@ -33,7 +33,7 @@ export const isValidUsername = (username: string): boolean => {
 }
 
 // function to return the university of a user upon sign up
-export const getUniversity = (email: string): university | null => {
+export const getUniversity = (email: string): University | null => {
     const emailEnding = '@'.concat(email.split('@')[1])
 
     // returns the first item in the array UniversityEmailEndings that matches the email ending.

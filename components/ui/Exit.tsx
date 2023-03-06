@@ -1,3 +1,5 @@
+'use client'
+
 import { FC } from 'react'
 import { exitProps } from '../../types'
 import styles from '../../styles/modules/UI.module.scss'

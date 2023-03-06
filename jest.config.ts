@@ -82,8 +82,9 @@ export default {
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
-        '\\.(css|scss)$': 'identity-obj-proxy',
-        '^.+.(png|jpg)$': 'jest-transform-stub'
+        '\\.(css|scss|less|sass)$': 'identity-obj-proxy',
+        '^.+.(png|jpg)$': 'jest-transform-stub',
+        "@fontsource/*": "<rootDir>/__tests__/__helpers__/mock-font.ts"
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -128,7 +129,7 @@ export default {
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    setupFiles: process.env.RUNNER_NAME ? undefined: ['<rootDir>/__tests__/setEnvVars.ts'],
+    setupFiles: process.env.RUNNER_NAME ? ['<rootDir>/__tests__/mocks.ts']: ['<rootDir>/__tests__/setEnvVars.ts', '<rootDir>/__tests__/mocks.ts'],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     // setupFilesAfterEnv: [],
@@ -155,7 +156,7 @@ export default {
     // ],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-    testPathIgnorePatterns: ['\\\\node_modules\\\\', '__helpers__', 'setEnvVars.ts'],
+    testPathIgnorePatterns: ['\\\\node_modules\\\\', '__helpers__', 'setEnvVars.ts', 'mocks.ts'],
 
     // The regexp pattern or array of patterns that Jest uses to detect test files
     // testRegex: [],
@@ -177,10 +178,7 @@ export default {
     },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-    // transformIgnorePatterns: [
-    //   "\\\\node_modules\\\\",
-    //   "\\.pnp\\.[^\\\\]+$"
-    // ],
+    // transformIgnorePatterns: ['/node_modules/(?!(?:@fontsource/orbitron|@storybook))'],
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
     // unmockedModulePathPatterns: undefined,

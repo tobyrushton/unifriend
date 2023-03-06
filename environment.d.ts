@@ -18,4 +18,5 @@ declare global {
         const value: Record<string, string>;
         export default value;
     }
+    declare module 'server-only' { export default {} }
 }

@@ -1,9 +1,16 @@
+'use client'
+
 import { FC, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Text } from './Text'
 import styles from '../../styles/modules/UI.module.scss'
 import { DropDownProps } from '../../types'
-import { useSignOut, useLoadingScreen, useNotifications } from '../../hooks'
+import {
+    useSignOut,
+    useLoadingScreen,
+    useNotifications,
+    useUser,
+} from '../../hooks'
 
 export const DropDown: FC<DropDownProps> = ({ handleClickOutside }) => {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -11,6 +18,7 @@ export const DropDown: FC<DropDownProps> = ({ handleClickOutside }) => {
     const { loading, response: signOut } = useSignOut()
     const { setLoading } = useLoadingScreen()
     const { createNotification } = useNotifications()
+    const { user } = useUser()
 
     useEffect(() => {
         setLoading(loading)
@@ -47,7 +55,7 @@ export const DropDown: FC<DropDownProps> = ({ handleClickOutside }) => {
     return (
         <div className={styles.dropdown} ref={containerRef}>
             <div className={styles.item}>
-                <Link href="/a/profile">View Profile</Link>
+                <Link href={`/a/profile/${user.id}`}>View Profile</Link>
             </div>
             <div className={styles.item}>
                 <Link href="/a/settings">Settings</Link>

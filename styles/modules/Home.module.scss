@@ -1,46 +1,27 @@
-@use '../reusables/variables' as variables;
-@use '../reusables/mixins' as mixins;
+@use '../reusables//variables' as variables;
 
-.logoContainer {
+.wrapper {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
     position: absolute;
-    top: 50%; 
-    left: 30%;
+    width: 100%;
+    height: calc( 100% - 100px );
+    background-color: variables.$background_color;
 }
 
-.line {
-    width: 100vh;
-    height: 0px;
-    @include mixins.center();
-    border: 1px solid variables.$accent_color;
-    transform:  translate(-50%, -50%) rotate(90deg);
+.retryImage{
+    margin-left: auto;
+    padding: 2rem;
+    cursor: pointer;
 }
 
-.accountContainer {
-    position: absolute;
-    top:40%;
-    right: 10%;
-    justify-content: center;
-    text-align: center;
-    width: 40%;
-}
-
-@media screen and (max-width: 1000px) {
-    .logoContainer{
-        display: none;
-    }
-
-    .line {
-        display:none;
-    }
-
-    .accountContainer {
-        @include mixins.center();
-        width: 100%;
-    }
-}
-
-@media screen and (min-width:1000px) and (max-width: 1350px) {
-    .logoContainer {
-        left: 23%
-    }
+.usersContainer {
+    display: flex;
+    padding: 0 2rem 1rem 2rem;
+    overflow-y: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1;
+    gap: 1rem;
 }

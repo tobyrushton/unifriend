@@ -7,6 +7,7 @@
 
 .fontTextBold {
     @include mixins.fontClass($fontWeight: 600);
+    color: variables.$text_color;
 }
 
 .extraLarge {
@@ -39,6 +40,7 @@
 
 .fontText {
     @include mixins.fontClass($fontWeight: 400);
+    color: variables.$text_color;
 }
 
 .button {
@@ -48,12 +50,13 @@
     padding: .5rem 1rem .5rem 1rem;
     cursor: pointer;
     text-align: center;
-    background-color: variables.$secondary_color ;
+    background-color: variables.$background_color;
+    color: variables.$text_color;
 }
 
 .filled {
     background-color: variables.$primary_color;
-    color: variables.$secondary_color;
+    color: variables.$text_secondary_color;
 }
 
 .inactive {
@@ -63,17 +66,18 @@
 }
 
 .inputBox {
-    border-radius: 10px;
+    border-radius: 15px;
     border: 1px solid variables.$accent_color;
     width: 20rem;
     padding: .5rem 1rem .5rem 1rem;
+    background-color: variables.$secondary_color;
 }
 
 .exit {
     position: relative;
     cursor: pointer;
     padding: 1rem .5rem 1rem .5rem;
-
+    
     div{
         border: 1px solid #000000;
         background: black;
@@ -125,9 +129,10 @@
 .navbar {
     position: absolute;
     width: 100%;
+    z-index: 1;
     top: 0;
     height: 100px;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    box-shadow: (0px 4px 4px rgba(0, 0, 0, 0.25));
     background-color: variables.$primary_color;
     display: flex;
     align-items: center;
@@ -139,7 +144,7 @@
 
 .triangle {
 	position: relative;
-	background-color: variables.$secondary_color;
+	background-color: variables.$text_color;
 	text-align: left;
     margin-left: 1.5%;
     margin-right: 5%;
@@ -179,11 +184,12 @@
     top: 75px;
     right: 2.5%;
     background-color: variables.$secondary_color;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    box-shadow: (0px 4px 4px rgba(0, 0, 0, 0.25));
     display: flex;
     flex-direction: column;
     border-radius: 0.25em;
     width: 15rem;
+    z-index: 2;
 
     .item {
         position: relative;
@@ -255,9 +261,114 @@
     }
 }
 
+.message {
+    background: variables.$primary_color;
+    border-radius: 15px 15px 0px 15px;
+    width: fit-content;
+    max-width: 75%;
+    padding: .75rem;
+    align-self: flex-end;
+    margin-right: .5rem;
+    word-wrap: break-word;
+
+    p {
+        font-size: medium;
+    }
+}
+
+.recieved {
+    background: variables.$accent_color;
+    border-radius: 15px 15px 15px 0px;
+    align-self: flex-start;
+    margin-right: 0;
+    margin-left: .5rem;
+}
+
+.user {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    background-color: variables.$secondary_color;
+    width: calc(50% - 1rem);
+}
+
+.userHeader  {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: .5rem;
+    background-color: variables.$primary_color;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px 10px 0px 0px;
+}
+
+.userHeaderText {
+    display: flex;
+    margin-left: .5rem;
+    flex-direction: column;
+
+    h1{
+        font-size: 2rem !important;
+        text-decoration: none;
+    }
+
+    p{
+        font-size: 1rem !important;
+    }
+}
+
+.detailsContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+
+    p{
+        font-size: 1rem !important;
+    }
+}
+
+.popupWrapper {
+    @include mixins.fazeOut();
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    border-radius: 25px;
+    background-color: variables.$secondary_color;
+    padding: 2rem;
+    border-width: 2px;
+    border-style: solid;
+    border-color: variables.$accent_color;
+}
+
+.popupButtons {
+    display: flex;
+    gap: 1rem;
+}
+
 
 @media screen and (max-width: 1000px) {
     .notification{
         width: calc(100% - 1rem);
+    }
+
+    .user{
+        width: calc(100% - 1rem);
+    }
+
+    .userHeaderText{
+        h1{
+            font-size: 3rem !important;
+        }
+
+        p{
+            font-size: .1.5rem !important;
+        }
     }
 }

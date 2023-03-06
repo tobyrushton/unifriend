@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, BaseSyntheticEvent } from 'react'
 import { InputProps } from '../../types'
 import styles from '../../styles/modules/UI.module.scss'

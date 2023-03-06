@@ -22,6 +22,7 @@ export interface SelectUserByIDParameters {
     lastName?: boolean
     bio?: boolean
     username?: boolean
+    all?: boolean
 }
 
 export interface AuthenticationParams {
@@ -47,7 +48,7 @@ export interface GetEmailParams {
     username: string
 }
 
-export interface authStatusReturnType {
+export interface AuthStatusReturnType {
     session: Session | null
     loading: boolean
     passwordResetRequest: boolean
@@ -81,6 +82,7 @@ export type Join<X, Y> = X & Y
 
 export interface Query {
     query: DocumentNode
+    fetchPolicy?: 'no-cache' | 'cache-first' | 'network-only' | 'cache-only'
 }
 
 export interface Mutation {
@@ -96,37 +98,34 @@ export interface ApolloQueryReturn {
     query: ApolloQueryFunction
 }
 
-export interface ApolloMutationFunctionReturn {
+export interface ApolloMutationFunctionReturn<TReturn> {
     success: boolean
     error: readonly Error[] | undefined
+    data: TReturn | undefined
 }
 
 /* eslint-disable-next-line */
 export type ApolloMutationFunction = <Return, Params>(
     args: Join<Mutation, Params>
-) => Promise<ApolloMutationFunctionReturn>
+) => Promise<ApolloMutationFunctionReturn<Return>>
 
 export interface ApolloMutationReturn {
     loading: boolean
     mutation: ApolloMutationFunction
 }
 
-export type emailQuery = {
+export type EmailQuery = {
     email: string
 }
 
-export type userQueryReturnInterface<Return extends object, T> = Return & {
+export type QueryReturnInterface<Return extends object, T> = Return & {
     __typename: T
 }
 
-export interface getUserFromAuthQuery<Return extends object, T> {
-    getUserFromAuth: userQueryReturnInterface<Return, T>
+export type IDArguement = {
+    id: string
 }
 
-export interface CheckUsernameIsTaken<Return> {
-    CheckUsernameIsTaken: Return
-}
-
-export interface GetAuthFromUsernameQuery<Return extends object, T> {
-    getAuthFromUsername: userQueryReturnInterface<Return, T>
+export type QueryReturn<Return, T, X extends string> = {
+    [K in X]: Return extends object ? QueryReturnInterface<Return, T> : Return
 }

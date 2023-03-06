@@ -1,23 +1,27 @@
+'use client'
+
 import { createContext, FC, useMemo, useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import Cookies from 'js-cookie'
 import {
-    userContextInterface,
-    ChildrenProps,
+    UserContextInterface,
     UserObjectWithID,
-    emailQuery,
-    getUserFromAuthQuery,
+    EmailQuery,
     Settings,
     UpdateSettingsArgs,
-    UserObjectWithSettings,
+    QueryReturn,
+    UserProviderProps,
+    FriendsWithID,
+    UserObjectWithSettingsAndFriends,
 } from '../../types'
-import { UserByEmailQuery } from '../../graphql/queries'
+import { GET_USER_BY_EMAIL } from '../../graphql/queries'
 import { useQuery } from '../../hooks/graphql/useQuery'
 import { useAuthStatus } from '../../hooks/providers/useAuthStatus'
 import { useLoadingScreen } from '../../hooks/providers/useLoadingScreen'
 import { useNotifications } from '../../hooks/providers/useNotifications'
 
 // creates context for the provider.
-export const UserContext = createContext<userContextInterface | null>(null)
+export const UserContext = createContext<UserContextInterface | null>(null)
 
 const defaultUser: UserObjectWithID = {
     id: '',
@@ -33,13 +37,25 @@ const defaultUser: UserObjectWithID = {
 
 const defaultSettings: Settings = {
     universityPreference: 'OWN',
-    darkMode: false,
+    darkMode: (Cookies.get('theme')?.valueOf() ?? 'light') === 'dark',
 }
 
-export const UserProvider: FC<ChildrenProps> = ({ children }) => {
+export const UserProvider: FC<UserProviderProps> = ({
+    children,
+    fetchedUser,
+    fetchedSettings,
+    fetchedFriends,
+}) => {
     // creates state to store the users details
-    const [user, setUser] = useState<UserObjectWithID>(defaultUser)
-    const [settings, setSettings] = useState<Settings>(defaultSettings)
+    const [user, setUser] = useState<UserObjectWithID>(
+        fetchedUser ?? defaultUser
+    )
+    const [settings, setSettings] = useState<Settings>(
+        fetchedSettings ?? defaultSettings
+    )
+    const [friends, setFriends] = useState<FriendsWithID[]>(
+        fetchedFriends ?? []
+    )
 
     // all hooks used
     const {
@@ -64,18 +80,24 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
         const run = async (): Promise<void> => {
             if (session?.user.email) {
                 const { data, error } = await query<
-                    getUserFromAuthQuery<UserObjectWithSettings, 'User'>,
-                    emailQuery
-                >({ query: UserByEmailQuery, email: session.user.email })
+                    QueryReturn<
+                        UserObjectWithSettingsAndFriends,
+                        'User',
+                        'getUserFromAuth'
+                    >,
+                    EmailQuery
+                >({ query: GET_USER_BY_EMAIL, email: session.user.email })
 
                 if (data) {
                     const {
                         __typename,
                         settings: userSettings,
+                        friends: userFriends,
                         ...userDetails
                     } = data.getUserFromAuth
                     setUser(userDetails)
                     setSettings(userSettings)
+                    setFriends(userFriends)
                 } else if (error)
                     createNotification({
                         type: 'error',
@@ -134,10 +156,10 @@ export const UserProvider: FC<ChildrenProps> = ({ children }) => {
     )
 
     // value that is passed down
-    const providerValue: userContextInterface = useMemo(
+    const providerValue: UserContextInterface = useMemo(
         // memoised
-        () => ({ user, resetPassword, settings, updateSettings }),
-        [user, resetPassword, settings, updateSettings]
+        () => ({ user, resetPassword, settings, updateSettings, friends }),
+        [user, resetPassword, settings, updateSettings, friends]
     )
 
     return (

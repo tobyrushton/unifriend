@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, FC, useMemo } from 'react'
 import { ChildrenProps, NotificationContextInterface } from '../../types'
 import { useNotificationQueue } from '../../hooks/providers/useNotificationQueue'

@@ -8,15 +8,16 @@ export interface ShellUser {
     username: string
 }
 
-export interface createUserObject extends ShellUser {
+export interface CreateUserObject extends ShellUser {
     email: string
+    bio: string | undefined
 }
 
-export interface createUserObjectWithUniversity extends createUserObject {
+export interface CreateUserObjectWithUniversity extends CreateUserObject {
     university: string
 }
 
-export interface UserObject extends createUserObjectWithUniversity {
+export interface UserObject extends CreateUserObjectWithUniversity {
     bio: string
 }
 
@@ -43,6 +44,34 @@ export interface UserObjectWithSettings extends UserObjectWithID {
     settings: Settings
 }
 
-export interface tempUserObject extends UserUpdateObject {
+export interface TempUserObject extends UserUpdateObject {
     id?: string
+}
+
+export type UserFromFriend = {
+    id: string
+    username: string
+    rowId: string
+}
+
+export type UserFromFriendQuery = UserFromFriend & {
+    __typename: 'GetFriend'
+}
+
+export type UserFromConversation = {
+    id: string
+    username: string
+}
+
+export type UserByEmailOptions = {
+    birthday?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    university?: boolean
+    course?: boolean
+    username?: boolean
+    bio?: boolean
+    id?: boolean
+    all?: boolean
+    settings?: boolean
 }
