@@ -12,7 +12,7 @@ import {
 import { Text, ProfilePicture } from '../../../../components'
 import { GET_USER_BY_ID, GET_FRIENDS_BY_ID } from '../../../../graphql/queries'
 import { initiateApollo } from '../../../../lib/apollo'
-import { isError } from '../../../../lib/utils'
+import { isError, getAge } from '../../../../lib/utils'
 import { ButtonContainer } from './ButtonContainer'
 import styles from '../../../../styles/modules/Profile.module.scss'
 
@@ -84,6 +84,7 @@ const Profile = async ({
                     </Text>
                     <Text>{profile?.university}</Text>
                     <Text>{profile?.course}</Text>
+                    <Text>{getAge(profile.birthday)} Years old</Text>
                 </div>
                 <div className={styles.buttonContainer}>
                     <ButtonContainer profileId={params.id} friends={friends} />
