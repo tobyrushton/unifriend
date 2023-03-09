@@ -416,7 +416,6 @@ export const UserQueryByEmail = extendType({
                 all: booleanArg(),
             },
             resolve: (_parent, args, ctx) => {
-                console.log(args.email)
                 return ctx.prisma.users.findUnique({
                     where: {
                         // finds the unique user row in the databse with corresponding id
