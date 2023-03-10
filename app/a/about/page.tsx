@@ -8,7 +8,7 @@ const Page: FC = () => {
             style={{
                 position: 'absolute',
                 top: '100px',
-                margin: '3rem',
+                padding: '3rem',
                 width: 'calc(100% - 6rem)',
                 height: 'calc(100% - 100px - 6rem)',
                 backgroundColor: 'var(--background-color)',
