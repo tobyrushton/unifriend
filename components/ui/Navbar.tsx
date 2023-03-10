@@ -47,7 +47,10 @@ export const Navbar: FC = () => {
             <Link href="/a" passHref legacyBehavior>
                 {/* eslint-disable-next-line */}
                 <a style={{ textDecoration: 'none'}}>
-                    <Logo color="text" style={{ marginLeft: '2.5%' }} />
+                    <Logo
+                        color="secondaryText"
+                        style={{ marginLeft: '2.5%' }}
+                    />
                 </a>
             </Link>
             <div className={styles.pushLeft}>
