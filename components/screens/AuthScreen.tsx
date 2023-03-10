@@ -197,7 +197,7 @@ export const AuthScreen: FC<AuthProps> = ({ logIn, signUp, changeAuth }) => {
                     const temp = [...prevState]
                     temp[0] = {
                         active: true,
-                        content: 'Username must contain no special characters',
+                        content: 'Username must contain no special characters and be at least 3 characters long',
                     }
                     return temp
                 })
