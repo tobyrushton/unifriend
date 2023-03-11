@@ -250,7 +250,7 @@ describe('user query tests', () => {
                 darkMode: false,
                 universityPreference: 'OWN',
             },
-            friends: [],
+            friends: [null],
         })
     })
 
