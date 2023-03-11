@@ -302,7 +302,9 @@ describe('AuthScreen tests', () => {
             )
         ).toBeTruthy()
         expect(
-            screen.queryByText('Username must contain no special characters')
+            screen.queryByText(
+                'Username must contain no special characters and be at least 3 characters long'
+            )
         ).toBeTruthy()
     })
 

@@ -50,7 +50,7 @@ export const Sidebar: FC<{ fetchedConversations: ConversationReturn[] }> = ({
                 (async (): Promise<NewConversationUser> => {
                     const id =
                         friend.friendID === user.id
-                            ? friend.userId
+                            ? friend.usersId
                             : friend.friendID
 
                     const { data, error } = await query<
@@ -146,6 +146,7 @@ export const Sidebar: FC<{ fetchedConversations: ConversationReturn[] }> = ({
                 <New
                     exit={() => setDisplayNewMessage(false)}
                     users={newConversationUsers}
+                    conversations={conversations}
                 />
             ) : null}
         </>

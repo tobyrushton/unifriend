@@ -126,6 +126,7 @@ export const GetFriend = objectType({
         t.nonNull.string('id')
         t.nonNull.string('username')
         t.nonNull.string('rowId')
+        t.nonNull.string('fullName')
     },
 })
 
@@ -157,6 +158,7 @@ export const getFriendRequests = extendType({
                         rowId: id,
                         id: details?.id,
                         username: details?.username,
+                        fullName: `${details?.firstName} ${details?.lastName}`,
                     }
                 })
 
@@ -210,6 +212,7 @@ export const getFriends = extendType({
                             rowId: id,
                             id: details?.id,
                             username: details?.username,
+                            fullName: `${details?.firstName} ${details?.lastName}`,
                         }
                     }
                 )

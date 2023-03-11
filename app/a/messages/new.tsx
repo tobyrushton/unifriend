@@ -4,7 +4,6 @@ import { FC, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Exit, Text, Input, ProfilePicture } from '../../../components'
 import {
-    useQuery,
     useMutation,
     useUser,
     useNotifications,
@@ -15,19 +14,20 @@ import {
     NewConversationArgs,
     NewConversationUser,
     QueryReturn,
+    ConversationReturn,
 } from '../../../types'
-import { CREATE_CONVERSATION, GET_CONVERSATION } from '../../../graphql/queries'
+import { CREATE_CONVERSATION } from '../../../graphql/queries'
 import styles from '../../../styles/modules/Messages.module.scss'
 
-export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
-    exit,
-    users: fetchedUsers,
-}) => {
+export const New: FC<{
+    exit: () => void
+    users: NewConversationUser[]
+    conversations: ConversationReturn[]
+}> = ({ exit, users: fetchedUsers, conversations: fetchedConversations }) => {
     const [users, setUsers] = useState<NewConversationUser[]>(fetchedUsers)
     const [search, setSearch] = useState<string>('')
 
     // hooks
-    const { query, loading: queryLoading } = useQuery()
     const { mutation, loading: mutationLoading } = useMutation()
     const { user } = useUser()
     const { createNotification } = useNotifications()
@@ -49,41 +49,39 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
     }
 
     // checks if a conversation already exists
-    const checkForConversation = async (
-        id: string
-    ): Promise<string | undefined> => {
+    const checkForConversation = (id: string): string | undefined => {
         // query to search for conversation
-        const { data, error } = await query<
-            ConversationPartial,
-            NewConversationArgs
-        >({ query: GET_CONVERSATION, userOneId: user.id, userTwoId: id })
-        if (error) createNotification({ type: 'error', content: error.message })
-
-        if (data) return data.id
-        return undefined
+        return fetchedConversations.find(
+            conversation => conversation.usersId === id
+        )?.id
     }
 
     // creates a new conversation
     const createConversation = async (id: string): Promise<void> => {
         // check if conversation already exists
-        const check = await checkForConversation(id)
+        const check = checkForConversation(id)
         if (check) router.push(`/a/messages/${check}`)
-
-        // mutation to create a new conversation
-        const { error, data } = await mutation<
-            QueryReturn<
-                ConversationPartial,
-                'Conversation',
-                'CreateConversation'
-            >,
-            NewConversationArgs
-        >({ mutation: CREATE_CONVERSATION, userOneId: user.id, userTwoId: id })
-        if (error)
-            error.forEach(err =>
-                createNotification({ type: 'error', content: err.message })
-            )
-        // on success router.push to conversation page.
-        if (data) router.push(`/a/messages/${data.CreateConversation.id}`)
+        else {
+            // mutation to create a new conversation
+            const { error, data } = await mutation<
+                QueryReturn<
+                    ConversationPartial,
+                    'Conversation',
+                    'CreateConversation'
+                >,
+                NewConversationArgs
+            >({
+                mutation: CREATE_CONVERSATION,
+                userOneId: user.id,
+                userTwoId: id,
+            })
+            if (error)
+                error.forEach(err =>
+                    createNotification({ type: 'error', content: err.message })
+                )
+            // on success router.push to conversation page.
+            if (data) router.push(`/a/messages/${data.CreateConversation.id}`)
+        }
     }
 
     // filters when search input changes
@@ -91,8 +89,8 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
 
     // synchornises the loading state with the loading state of the query and mutation hooks
     useEffect(() => {
-        setLoading(mutationLoading || queryLoading)
-    }, [mutationLoading, queryLoading, setLoading])
+        setLoading(mutationLoading)
+    }, [mutationLoading, setLoading])
 
     return (
         <div className={styles.fazed}>
@@ -114,7 +112,7 @@ export const New: FC<{ exit: () => void; users: NewConversationUser[] }> = ({
                             tabIndex={0}
                         >
                             <ProfilePicture
-                                image={user.id}
+                                image={friend.id}
                                 width={50}
                                 height={50}
                             />

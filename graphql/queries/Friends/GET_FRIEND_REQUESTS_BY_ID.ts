@@ -6,6 +6,7 @@ export const GET_FRIEND_REQUESTS_BY_ID = gql`
             id
             username
             rowId
+            fullName
         }
     }
 `

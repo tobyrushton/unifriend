@@ -109,7 +109,17 @@ export const DisplayRequests: FC<{ fetchedRequests?: UserFromFriend[] }> = ({
                             width={75}
                             height={75}
                         />
-                        <Text>{request.username}</Text>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                            }}
+                        >
+                            <Text>{request.fullName}</Text>
+                            <Text small>@{request.username}</Text>
+                        </div>
                         <div className={styles.buttons}>
                             <Text
                                 clickable

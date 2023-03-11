@@ -12,6 +12,7 @@ import {
     UserObjectWithSettings,
     UserUpdateObject,
     UserObjectWithSettingsAndFriends,
+    FriendsWithID,
 } from '../../types'
 import { Friend, FriendRequest } from './Friends'
 import { Settings } from './Settings'
@@ -382,14 +383,29 @@ export const GetUserFromAuth = extendType({
                 // takes the users email as an arguement
                 email: nonNull(stringArg()),
             },
-            resolve: (_, args, ctx) => {
-                return ctx.prisma.users.findUnique({
+            resolve: async (_, args, ctx) => {
+                const temp = (await ctx.prisma.users.findUnique({
                     where: {
                         email: args.email,
                     },
                     // gets the users settings
-                    include: { settings: true, friends: true },
-                }) as unknown as UserObjectWithSettingsAndFriends
+                    include: {
+                        settings: true,
+                        friends: true,
+                        Friends_Friends_friendIDToUsers: true,
+                    },
+                })) as unknown as UserObjectWithSettingsAndFriends
+                if (!temp) throw Error('User not found')
+                return {
+                    ...temp,
+                    friends: temp.friends.concat(
+                        (
+                            temp as unknown as {
+                                Friends_Friends_friendIDToUsers: FriendsWithID[]
+                            }
+                        ).Friends_Friends_friendIDToUsers
+                    ),
+                }
             },
         })
     },
@@ -416,7 +432,6 @@ export const UserQueryByEmail = extendType({
                 all: booleanArg(),
             },
             resolve: (_parent, args, ctx) => {
-                console.log(args.email)
                 return ctx.prisma.users.findUnique({
                     where: {
                         // finds the unique user row in the databse with corresponding id

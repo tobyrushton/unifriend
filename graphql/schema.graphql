@@ -30,6 +30,7 @@ type Friend {
 }
 
 type GetFriend {
+  fullName: String!
   id: String!
   rowId: String!
   username: String!

@@ -2,7 +2,7 @@ import { UserObjectWithID, UserObjectWithSettings } from './User'
 
 export interface Friends {
     friendID: string
-    userId: string
+    usersId: string
     friendedAt: string // stored as iso date string
 }
 

@@ -30,7 +30,7 @@ export const CreateMessage = extendType({
                 conversationId: nonNull(stringArg()),
             },
             resolve: async (_parent, args, ctx) => {
-                const messages = await ctx.prisma.conversations.update({
+                await ctx.prisma.conversations.update({
                     where: { id: args.conversationId },
                     data: {
                         messages: {
@@ -43,9 +43,13 @@ export const CreateMessage = extendType({
                     include: { messages: true },
                 })
 
-                const message: MessageWithId = messages.messages.at(
-                    -1
-                ) as unknown as MessageWithId
+                const message = (await ctx.prisma.messages.findFirst({
+                    where: {
+                        conversationId: args.conversationId,
+                        message: args.message,
+                    },
+                    orderBy: { sentAt: 'desc' },
+                })) as unknown as MessageWithId
 
                 ctx.pubsub.publish('newMessage', args.conversationId, message)
 

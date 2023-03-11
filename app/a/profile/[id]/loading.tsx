@@ -26,6 +26,10 @@ const ProfileLoading: FC = () => {
                         className={styles.loadingItem}
                         style={{ width: '5rem' }}
                     />
+                    <div
+                        className={styles.loadingItem}
+                        style={{ width: '7rem' }}
+                    />
                 </div>
             </div>
             <div

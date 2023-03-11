@@ -52,6 +52,7 @@ export type UserFromFriend = {
     id: string
     username: string
     rowId: string
+    fullName: string
 }
 
 export type UserFromFriendQuery = UserFromFriend & {
