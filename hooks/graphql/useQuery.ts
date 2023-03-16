@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useApolloClient } from '@apollo/client'
+import { OperationVariables, useApolloClient } from '@apollo/client'
 import {
     ApolloQueryReturn,
     ApolloQueryFunction,
@@ -17,12 +17,12 @@ export const useQuery = (): ApolloQueryReturn => {
 
     const runQuery: ApolloQueryFunction = useMemo(
         () =>
-            async <Params, Return>({
+            async <Params extends OperationVariables, Return>({
                 query,
                 fetchPolicy,
                 ...vars
             }: Join<Query, Params>) => {
-                const variables = { ...vars } as Params
+                const variables = { ...vars } as unknown as Params
                 setLoading(true)
                 let error: Error | undefined
                 let data: Return | undefined

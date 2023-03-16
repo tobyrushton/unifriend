@@ -1,4 +1,4 @@
-import { useApolloClient } from '@apollo/client'
+import { OperationVariables, useApolloClient } from '@apollo/client'
 import { useState } from 'react'
 import {
     ApolloMutationReturn,
@@ -12,12 +12,12 @@ export const useMutation = (): ApolloMutationReturn => {
     const [loading, setLoading] = useState<boolean>(false)
     const apollo = useApolloClient()
 
-    const runMutation: ApolloMutationFunction = async <Return, Params>({
+    const runMutation: ApolloMutationFunction = async <Return, Params extends OperationVariables>({
         mutation,
         ...vars
     }: Join<Mutation, Params>) => {
         // gives correct type to variables
-        const variables = { ...vars } as Params
+        const variables = { ...vars } as unknown as Params
         setLoading(true)
         let errors: readonly Error[] | undefined
         let success = false
