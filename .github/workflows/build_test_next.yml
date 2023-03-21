@@ -33,6 +33,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm ci, build and test
         run: |
-          npm ci
+          npm ci --legacy-peer-deps
           CI= npm run build --if-present
           npm test
