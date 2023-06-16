@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.4",
-    "@apollo/server": "^4.3.0",
+    "@apollo/server": "^4.7.4",
     "@fontsource/orbitron": "^4.5.10",
     "@prisma/client": "^4.8.0",
     "@supabase/auth-helpers-nextjs": "^0.5.2",
